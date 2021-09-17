@@ -105,9 +105,7 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\bin\Release\Win32" "$(TargetDir)" /e /h /y /s
-
-XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
+      <Command>"$(SolutionDir)Engine Grafico\Banana.bat" "$(ProjectDir)bin\$(Configuration)\$(Platform)\Engine Grafico.dll" "$(SolutionDir)lib\glew\lib\RLibs\Win32\glew32.dll" "$(SolutionDir)Game Module\bin\$(Configuration)\$(Platform)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
