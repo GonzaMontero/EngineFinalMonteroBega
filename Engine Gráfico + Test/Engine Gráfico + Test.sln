@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1622
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine Grafico", "Engine Grafico\Engine Grafico.vcxproj", "{61105397-0A71-42BE-AFFA-DDCCC9D571AE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game Module", "Game Module\Game Module.vcxproj", "{ADC3E67F-D986-4163-B428-0A76A1C29D6A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61105397-0A71-42BE-AFFA-DDCCC9D571AE} = {61105397-0A71-42BE-AFFA-DDCCC9D571AE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
