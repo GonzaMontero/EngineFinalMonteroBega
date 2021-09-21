@@ -187,6 +187,9 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
     <ClInclude Include="src\Shape.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shader\BasicShader.shader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
