@@ -105,7 +105,8 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)Engine Grafico\Banana.bat" "$(ProjectDir)bin\$(Configuration)\$(Platform)\Engine Grafico.dll" "$(SolutionDir)lib\glew\lib\RLibs\Win32\glew32.dll" "$(SolutionDir)Game Module\bin\$(Configuration)\$(Platform)\"</Command>
+      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
+XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,8 +127,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\Win32;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\bin\Release\Win32" "$(TargetDir)" /e /h /y /s
-
+      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
 XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -145,7 +145,7 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\bin\Release\x64" "$(TargetDir)" /e /h /y /s
+      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
 XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -167,7 +167,7 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\bin\Release\x64" "$(TargetDir)" /e /h /y /s
+      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
 XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
