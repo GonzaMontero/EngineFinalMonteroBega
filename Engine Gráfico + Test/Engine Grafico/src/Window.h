@@ -16,7 +16,7 @@ public:
 	GLFWwindow* window;
 	int Start(int width, int height, const char* windowName);
 	static void ClearBackground();
-	int WindowShouldClose();
+	bool WindowShouldClose();
 	void FinishWindowCycle();
 	void CloseWindow();
 

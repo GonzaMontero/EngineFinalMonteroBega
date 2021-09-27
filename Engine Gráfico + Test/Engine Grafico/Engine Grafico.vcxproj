@@ -105,8 +105,9 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
-XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
+      <Command>copy /Y  "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -127,8 +128,9 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\Win32;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
-XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
+      <Command>copy /Y  "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,8 +147,9 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
-XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
+      <Command>copy /Y  "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -167,8 +170,9 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
       <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
-XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
+      <Command>copy /Y  "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -188,7 +192,8 @@ XCOPY "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s</Command>
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shader\BasicShader.shader" />
+    <None Include="res\shader\Fragment.shader" />
+    <None Include="res\shader\Vertex.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

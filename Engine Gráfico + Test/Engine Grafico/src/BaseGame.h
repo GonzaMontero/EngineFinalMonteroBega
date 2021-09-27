@@ -14,10 +14,10 @@ public:
 	~BaseGame();
 	Window ventana;
 	Renderer render;
-	int StartWindow(int width, int height, const char* windowName);
 	void CloseWindow();
-	void drawTriangle(CVec4 pos1, CVec4 pos2, CVec4 pos3);
+	void drawTriangle(CVec3 pos1, CVec3 pos2, CVec3 pos3);
 	void update();
+	void initEngine();
 	virtual void init() = 0;
 	virtual void updateGame() = 0;
 	virtual void unload() = 0;

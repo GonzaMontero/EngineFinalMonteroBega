@@ -13,27 +13,23 @@ BaseGame::BaseGame() {
 BaseGame::~BaseGame() {
 }
 
-int BaseGame::StartWindow(int width, int height, const char* windowName)
-{
-	return ventana.Start(width, height, windowName);
-}
 
 void BaseGame::CloseWindow()
 {
 	ventana.CloseWindow();
 }
 
-void BaseGame::drawTriangle(CVec4 pos1, CVec4 pos2, CVec4 pos3)
+void BaseGame::drawTriangle(CVec3 pos1, CVec3 pos2, CVec3 pos3)
 {
 	render.DrawTriangle(pos1, pos2, pos3);
 }
 
 void BaseGame::update()
 {
-	//initGame; (Virtual)
-	CVec4 pos1 = { -0.5f, -0.5f, 1, 1, BLUE };
-	CVec4 pos2 = { 0.5f, -0.5f, 1, 1, BLUE };
-	CVec4 pos3 = { 0.0f, 0.5f, 1, 1, BLUE };
+
+	CVec3 pos1 = { -0.5f, -0.5f, 1, BLUE };
+	CVec3 pos2 = { 0.5f, -0.5f, 1, BLUE };
+	CVec3 pos3 = { 0.0f, 0.5f, 1, BLUE };
 
 	while (!ventana.WindowShouldClose())  //mantiene el bucle mientras que no se cierre la ventana
 	{	
@@ -45,7 +41,11 @@ void BaseGame::update()
 
 		ventana.FinishWindowCycle(); // swapea los buffers y ejecuta los eventos
 	}
-
-	//deInitGame; (Virtual)
+	
 	CloseWindow(); // cierra la ventana
+}
+
+void BaseGame::initEngine()
+{
+	ventana.Start(600, 600, "Test2");
 }

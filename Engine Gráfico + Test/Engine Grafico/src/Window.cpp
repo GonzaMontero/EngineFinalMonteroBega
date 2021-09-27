@@ -26,7 +26,7 @@ int Window::Start(int width, int height, const char* windowName)
 	// Hace que el context en el que hagamos las cosas ahora sea la ventana que acabamos de crear (podemos tener varias ventanas en simultaneo)/
 	glfwMakeContextCurrent(window);
 
-	glewInit();   /// Crea el punto de entrada para las extenciones de glew (necesita un contexto precvio)
+	glewInit();   /// Crea el punto de entrada para las extenciones de glew (necesita un contexto previo)
 
 	std::cout << glGetString(GL_VERSION) << std::endl; // nos dice la version de gl
 }
@@ -37,7 +37,7 @@ void Window::ClearBackground()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-int Window::WindowShouldClose()
+bool Window::WindowShouldClose()
 {
 	return glfwWindowShouldClose(window);
 }
