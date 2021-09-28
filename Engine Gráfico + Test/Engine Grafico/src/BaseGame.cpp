@@ -30,6 +30,7 @@ void BaseGame::update()
 	CVec3 pos1 = { -0.5f, -0.5f, 1, BLUE };
 	CVec3 pos2 = { 0.5f, -0.5f, 1, BLUE };
 	CVec3 pos3 = { 0.0f, 0.5f, 1, BLUE };
+	render.initRender();
 
 	while (!ventana.WindowShouldClose())  //mantiene el bucle mientras que no se cierre la ventana
 	{	

@@ -61,10 +61,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shader\Fragment.shader">
+    <None Include="res\shader\Vertex.shader">
       <Filter>res\shader</Filter>
     </None>
-    <None Include="res\shader\Vertex.shader">
+    <None Include="res\shader\Fragment.shader">
       <Filter>res\shader</Filter>
     </None>
   </ItemGroup>

@@ -7,7 +7,7 @@ void Game::init() {
 	
 }
 void Game::updateGame() {
-
+	
 }
 void Game::unload() {
 	//CloseWindow();
