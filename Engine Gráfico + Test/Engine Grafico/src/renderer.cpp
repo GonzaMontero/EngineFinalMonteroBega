@@ -117,6 +117,7 @@ void Renderer::DrawTriangle(CVec3 pos1, CVec3 pos2, CVec3 pos3)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexs), vertexs, GL_STATIC_DRAW);
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0); //se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son que tipo de primitiva queres dibujar, desde donde queres empezar a leer la data y cantidad de indices qeu se van a renderizar
 
+
 }
 
 void Renderer::BindBuffers()
@@ -130,6 +131,7 @@ void Renderer::initRender()
 {
 	shaderId = CreateShader("../res/shader/Vertex.shader", "../res/shader/Fragment.shader");
 
+
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -142,10 +144,16 @@ void Renderer::initRender()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW); // le dice al buffer, donde guardar, que tanto espacio tiene disponible, que tiene que guardar y para que se va a usar 
 	//GL_ELEMENT_ARRAY_BUFFER es para los indices
 
-		// el glVertexAttribPointer es muy importante ya que espeficia como leer el buffer, como interpretar la data que ponemos adentro del mismo
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(0 * sizeof(float))); //index, tamaño del VERTEX , tipo de dato, si queremos que se normalice, stride (cuanto tiene que recorrer hasta el siguiente VERTEX, no al siguiente Attribute), stride al siguiente atributo
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(3 * sizeof(float)));
+	unsigned int verAttribute = glGetAttribLocation(shaderId, "position");
+	unsigned int colorAt = glGetAttribLocation(shaderId, "inColor");
 
-	glEnableVertexAttribArray(0);  //Habilita y deshabilita los attributos del array vertex
-	glEnableVertexAttribArray(1);  //Habilita y deshabilita los attributos del array vertex
+	cout << "Vertex atr " << verAttribute << endl;
+	cout << "Color atr " << colorAt << endl;
+
+		// el glVertexAttribPointer es muy importante ya que espeficia como leer el buffer, como interpretar la data que ponemos adentro del mismo
+	glVertexAttribPointer(verAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(0 * sizeof(float))); //index, tamaño del VERTEX , tipo de dato, si queremos que se normalice, stride (cuanto tiene que recorrer hasta el siguiente VERTEX, no al siguiente Attribute), stride al siguiente atributo
+	glVertexAttribPointer(colorAt, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(3 * sizeof(float)));
+
+	glEnableVertexAttribArray(verAttribute);  //Habilita y deshabilita los attributos del array vertex
+	glEnableVertexAttribArray(colorAt);  //Habilita y deshabilita los attributos del array vertex
 }

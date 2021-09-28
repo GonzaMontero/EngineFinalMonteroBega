@@ -34,7 +34,9 @@ int Window::Start(int width, int height, const char* windowName)
 void Window::ClearBackground()
 {
 	// Swap front and back buffers 
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
 }
 
 bool Window::WindowShouldClose()

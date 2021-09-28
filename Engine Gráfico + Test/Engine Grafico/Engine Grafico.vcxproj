@@ -192,8 +192,8 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shader\Fragment.shader" />
-    <None Include="res\shader\Vertex.shader" />
+    <None Include="..\res\shader\Fragment.shader" />
+    <None Include="..\res\shader\Vertex.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
