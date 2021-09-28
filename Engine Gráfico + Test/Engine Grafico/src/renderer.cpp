@@ -116,8 +116,6 @@ void Renderer::DrawTriangle(CVec3 pos1, CVec3 pos2, CVec3 pos3)
 	glUseProgram(shaderId);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexs), vertexs, GL_STATIC_DRAW);
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0); //se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son que tipo de primitiva queres dibujar, desde donde queres empezar a leer la data y cantidad de indices qeu se van a renderizar
-
-
 }
 
 void Renderer::BindBuffers()
@@ -130,7 +128,6 @@ void Renderer::BindBuffers()
 void Renderer::initRender()
 {
 	shaderId = CreateShader("../res/shader/Vertex.shader", "../res/shader/Fragment.shader");
-
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);

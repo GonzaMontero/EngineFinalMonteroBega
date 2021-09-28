@@ -45,5 +45,4 @@ public:
 		0,1,2
 	};
 };
-
 #endif // !RENDERER_H
