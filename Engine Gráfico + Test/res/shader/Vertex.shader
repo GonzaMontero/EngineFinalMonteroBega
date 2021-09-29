@@ -5,9 +5,10 @@
 /*layout(location = 1)*/ in vec3 inColor;
 
 out vec3 outColor;
+uniform mat4 trsmatrix = mat4(1.0);
 
 void main()
 {
-	gl_Position = vec4(position, 1.0);
+	gl_Position = trsmatrix * vec4(position, 1.0);
 	outColor = inColor;
 };

@@ -3,6 +3,11 @@
 Entity::Entity(Renderer* _renderer)
 {
 	renderer = _renderer;
+
+	translate = glm::mat4(1.0);
+	scale = glm::mat4(1.0);
+	rotate = glm::mat4(1.0);
+	model = glm::mat4(1.0);
 }
 
 void Entity::SetPosition(float x, float y, float z) {
@@ -13,6 +18,7 @@ void Entity::SetPosition(float x, float y, float z) {
 	translate = glm::translate(glm::mat4(1.0f),position);
 	UpdateModel();
 }
+
 void Entity::SetScale(float x, float y, float z) {
 	scalation.x = x;
 	scalation.y = y;
@@ -21,6 +27,7 @@ void Entity::SetScale(float x, float y, float z) {
 	scale = glm::scale(glm::mat4(1.0f), scalation);
 	UpdateModel();
 }
+
 void Entity::SetRotation(float x, float y, float z) {
 	glm::vec3 axis{ 0.0f, 0.0f, 0.0f };
 
@@ -37,6 +44,7 @@ void Entity::SetRotation(float x, float y, float z) {
 	rotate = glm::rotate(glm::mat4(1.0f), z, axis);
 	UpdateModel();
 }
+
 void Entity::Translate(float x, float y, float z)
 {
 	position.x += x;
@@ -46,6 +54,7 @@ void Entity::Translate(float x, float y, float z)
 	translate = glm::translate(glm::mat4(1.0f), position);
 	UpdateModel();
 }
+
 void Entity::UpdateModel()
 {
 	model = translate * rotate * scale;

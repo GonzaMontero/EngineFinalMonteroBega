@@ -68,9 +68,21 @@ Renderer::~Renderer() {
 	//glDeleteProgram(shader);
 }
 
-void Renderer::DrawTriangle(unsigned int *indices, float *vertices) 
+void Renderer::DrawTriangle(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix)
 {	
+	unsigned int verAttribute = glGetAttribLocation(shaderId, "position");
+	unsigned int colorAt = glGetAttribLocation(shaderId, "inColor");
+
+	glVertexAttribPointer(verAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(0 * sizeof(float))); //index, tamaño del VERTEX , tipo de dato, si queremos que se normalice, stride (cuanto tiene que recorrer hasta el siguiente VERTEX, no al siguiente Attribute), stride al siguiente atributo
+	glVertexAttribPointer(colorAt, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(3 * sizeof(float)));
+
+	glEnableVertexAttribArray(verAttribute);  //Habilita y deshabilita los attributos del array vertex
+	glEnableVertexAttribArray(colorAt);  //Habilita y deshabilita los attributos del array vertex
+
+	unsigned int model = glGetUniformLocation(shaderId,"trsmatrix");
 	glUseProgram(shaderId);
+	glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(_trsmatrix));
+
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * 18, vertices, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * 3, indices, GL_STATIC_DRAW); // le dice al buffer, donde guardar, que tanto espacio tiene disponible, que tiene que guardar y para que se va a usar 
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0); //se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son que tipo de primitiva queres dibujar, desde donde queres empezar a leer la data y cantidad de indices qeu se van a renderizar

@@ -16,6 +16,7 @@ unsigned int indices[3] = {
 
 Shape::Shape(Renderer* _renderer): Entity2D(_renderer)
 {
+
 }
 
 void Shape::Init()
@@ -50,6 +51,6 @@ void Shape::Init()
 void Shape::Draw()
 {
 	//llamar al draw
-	renderer->DrawTriangle(indices, vertexs);
+	renderer->DrawTriangle(indices, vertexs,model);
 	//actualizar buffers
 }

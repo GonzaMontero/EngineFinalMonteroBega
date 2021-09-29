@@ -2,6 +2,9 @@
 #define RENDERER_H
 #include "export.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include <stdlib.h>
 #include <string>
 #include <iostream>
@@ -26,7 +29,7 @@ class ENGINE_API Renderer {
 public:
 	Renderer();
 	~Renderer();
-	void DrawTriangle(unsigned int *indices, float *vertices);
+	void DrawTriangle(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix);
 	void BindBuffers(unsigned int &vao, unsigned int &vbo, unsigned int &ibo);
 	void initRender();
 	unsigned int shaderId;
