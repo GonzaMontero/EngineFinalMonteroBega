@@ -7,7 +7,7 @@ void Game::init() {
 	
 }
 void Game::updateGame() {
-	
+	draw(TRIANGLE);
 }
 void Game::unload() {
 	//CloseWindow();
