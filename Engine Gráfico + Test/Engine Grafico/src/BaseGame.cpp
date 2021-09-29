@@ -19,18 +19,12 @@ void BaseGame::CloseWindow()
 	ventana.CloseWindow();
 }
 
-void BaseGame::drawTriangle(CVec3 pos1, CVec3 pos2, CVec3 pos3)
-{
-	render.DrawTriangle(pos1, pos2, pos3);
-}
-
 void BaseGame::update()
 {
-
-	CVec3 pos1 = { -0.5f, -0.5f, 1, BLUE };
-	CVec3 pos2 = { 0.5f, -0.5f, 1, BLUE };
-	CVec3 pos3 = { 0.0f, 0.5f, 1, BLUE };
 	render.initRender();
+
+	Shape* shapeTest = new Shape(&render);
+	shapeTest->Init();
 
 	while (!ventana.WindowShouldClose())  //mantiene el bucle mientras que no se cierre la ventana
 	{	
@@ -38,7 +32,7 @@ void BaseGame::update()
 
 		updateGame();
 
-		render.DrawTriangle(pos1, pos2, pos3);
+		shapeTest->Draw();
 
 		ventana.FinishWindowCycle(); // swapea los buffers y ejecuta los eventos
 	}

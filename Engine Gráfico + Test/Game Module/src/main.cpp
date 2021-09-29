@@ -3,6 +3,7 @@
 int main() {
 	Game* game = new Game();
 	game -> initEngine();
+
 	if (game != NULL) {
 		game->init();
 

@@ -5,6 +5,7 @@
 
 #include "Window.h"
 #include "renderer.h"
+#include "Shape.h"
 
 #include "Global.h"
 
@@ -15,7 +16,6 @@ public:
 	Window ventana;
 	Renderer render;
 	void CloseWindow();
-	void drawTriangle(CVec3 pos1, CVec3 pos2, CVec3 pos3);
 	void update();
 	void initEngine();
 	virtual void init() = 0;
