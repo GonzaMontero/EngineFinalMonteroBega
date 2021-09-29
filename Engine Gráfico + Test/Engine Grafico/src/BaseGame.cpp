@@ -11,8 +11,8 @@ BaseGame::BaseGame() {
 }
 
 BaseGame::~BaseGame() {
-}
 
+}
 
 void BaseGame::CloseWindow()
 {
@@ -25,8 +25,6 @@ void BaseGame::update()
 
 	Shape* shapeTest = new Shape(&render);
 	shapeTest->Init();
-
-	shapeTest->SetPosition(0.7, 0.5, 0);
 
 	while (!ventana.WindowShouldClose())  //mantiene el bucle mientras que no se cierre la ventana
 	{	
