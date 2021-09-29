@@ -23,6 +23,6 @@ public:
 	void SetScale(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
 	void Translate(float x, float y, float z);
+	void UpdateModel();
 };
-
 #endif // !ENTITY_H
