@@ -1,5 +1,10 @@
 #include "Entity.h"
 
+Entity::Entity(Renderer* _renderer)
+{
+	renderer = _renderer;
+}
+
 void Entity::SetPosition(float x, float y, float z) {
 	position.x = x;
 	position.y = y;

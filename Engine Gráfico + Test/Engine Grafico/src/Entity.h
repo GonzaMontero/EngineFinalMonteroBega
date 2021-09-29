@@ -19,6 +19,7 @@ public:
 	glm::vec3 rotation;
 	glm::vec3 scalation;
 
+	Entity(Renderer* _renderer);
 	void SetPosition(float x, float y, float z);
 	void SetScale(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
