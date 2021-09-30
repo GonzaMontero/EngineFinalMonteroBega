@@ -5,8 +5,6 @@
 #include "Entity2D.h"
 
 class ENGINE_API Shape: public Entity2D {
-
-
 public:
 	float vertexs[18] = {
 		//X     Y     Z     R      G    B
@@ -26,6 +24,7 @@ public:
 	Color color;
 	void Init(Color newColor);
 	void UpdateColor(Color newColor);
+	void EpilepsyMode();
 	void Draw();
 };
 #endif // !SHAPE_H

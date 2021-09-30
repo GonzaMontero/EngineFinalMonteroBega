@@ -7,7 +7,6 @@ class Game : public BaseGame {
 public:
     Game();
     ~Game();
-    int number;
     float valorRotacion;
 	Shape* testShape;
     void init() override;

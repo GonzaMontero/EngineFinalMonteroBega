@@ -1,8 +1,7 @@
 #include "glew.h"
 #include "Shape.h"
 #include "glfw3.h"
-
-
+#include <stdlib.h>
 
 Shape::Shape(Renderer* _renderer): Entity2D(_renderer)
 {
@@ -38,6 +37,22 @@ void Shape::UpdateColor(Color newColor)
 	vertexs[17] = color.B;
 
 	renderer->initRender(vao, vbo, ibo);
+}
+
+void Shape::EpilepsyMode()
+{
+	int number = rand() % 3;
+	switch (number) {
+	case 0:
+		UpdateColor(BLUE);
+		break;
+	case 1:
+		UpdateColor(RED);
+		break;
+	case 2:
+		UpdateColor(GREEN);
+		break;
+	}
 }
 
 void Shape::Draw()
