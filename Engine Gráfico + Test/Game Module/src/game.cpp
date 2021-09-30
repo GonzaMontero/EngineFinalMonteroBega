@@ -13,7 +13,10 @@ void Game::updateGame() {
 	testShape->SetRotation(0, 0, valorRotacion);
 	valorRotacion -= 0.01;
 	testShape->Draw();
-	testShape->EpilepsyMode();
+	if(input.GetKey(KeyCode::E))
+	{
+		testShape->EpilepsyMode();
+	}
 }
 void Game::unload() {
 

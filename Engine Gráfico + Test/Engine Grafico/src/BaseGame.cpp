@@ -40,21 +40,10 @@ void BaseGame::update()
 void BaseGame::initEngine()
 {
 	ventana.Start(600, 600, "Test2");
+	input = Input(ventana.window);
 }
 
-void BaseGame::draw()
+bool BaseGame::getKey(KeyCode key)
 {
-	//shapeTest->SetRotation(0, 0, -2);
-
-	//switch (shape)
-	//{
-	//case BaseGame::TRIANGLE:
-	//	shapeTest->Draw();
-	//	break;
-	//case BaseGame::SQUARE:
-	//	shapeTest->Draw();
-	//	break;
-	//default:
-	//	break;
-	//}
+	return input.GetKey(key);
 }

@@ -55,4 +55,5 @@ glm::vec3 Input::GetMousePosition3D() {
 }
 
 void Input::UnloadWindow() {
-    if (_window) _window = NULL;
+	if (_window) _window = NULL;
+}

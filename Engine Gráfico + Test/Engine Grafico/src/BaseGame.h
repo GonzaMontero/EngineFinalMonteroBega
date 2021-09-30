@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "renderer.h"
 #include "Shape.h"
+#include "Input.h"
 
 #include "Global.h"
 
@@ -20,9 +21,11 @@ public:
 	~BaseGame();
 	Window ventana;
 	Renderer render;
+	Input input;
 	void CloseWindow();
 	void update();
 	void initEngine();
+	bool getKey(KeyCode key);
 	void draw();
 	virtual void init() = 0;
 	virtual void updateGame() = 0;
