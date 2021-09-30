@@ -25,6 +25,7 @@ public:
 	unsigned int vao; // vertex array object
 	Color color;
 	void Init(Color newColor);
+	void UpdateColor(Color newColor);
 	void Draw();
 };
 #endif // !SHAPE_H
