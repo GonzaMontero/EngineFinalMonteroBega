@@ -17,7 +17,7 @@ void Game::updateGame() {
 	testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
 	testShape->SetScale(valorEscala, valorEscala, valorEscala);
 	testShape->Draw();
-	if(input.GetKey(KeyCode::R))
+	if(input.GetKey(KeyCode::M))
 	{
 		testShape->EpilepsyMode();
 	}
@@ -53,6 +53,18 @@ void Game::updateGame() {
 	if (input.GetKey(KeyCode::X))
 	{
 		valorEscala += 0.01;
+	}
+	if (input.GetKey(KeyCode::R))
+	{
+		testShape->UpdateColor(RED);
+	}
+	if (input.GetKey(KeyCode::G))
+	{
+		testShape->UpdateColor(GREEN);
+	}
+	if (input.GetKey(KeyCode::B))
+	{
+		testShape->UpdateColor(BLUE);
 	}
 	
 }
