@@ -179,6 +179,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\BaseGame.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Entity2D.cpp" />
+    <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\Shape.cpp" />
     <ClCompile Include="src\Window.cpp" />
@@ -189,6 +190,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\Entity2D.h" />
     <ClInclude Include="src\Export.h" />
     <ClInclude Include="src\Global.h" />
+    <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\Shape.h" />
     <ClInclude Include="src\Window.h" />
