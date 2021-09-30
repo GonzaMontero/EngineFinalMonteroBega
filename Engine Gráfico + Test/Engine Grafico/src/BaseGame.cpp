@@ -21,7 +21,7 @@ void BaseGame::CloseWindow()
 
 void BaseGame::update()
 {
-	render.initRender();
+	render.CreateShader();
 
 	init();
 

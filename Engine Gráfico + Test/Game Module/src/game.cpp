@@ -5,7 +5,7 @@ Game::Game() {
 Game::~Game() {
 }
 void Game::init() {
-	testShape->Init();
+	testShape->Init(WHITE);
 	testShape->SetPosition(0, 0 ,0);
 	valorRotacion = 0;
 }

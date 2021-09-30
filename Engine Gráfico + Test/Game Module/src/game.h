@@ -8,7 +8,7 @@ public:
     Game();
     ~Game();
     float valorRotacion;
-    Shape *testShape;
+	Shape* testShape;
     void init() override;
     void updateGame() override;
     void unload() override;
