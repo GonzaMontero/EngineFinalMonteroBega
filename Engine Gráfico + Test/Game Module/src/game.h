@@ -8,6 +8,7 @@ public:
     Game();
     ~Game();
     float valorRotacion;
+	float valorEscala;
 	float valorTranslateX;
 	float valorTranslateY;
 	Shape* testShape;

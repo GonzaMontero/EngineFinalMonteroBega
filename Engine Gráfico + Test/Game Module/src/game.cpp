@@ -10,10 +10,12 @@ void Game::init() {
 	valorRotacion = 0;
 	valorTranslateX = 0;
 	valorTranslateY = 0;
+	valorEscala = 1;
 }
 void Game::updateGame() {
 	testShape->SetRotation(0, 0, valorRotacion);
 	testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
+	testShape->SetScale(valorEscala, valorEscala, valorEscala);
 	testShape->Draw();
 	if(input.GetKey(KeyCode::R))
 	{
@@ -44,6 +46,15 @@ void Game::updateGame() {
 	{
 		valorTranslateY -= 0.01;
 	}
+	if (input.GetKey(KeyCode::Z))
+	{
+		valorEscala -= 0.01;
+	}
+	if (input.GetKey(KeyCode::X))
+	{
+		valorEscala += 0.01;
+	}
+	
 }
 void Game::unload() {
 
