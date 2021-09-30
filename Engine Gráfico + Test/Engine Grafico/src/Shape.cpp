@@ -11,6 +11,7 @@ Shape::Shape(Renderer* _renderer): Entity2D(_renderer)
 void Shape::Init(Color newColor)
 {
 	color = newColor;
+
 	vertexs[3] = color.R;
 	vertexs[4] = color.G;
 	vertexs[5] = color.B;
