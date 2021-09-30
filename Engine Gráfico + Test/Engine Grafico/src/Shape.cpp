@@ -7,7 +7,7 @@ float vertexs[18] = {
 	//X     Y     Z     R      G    B
    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
 	0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-	0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+	0.0f,  0.375f, 0.0f, 0.0f, 0.0f, 1.0f
 };
 
 unsigned int indices[3] = {
@@ -16,7 +16,6 @@ unsigned int indices[3] = {
 
 Shape::Shape(Renderer* _renderer): Entity2D(_renderer)
 {
-
 }
 
 void Shape::Init()
@@ -48,6 +47,6 @@ void Shape::Init()
 void Shape::Draw()
 {
 	//llamar al draw
-	renderer->DrawTriangle(indices, vertexs,model);
+	renderer->DrawTriangle(indices, vertexs, model);
 	//actualizar buffers
 }

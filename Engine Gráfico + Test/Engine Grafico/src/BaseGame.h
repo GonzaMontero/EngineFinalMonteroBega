@@ -23,10 +23,9 @@ public:
 	void CloseWindow();
 	void update();
 	void initEngine();
-	void draw(shapes shape);
+	void draw();
 	virtual void init() = 0;
 	virtual void updateGame() = 0;
 	virtual void unload() = 0;
-
 };
 #endif // !BASEGAME_H

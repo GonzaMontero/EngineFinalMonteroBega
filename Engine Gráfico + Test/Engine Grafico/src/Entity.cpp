@@ -6,7 +6,9 @@ Entity::Entity(Renderer* _renderer)
 
 	translate = glm::mat4(1.0);
 	scale = glm::mat4(1.0);
-	rotate = glm::mat4(1.0);
+	rotateX = glm::mat4(1.0);
+	rotateY = glm::mat4(1.0);
+	rotateZ = glm::mat4(1.0);
 	model = glm::mat4(1.0);
 }
 
@@ -29,19 +31,44 @@ void Entity::SetScale(float x, float y, float z) {
 }
 
 void Entity::SetRotation(float x, float y, float z) {
+	SetRotationX(x);
+	SetRotationY(y);
+	SetRotationZ(z);
+}
+
+void Entity::SetRotationX(float x) {
 	glm::vec3 axis{ 0.0f, 0.0f, 0.0f };
 
 	axis[0] = 1.0f;
-	axis[1] = 1.0f;
-	axis[2] = 1.0f;
+	axis[1] = 0.0f;
+	axis[2] = 0.0f;
 
 	rotation.x = x;
-	rotation.y = y;
-	rotation.z = z;
+	rotateX = glm::rotate(glm::mat4(1.0f), x, axis);
+	UpdateModel();
+}
 
-	rotate = glm::rotate(glm::mat4(1.0f), x, axis);
-	rotate = glm::rotate(glm::mat4(1.0f), y, axis);
-	rotate = glm::rotate(glm::mat4(1.0f), z, axis);
+void Entity::SetRotationY(float y) {
+	glm::vec3 axis{ 0.0f, 0.0f, 0.0f };
+
+	axis[0] = 0.0f;
+	axis[1] = 1.0f;
+	axis[2] = 0.0f;
+
+	rotation.y = y;
+	rotateY = glm::rotate(glm::mat4(1.0f), y, axis);
+	UpdateModel();
+}
+
+void Entity::SetRotationZ(float z) {
+	glm::vec3 axis{ 0.0f, 0.0f, 0.0f };
+
+	axis[0] = 0.0f;
+	axis[1] = 0.0f;
+	axis[2] = 1.0f;
+
+	rotation.z = z;
+	rotateZ = glm::rotate(glm::mat4(1.0f), z, axis);
 	UpdateModel();
 }
 
@@ -57,5 +84,5 @@ void Entity::Translate(float x, float y, float z)
 
 void Entity::UpdateModel()
 {
-	model = translate * rotate * scale;
+	model = translate * rotateX * rotateY * rotateZ * scale;
 }

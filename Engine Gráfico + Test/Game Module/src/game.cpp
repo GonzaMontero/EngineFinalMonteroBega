@@ -1,14 +1,19 @@
 #include "game.h"
 Game::Game() {
+	testShape = new Shape(&render);
 }
 Game::~Game() {
 }
 void Game::init() {
-	
+	testShape->Init();
+	testShape->SetPosition(0, 0 ,0);
+	valorRotacion = 0;
 }
 void Game::updateGame() {
-	draw(TRIANGLE);
+	testShape->SetRotation(0, 0, valorRotacion);
+	valorRotacion -= 0.01;
+	testShape->Draw();
 }
 void Game::unload() {
-	//CloseWindow();
+
 }

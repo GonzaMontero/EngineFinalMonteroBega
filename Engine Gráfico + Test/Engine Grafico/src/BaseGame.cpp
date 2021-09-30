@@ -23,12 +23,13 @@ void BaseGame::update()
 {
 	render.initRender();
 
+	init();
+
 	while (!ventana.WindowShouldClose())  //mantiene el bucle mientras que no se cierre la ventana
 	{	
-		ventana.ClearBackground(); // limbia los buffers
+		ventana.ClearBackground(); // limpia los buffers
 
 		updateGame();
-
 
 		ventana.FinishWindowCycle(); // swapea los buffers y ejecuta los eventos
 	}
@@ -41,21 +42,19 @@ void BaseGame::initEngine()
 	ventana.Start(600, 600, "Test2");
 }
 
-void BaseGame::draw(shapes shape)
+void BaseGame::draw()
 {
+	//shapeTest->SetRotation(0, 0, -2);
 
-	Shape* shapeTest = new Shape(&render);
-	shapeTest->Init();
-
-	switch (shape)
-	{
-	case BaseGame::TRIANGLE:
-		shapeTest->Draw();
-		break;
-	case BaseGame::SQUARE:
-		shapeTest->Draw();
-		break;
-	default:
-		break;
-	}
+	//switch (shape)
+	//{
+	//case BaseGame::TRIANGLE:
+	//	shapeTest->Draw();
+	//	break;
+	//case BaseGame::SQUARE:
+	//	shapeTest->Draw();
+	//	break;
+	//default:
+	//	break;
+	//}
 }
