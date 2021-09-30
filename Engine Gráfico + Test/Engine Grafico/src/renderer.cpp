@@ -141,5 +141,4 @@ void Renderer::initRender(unsigned int vao, unsigned int vbo, unsigned int ibo)
 
 	glEnableVertexAttribArray(verAttribute);  //Habilita y deshabilita los attributos del array vertex
 	glEnableVertexAttribArray(colorAt);  //Habilita y deshabilita los attributos del array vertex
-
 }
