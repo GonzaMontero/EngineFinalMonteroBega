@@ -8,9 +8,11 @@ public:
     Game();
     ~Game();
     float valorRotacion;
+	float valorTranslateX;
+	float valorTranslateY;
 	Shape* testShape;
     void init() override;
     void updateGame() override;
     void unload() override;
-};
+}; 
 #endif // !GAME_H
