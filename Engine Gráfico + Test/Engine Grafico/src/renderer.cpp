@@ -112,12 +112,6 @@ void Renderer::DrawSquare(unsigned int* indices, float* vertices, glm::mat4 _trs
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son que tipo de primitiva queres dibujar, desde donde queres empezar a leer la data y cantidad de indices qeu se van a renderizar
 }
 
-void Renderer::BindBuffers(unsigned int &vao, unsigned int &vbo, unsigned int &ibo)
-{
-	glBindVertexArray(vao);  
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-}
 
 void Renderer::CreateShader()
 {
