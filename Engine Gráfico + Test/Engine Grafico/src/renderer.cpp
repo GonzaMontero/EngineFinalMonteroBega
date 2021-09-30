@@ -10,7 +10,8 @@ struct ShaderProgramSource
 
 unsigned int CompileShader(unsigned int type, const char* source)
 {
-	unsigned int id = glCreateShader(type);	  /// Crea un objeto shader vacio y devuelve un valor diferente de cero con el que puede ser referenciado, el tipo indica que tipo de shader se va a crear, sea de vertex,fragment, geometry, etc
+	unsigned int id = glCreateShader(type);	 
+	/// Crea un objeto shader vacio y devuelve un valor diferente de cero con el que puede ser referenciado, el tipo indica que tipo de shader se va a crear, sea de vertex,fragment, geometry, etc
 	string sourceShaderCode;
 	ifstream sourceShaderFile;
 	sourceShaderFile.exceptions(ifstream::failbit | ifstream::badbit);
@@ -40,7 +41,7 @@ unsigned int CompileShader(unsigned int type, const char* source)
 
 unsigned int  Renderer::CreateShader(const char* vertexShader, const char* fragmentShader)
 {
-	unsigned int program = glCreateProgram();
+	unsigned int program = glCreateProgram(); // crea un program object vacio
 	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
 	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
