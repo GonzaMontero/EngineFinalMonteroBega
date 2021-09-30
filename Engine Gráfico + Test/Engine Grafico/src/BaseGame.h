@@ -25,8 +25,6 @@ public:
 	void CloseWindow();
 	void update();
 	void initEngine();
-	bool getKey(KeyCode key);
-	void draw();
 	virtual void init() = 0;
 	virtual void updateGame() = 0;
 	virtual void unload() = 0;

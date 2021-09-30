@@ -43,7 +43,4 @@ void BaseGame::initEngine()
 	input = Input(ventana.window);
 }
 
-bool BaseGame::getKey(KeyCode key)
-{
-	return input.GetKey(key);
-}
+
