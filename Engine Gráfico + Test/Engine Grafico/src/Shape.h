@@ -18,9 +18,9 @@ public:
 	};
 
 	Shape(Renderer* _renderer);
-	unsigned int vbo; // vertex buffer object
-	unsigned int ibo;  // index buffer object
-	unsigned int vao; // vertex array object
+	unsigned int vbo; // vertex buffer object  //  Guarda los arrays de vertices, basicamente, cada punto de la shape (y en este caso color tambien)
+	unsigned int ibo;  // index buffer object  //  Guarda un array de los indices/elementos, basicamente clasifica los vertices para que al dibujar figuras que usan el mismo vertice no tenga que repetirlo
+	unsigned int vao; // vertex array object   //  Buffer interno de openGL 
 	Color color;
 	void Init(Color newColor);
 	void UpdateColor(Color newColor);

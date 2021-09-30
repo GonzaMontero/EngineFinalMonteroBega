@@ -4,7 +4,6 @@ int main() {
 	Game* game = new Game();
 
 	game -> initEngine();
-	game->init();
 
 	if (game != NULL) {
 

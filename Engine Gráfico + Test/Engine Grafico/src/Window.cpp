@@ -19,7 +19,7 @@ int Window::Start(int width, int height, const char* windowName)
 	window = glfwCreateWindow(width, height, windowName, NULL, NULL);
 	if (!window) // si no hay ventana por la razon que sea, cierra el ciclo de glfw y hay que volver a llamar a glfwInit
 	{
-		glfwTerminate();
+		glfwTerminate(); 
 		return -1;
 	}
 

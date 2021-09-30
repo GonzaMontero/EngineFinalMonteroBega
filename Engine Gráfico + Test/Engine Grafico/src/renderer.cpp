@@ -132,7 +132,7 @@ void Renderer::initRender(unsigned int vao, unsigned int vbo, unsigned int ibo)
 	//GL_ELEMENT_ARRAY_BUFFER es para los indices
 
 	unsigned int verAttribute = glGetAttribLocation(shaderId, "position");	// devuelve la ubicacion de un atributo dentro de un programa y luego se lo asigna a una variable
-	unsigned int colorAt = glGetAttribLocation(shaderId, "inColor");			//  Los parametros que se usan son el programa de donde estamos sacando el atribute, en estos casos los shaders, y el nombre del atributo
+	unsigned int colorAt = glGetAttribLocation(shaderId, "inColor");		//  Los parametros que se usan son el programa de donde estamos sacando el atribute, en estos casos los shaders, y el nombre del atributo
 
 	// el glVertexAttribPointer es muy importante ya que espeficia como leer el buffer, como interpretar la data que ponemos adentro del mismo
 	glVertexAttribPointer(verAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(0 * sizeof(float))); //index, tamaño del VERTEX , tipo de dato, si queremos que se normalice, stride (cuanto tiene que recorrer hasta el siguiente VERTEX, no al siguiente Attribute), stride al siguiente atributo
