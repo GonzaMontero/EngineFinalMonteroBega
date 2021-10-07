@@ -3,8 +3,9 @@
 
 #include "Export.h"
 
-class ENGINE_API camera {
-
+class ENGINE_API Camera {
+public: 
+	void Init();
 };
 
 #endif // !CAMERA_H
