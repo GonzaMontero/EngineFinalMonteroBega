@@ -9,7 +9,6 @@ class ENGINE_API Camera {
 public:
 	Camera();
 	~Camera();
-	void Init();
 
 	glm::mat4 proj;
 	glm::mat4 view;
