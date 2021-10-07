@@ -41,6 +41,7 @@ void BaseGame::initEngine()
 {
 	ventana.Start(600, 600, "Test2");
 	input = Input(ventana.window);
+	
 }
 
 

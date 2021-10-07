@@ -13,6 +13,7 @@
 
 using namespace std;
 
+#include "Camera.h"
 #include "Global.h"
 
 enum ShadersType
@@ -29,6 +30,7 @@ class ENGINE_API Renderer {
 public:
 	Renderer();
 	~Renderer();
+	Camera camera;
 	void DrawTriangle(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix);
 	void DrawSquare(unsigned int* indices, float* vertices, glm::mat4 _trsmatrix);
 	void CreateShader();
