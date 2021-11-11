@@ -72,9 +72,8 @@ Renderer::~Renderer() {
 	//glDeleteProgram(shader);
 }
 
-void Renderer::DrawTriangle(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix )
+void Renderer::Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix )
 {	
-
 	unsigned int model = glGetUniformLocation(shaderId,"trsmatrix");
 	unsigned int projInd = glGetUniformLocation(shaderId, "proj");
 	unsigned int viewInd = glGetUniformLocation(shaderId, "view");
@@ -96,18 +95,6 @@ void Renderer::DrawTriangle(unsigned int *indices, float *vertices, glm::mat4 _t
 	//se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son: tipo de primitiva queres dibujar, cabtudad de elementos a ser renderizados, tipo de valores en el indice, desde donde comienza a leer la data
 }
 
-void Renderer::DrawSquare(unsigned int* indices, float* vertices, glm::mat4 _trsmatrix)  /// en produccion
-{
-	unsigned int model = glGetUniformLocation(shaderId, "trsmatrix");
-	glUseProgram(shaderId);
-	glUniformMatrix4fv(model, 1, GL_FALSE, glm::value_ptr(_trsmatrix));
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * 18, vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * 3, indices, GL_STATIC_DRAW); // le dice al buffer, donde guardar, que tanto espacio tiene disponible, que tiene que guardar y para que se va a usar 
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son que tipo de primitiva queres dibujar, desde donde queres empezar a leer la data y cantidad de indices qeu se van a renderizar
-}
-
 
 void Renderer::CreateShader()
 {
@@ -117,8 +104,7 @@ void Renderer::CreateShader()
 
 void Renderer::initRender(unsigned int vao, unsigned int vbo, unsigned int ibo)
 {
-	glGenVertexArrays(1, &vao); // genera N arrays de vertices y guarda sus nombres en el segundo parametro
-	glBindVertexArray(vao); // le dice al vertex array cual es su nombre en caso de que no haya un vertex array object con ese nombre crea el vinculo entre el array y el nombre, si ya lo hay entonces rompe el vinculo previo 
+	GenerateVAO(vao);
 
 	glGenBuffers(1, &vbo); /// Genera N cantidad de buffers en el primer parametro, el segundo parametro es en donde se almacenan los nombres de dichos buffers
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // especifica a que buffer está bindeando (primer parametro), segundo parametro es el nombre del buffer que estas bindeando
@@ -138,4 +124,56 @@ void Renderer::initRender(unsigned int vao, unsigned int vbo, unsigned int ibo)
 	glEnableVertexAttribArray(verAttribute);  //Habilita y deshabilita los attributos del array vertex
 	glEnableVertexAttribArray(colorAt);  //Habilita y deshabilita los attributos del array vertex
 
+}
+
+void Renderer::GenerateVAO(unsigned int& vao) {
+	glGenVertexArrays(1, &vao); // genera N arrays de vertices y guarda sus nombres en el segundo parametro
+	glBindVertexArray(vao);// le dice al vertex array cual es su nombre en caso de que no haya un vertex array object con ese nombre crea el vinculo entre el array y el nombre, si ya lo hay entonces rompe el vinculo previo 
+}
+void Renderer::BindVAO(unsigned int& vao) {
+	glBindVertexArray(vao);
+}
+void Renderer::BindVBO(unsigned int& vbo, float* vertices, int verticesAmmount) {
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * verticesAmmount, vertices, GL_STATIC_DRAW);
+}
+void Renderer::BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmount) {
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * indicesAmmount, indices, GL_STATIC_DRAW);
+}
+void Renderer::UnbindBuffers() {
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glUseProgram(0);
+}
+void Renderer::DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo) {
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ebo);
+}
+
+void Renderer::CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition) {
+	glVertexAttribPointer(shaderAttribIndex, dataAmmount, GL_FLOAT, GL_FALSE, sizeof(float) * dataSize, (void*)(sizeof(float) * dataPosition));
+	glEnableVertexAttribArray(shaderAttribIndex);
+}
+
+void Renderer::SetTexAttribPointer() {
+	GLuint posAttrib = glGetAttribLocation(shaderId, "aPos");
+	GLuint colorAttrib = glGetAttribLocation(shaderId, "aColor"); // no daba el valor correcto porque no usaba la variable en el main
+	GLuint texAttrib = glGetAttribLocation(shaderId, "aTexCoord");
+	glUniform1i((glGetUniformLocation(shaderId, "mainTexture")), 0);
+	CreateAtribPointers(posAttrib, 3, 8, 0);
+	CreateAtribPointers(colorAttrib, 3, 8, 3);
+	CreateAtribPointers(texAttrib, 2, 8, 6);
+}
+
+void Renderer::DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmmount, glm::mat4 model) {
+	BindVAO(vao);
+	BindVBO(vbo, vertices, verticesAmmount);
+	SetTexAttribPointer();
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	UnbindBuffers();
 }

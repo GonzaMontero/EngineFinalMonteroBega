@@ -20,7 +20,7 @@ void Shape::Init(Color newColor)
 	vertexs[16] = color.G;
 	vertexs[17] = color.B;
 
-	renderer->initRender(vao, vbo, ibo);
+	renderer->initRender(vao, vbo, ebo);
 }
 
 void Shape::UpdateColor(Color newColor)
@@ -36,7 +36,7 @@ void Shape::UpdateColor(Color newColor)
 	vertexs[16] = color.G;
 	vertexs[17] = color.B;
 
-	renderer->initRender(vao, vbo, ibo);
+	renderer->initRender(vao, vbo, ebo);
 }
 
 void Shape::EpilepsyMode()
@@ -58,6 +58,6 @@ void Shape::EpilepsyMode()
 void Shape::Draw()
 {
 	//llamar al draw
-	renderer->DrawTriangle(indices, vertexs, model);
+	renderer->Draw(indices, vertexs, model);
 	//actualizar buffers
 }

@@ -31,11 +31,20 @@ public:
 	Renderer();
 	~Renderer();
 	Camera camera;
-	void DrawTriangle(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix);
-	void DrawSquare(unsigned int* indices, float* vertices, glm::mat4 _trsmatrix);
+	void Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix);
 	void CreateShader();
 	void initRender(unsigned int vao, unsigned int vbo, unsigned int ibo);
 	unsigned int shaderId;
 	unsigned int  CreateShader(const char* vertexShader, const char* fragmentShader);
+
+	void GenerateVAO(unsigned int& vao);
+	void BindVAO(unsigned int& vao);
+	void BindVBO(unsigned int& vbo, float* vertices, int verticesAmmount);
+	void BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmount);
+	void UnbindBuffers();
+	void DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo);
+	void CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition);
+	void SetTexAttribPointer();
+	void DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, glm::mat4 model);
 };
 #endif // !RENDERER_H
