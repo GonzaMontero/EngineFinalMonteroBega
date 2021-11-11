@@ -92,6 +92,9 @@
     <ClInclude Include="src\TextureImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Collision Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\res\shader\Fragment.shader">
