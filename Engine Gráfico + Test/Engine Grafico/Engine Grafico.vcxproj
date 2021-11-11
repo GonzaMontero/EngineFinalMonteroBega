@@ -178,6 +178,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
   <ItemGroup>
     <ClCompile Include="src\BaseGame.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Collision Manager.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Entity2D.cpp" />
     <ClCompile Include="src\Input.cpp" />

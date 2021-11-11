@@ -8,7 +8,7 @@ class ENGINE_API CollisionManager {
 public:
 	CollisionManager();
 	
-	void CheckCollisions();
+	bool CheckCollisions(Entity2D one, Entity2D two);
 
 };
 #endif // !CAMERA_H
