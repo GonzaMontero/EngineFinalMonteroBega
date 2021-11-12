@@ -1,12 +1,13 @@
 #include "glew.h"
 #include "glfw3.h"
-#include <iostream>
 
-#include "TextureImporter.h"
-
-#include "stb_image.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG 
+#include "stb_image.h"
+
+#include "TextureImporter.h"
+#include <iostream>
+
 
 
 
@@ -26,7 +27,7 @@ TextureImporter::TextureImporter(int width, int height, const char* path, bool t
 {
 	_texture = 0;
 	_path = path;
-	LoadImage(width, height, transparency);
+	//LoadImage(width, height, transparency);
 }
 
 TextureImporter::~TextureImporter()
@@ -43,14 +44,14 @@ void TextureImporter::LoadImage(int& width, int& height, bool transparency) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(true);//
 
 	if (transparency)
-		_data = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb_alpha);
+		_data = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb_alpha);//
 	else
-		_data = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb);
+		_data = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb);//
 
-	if (_data) {
+		if(_data) {
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		if (!transparency)
@@ -63,7 +64,7 @@ void TextureImporter::LoadImage(int& width, int& height, bool transparency) {
 	else {
 		std::cout << "Failed to load texture" << " - " << stbi_failure_reason() << std::endl;
 	}
-	stbi_image_free(_data);
+	stbi_image_free(_data);//
 }
 
 void TextureImporter::SetPath(const char* path) {

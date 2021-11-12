@@ -11,9 +11,7 @@
 
 	Sprite::Sprite(bool transparency, const char* path, Renderer* _renderer) : Entity2D(_renderer) {
 		_transparency = transparency;
-		_texImporter = new TextureImporter();
-		_texImporter->SetPath(path);
-
+		_texImporter = new TextureImporter(path);	
 	}
 
 	Sprite::~Sprite() {
