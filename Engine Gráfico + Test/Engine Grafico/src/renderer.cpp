@@ -172,7 +172,7 @@ void Renderer::SetTexAttribPointer() {
 	glUniform1i((glGetUniformLocation(textureShaderId, "thisTexture")), 0);
 	CreateAtribPointers(posAttrib, 3, 8, 0);
 	CreateAtribPointers(colorAttrib, 3, 8, 3);
-	CreateAtribPointers(3, 2, 8, 6);
+	CreateAtribPointers(texAttrib, 2, 8, 6);
 }
 
 void Renderer::DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmmount, glm::mat4 model, unsigned int* indices) {
