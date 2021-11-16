@@ -1,25 +1,30 @@
 #include "game.h"
 Game::Game() {
-	testShape = new Shape(&render);
+	//testShape = new Shape(&render);
+	testSprite = new Sprite(true, "res/meme2.png", &render);
 }
 Game::~Game() {
 }
 void Game::init() {
-	testShape->Init(WHITE);
-	testShape->SetPosition(0, 0 ,0);
+	//testShape->Init(WHITE);
+	//testShape->SetPosition(0, 0 ,0);
 	valorRotacion = 0;
 	valorTranslateX = 0;
 	valorTranslateY = 0;
 	valorEscala = 1;
+	testSprite->Init();
 }
 void Game::updateGame() {
-	testShape->SetRotation(0, 0, valorRotacion);
-	testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
-	testShape->SetScale(valorEscala, valorEscala, valorEscala);
-	testShape->Draw();
+
+	testSprite->DrawSprite();
+
+	//testShape->SetRotation(0, 0, valorRotacion);
+	//testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
+	//testShape->SetScale(valorEscala, valorEscala, valorEscala);
+	//testShape->Draw();
 	if(input.GetKey(KeyCode::M))
 	{
-		testShape->EpilepsyMode();
+	//	testShape->EpilepsyMode();
 	}
 	if (input.GetKey(KeyCode::Q))
 	{
@@ -56,15 +61,15 @@ void Game::updateGame() {
 	}
 	if (input.GetKey(KeyCode::R))
 	{
-		testShape->UpdateColor(RED);
+	//	testShape->UpdateColor(RED);
 	}
 	if (input.GetKey(KeyCode::G))
 	{
-		testShape->UpdateColor(GREEN);
+	//	testShape->UpdateColor(GREEN);
 	}
 	if (input.GetKey(KeyCode::B))
 	{
-		testShape->UpdateColor(BLUE);
+	//	testShape->UpdateColor(BLUE);
 	}
 	
 }

@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "renderer.h"
 #include "Shape.h"
+#include "Sprite.h"
 #include "Input.h"
 
 #include "Global.h"

@@ -33,7 +33,7 @@ int Window::Start(int width, int height, const char* windowName)
 
 void Window::ClearBackground()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // especifica los valores RGBA con los que se va a limpiar los buffers  
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // especifica los valores RGBA con los que se va a limpiar los buffers  
 	glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);  // limpia los buffers con los valores que seleccionamos en el glClearColor en la funcion de arriba
 }
 

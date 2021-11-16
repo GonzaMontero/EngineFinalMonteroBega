@@ -12,6 +12,7 @@
 	Sprite::Sprite(bool transparency, const char* path, Renderer* _renderer) : Entity2D(_renderer) {
 		_transparency = transparency;
 		_texImporter = new TextureImporter(path);	
+		LoadSprite(_width, _height, path);
 	}
 
 	Sprite::~Sprite() {
@@ -73,17 +74,18 @@
 	}	
 
 	void Sprite::DrawSprite() {
+		glActiveTexture(GL_TEXTURE0);
 		UpdateModel();
 		if (_transparency) {
 			BlendSprite();
 			BindTexture();
-			renderer->Draw(indices, vertexs, model);
+			renderer->DrawSprite(vao, vbo, vertexs,32, model, indices);
 			UnBlendSprite();
 			glDisable(GL_TEXTURE_2D);
 		}
 		else {
 			BindTexture();
-			renderer->Draw(indices, vertexs, model);
+			renderer->DrawSprite(vao, vbo, vertexs, 32, model, indices);
 			glDisable(GL_TEXTURE_2D);
 		}
 	}

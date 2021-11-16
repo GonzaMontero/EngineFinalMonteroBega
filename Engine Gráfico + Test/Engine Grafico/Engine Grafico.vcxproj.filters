@@ -106,5 +106,11 @@
     <None Include="..\res\shader\Vertex.shader">
       <Filter>res\shader</Filter>
     </None>
+    <None Include="res\shader\TextureFragment .shader">
+      <Filter>res\shader</Filter>
+    </None>
+    <None Include="res\shader\TextureVertex.shader">
+      <Filter>res\shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

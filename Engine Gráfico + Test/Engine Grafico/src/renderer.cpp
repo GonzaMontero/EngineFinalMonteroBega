@@ -96,9 +96,11 @@ void Renderer::Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix
 }
 
 
+
 void Renderer::CreateShader()
 {
 	shaderId = CreateShader("../res/shader/Vertex.shader", "../res/shader/Fragment.shader");
+	textureShaderId = CreateShader("../res/shader/TextureVertex.shader", "../res/shader/TextureFragment .shader");
 
 }
 
@@ -125,6 +127,8 @@ void Renderer::initRender(unsigned int vao, unsigned int vbo, unsigned int ibo)
 	glEnableVertexAttribArray(colorAt);  //Habilita y deshabilita los attributos del array vertex
 
 }
+
+
 
 void Renderer::GenerateVAO(unsigned int& vao) {
 	glGenVertexArrays(1, &vao); // genera N arrays de vertices y guarda sus nombres en el segundo parametro
@@ -161,19 +165,34 @@ void Renderer::CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmou
 }
 
 void Renderer::SetTexAttribPointer() {
-	GLuint posAttrib = glGetAttribLocation(shaderId, "aPos");
-	GLuint colorAttrib = glGetAttribLocation(shaderId, "aColor"); // no daba el valor correcto porque no usaba la variable en el main
-	GLuint texAttrib = glGetAttribLocation(shaderId, "aTexCoord");
-	glUniform1i((glGetUniformLocation(shaderId, "mainTexture")), 0);
+
+	GLuint posAttrib = glGetAttribLocation(textureShaderId, "position");
+	GLuint colorAttrib = glGetAttribLocation(textureShaderId, "inColor"); // no daba el valor correcto porque no usaba la variable en el main
+	GLuint texAttrib = glGetAttribLocation(textureShaderId, "uv");
+	glUniform1i((glGetUniformLocation(textureShaderId, "thisTexture")), 0);
 	CreateAtribPointers(posAttrib, 3, 8, 0);
 	CreateAtribPointers(colorAttrib, 3, 8, 3);
-	CreateAtribPointers(texAttrib, 2, 8, 6);
+	CreateAtribPointers(3, 2, 8, 6);
 }
 
-void Renderer::DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmmount, glm::mat4 model) {
+void Renderer::DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmmount, glm::mat4 model, unsigned int* indices) {
 	BindVAO(vao);
 	BindVBO(vbo, vertices, verticesAmmount);
 	SetTexAttribPointer();
+
+	unsigned int textureModel = glGetUniformLocation(textureShaderId, "trsmatrix");
+	unsigned int projInd = glGetUniformLocation(textureShaderId, "proj");
+	unsigned int viewInd = glGetUniformLocation(textureShaderId, "view");
+	/// Devuelve la ubicacion de una variable uniforme, el primer parametro es el identificador del programa y el segundo el nombre de la variable que contiene esa ubicacion
+	/// Devuelve un int que representa la ubicacion de una variable especifica dentro de un programa (el segundo parametro, "name") no puede contener espacios ni ser un struct, array de structs o un sub componente de un vector o matriz
+
+	glUseProgram(textureShaderId); /// Instala un programa como parte recurrente del estado de renderizado, el parametro es el identificador del programa
+	/// Requiere previamente haber, attacheado el shader, compilado el shader y linkeado el programa, atachear otro shader, desatachear este o borrar el shader durante la compilacion no van a afectar el estado actual del programa, pero si si es que volvemos a linkear
+
+	glUniformMatrix4fv(textureModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(projInd, 1, GL_FALSE, glm::value_ptr(camera.proj));
+	glUniformMatrix4fv(viewInd, 1, GL_FALSE, glm::value_ptr(camera.view));
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	UnbindBuffers();
 }

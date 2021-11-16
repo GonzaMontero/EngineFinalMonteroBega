@@ -12,7 +12,8 @@ public:
 	float valorTranslateX;
 	float valorTranslateY;
 	Color color;
-	Shape* testShape;
+	//Shape* testShape;
+	Sprite* testSprite;
     void init() override;
     void updateGame() override;
     void unload() override;

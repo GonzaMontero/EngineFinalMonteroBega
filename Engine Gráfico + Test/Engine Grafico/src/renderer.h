@@ -35,6 +35,7 @@ public:
 	void CreateShader();
 	void initRender(unsigned int vao, unsigned int vbo, unsigned int ibo);
 	unsigned int shaderId;
+	unsigned int textureShaderId;
 	unsigned int  CreateShader(const char* vertexShader, const char* fragmentShader);
 
 	void GenerateVAO(unsigned int& vao);
@@ -45,6 +46,6 @@ public:
 	void DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo);
 	void CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition);
 	void SetTexAttribPointer();
-	void DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, glm::mat4 model);
+	void DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, glm::mat4 model, unsigned int* indices);
 };
 #endif // !RENDERER_H
