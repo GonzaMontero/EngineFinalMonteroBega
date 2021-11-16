@@ -13,6 +13,7 @@ void Game::init() {
 	valorTranslateY = 0;
 	valorEscala = 1;
 	testSprite->Init();
+	testSprite->SetScale(0.1, 0.1, 0.1);
 }
 void Game::updateGame() {
 
