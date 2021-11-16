@@ -100,7 +100,7 @@ void Renderer::Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix
 void Renderer::CreateShader()
 {
 	shaderId = CreateShader("../res/shader/Vertex.shader", "../res/shader/Fragment.shader");
-	textureShaderId = CreateShader("../res/shader/TextureVertex.shader", "../res/shader/TextureFragment .shader");
+	textureShaderId = CreateShader("../res/shader/TextureVertex.shader", "../res/shader/TextureFragment.shader");
 
 }
 
@@ -167,12 +167,12 @@ void Renderer::CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmou
 void Renderer::SetTexAttribPointer() {
 
 	GLuint posAttrib = glGetAttribLocation(textureShaderId, "position");
-	GLuint colorAttrib = glGetAttribLocation(textureShaderId, "inColor"); // no daba el valor correcto porque no usaba la variable en el main
+	GLuint colorAttrib = glGetAttribLocation(textureShaderId, "inColor"); 
 	GLuint texAttrib = glGetAttribLocation(textureShaderId, "uv");
 	glUniform1i((glGetUniformLocation(textureShaderId, "thisTexture")), 0);
 	CreateAtribPointers(posAttrib, 3, 8, 0);
 	CreateAtribPointers(colorAttrib, 3, 8, 3);
-	CreateAtribPointers(texAttrib, 2, 8, 6);
+	CreateAtribPointers(2, 2, 8, 6);    /// preguntar porque si pongo texAttrib en vez de 2 me manda numero gigante
 }
 
 void Renderer::DrawSprite(unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmmount, glm::mat4 model, unsigned int* indices) {
