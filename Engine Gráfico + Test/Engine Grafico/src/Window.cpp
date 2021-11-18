@@ -26,15 +26,19 @@ int Window::Start(int width, int height, const char* windowName)
 	// Hace que el context en el que hagamos las cosas ahora sea la ventana que acabamos de crear (podemos tener varias ventanas en simultaneo)/
 	glfwMakeContextCurrent(window);
 
+
+	glewExperimental = GL_TRUE;
 	glewInit();   /// Crea el punto de entrada para las extenciones de glew (necesita un contexto previo)
 
 	std::cout << glGetString(GL_VERSION) << std::endl; // nos dice la version de gl
+
+
 }
 
 void Window::ClearBackground()
 {
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // especifica los valores RGBA con los que se va a limpiar los buffers  
-	glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);  // limpia los buffers con los valores que seleccionamos en el glClearColor en la funcion de arriba
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // limpia los buffers con los valores que seleccionamos en el glClearColor en la funcion de arriba
 }
 
 bool Window::WindowShouldClose()

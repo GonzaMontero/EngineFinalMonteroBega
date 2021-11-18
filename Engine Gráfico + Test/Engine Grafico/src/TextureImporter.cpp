@@ -59,7 +59,7 @@ void TextureImporter::LoadImage(int& width, int& height, bool transparency) {
 		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data);
 
-		//glGenerateMipmap(GL_TEXTURE_2D);  preguntar
+		glGenerateMipmap(GL_TEXTURE_2D);  
 	}
 	else {
 		std::cout << "Failed to load texture" << " - " << stbi_failure_reason() << std::endl;

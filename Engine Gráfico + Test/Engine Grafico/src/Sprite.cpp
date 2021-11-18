@@ -13,6 +13,9 @@
 		_transparency = transparency;
 		_texImporter = new TextureImporter(path);	
 		LoadSprite(_width, _height, path);
+
+		cout << "width: " << _width << endl;
+		cout << "height: " << _height << endl;
 	}
 
 	Sprite::~Sprite() {
@@ -40,6 +43,7 @@
 
 	void Sprite::Init() {
 		renderer->SetTexAttribPointer();
+		glEnable(GL_TEXTURE_2D);
 		BindBuffers();
 	}
 
@@ -74,7 +78,7 @@
 	}	
 
 	void Sprite::DrawSprite() {
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0); ///sacar?
 		UpdateModel();
 		if (_transparency) {
 			BlendSprite();

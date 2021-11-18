@@ -14,6 +14,7 @@ public:
 	Color color;
 	//Shape* testShape;
 	Sprite* testSprite;
+	Sprite* testSprite2;
     void init() override;
     void updateGame() override;
     void unload() override;
