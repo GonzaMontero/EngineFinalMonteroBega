@@ -10,5 +10,6 @@ public:
 	CollisionManager();
 	
 	bool CheckAABBCollisions(Entity2D* one, Entity2D* two);
+	//bool CheckCircleObjectCollisions(Entity2D* one, BallObject* two);
 };
 #endif // !CAMERA_H
