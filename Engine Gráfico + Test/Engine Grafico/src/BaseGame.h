@@ -8,6 +8,7 @@
 #include "Shape.h"
 #include "Sprite.h"
 #include "Input.h"
+#include "Collision Manager.h"
 
 #include "Global.h"
 
@@ -23,6 +24,7 @@ public:
 	Window ventana;
 	Renderer render;
 	Input input;
+	CollisionManager *collision;
 	void CloseWindow();
 	void update();
 	void initEngine();

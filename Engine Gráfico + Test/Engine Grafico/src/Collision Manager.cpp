@@ -39,3 +39,5 @@ bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two){
 //    difference = closest - center;
 //    return glm::length(difference) < one.Radius;
 //}
+
+

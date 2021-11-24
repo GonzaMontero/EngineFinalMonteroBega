@@ -23,13 +23,11 @@ void Game::init() {
 	testSprite2->SetPosition(250, 100, -1);
 	valorTranslateX = 250;
 	valorTranslateY = 100;
+
 }
 void Game::updateGame() {
 
-	testSprite->DrawSprite();
-	testSprite2->DrawSprite();
-	testSprite2->SetPosition(valorTranslateX, valorTranslateY, -1);
-	cout << "x:" << testSprite2->position.x << " y:" << testSprite2->position.y << " z:" << testSprite2->position.z << endl;
+	
 	//testShape->SetRotation(0, 0, valorRotacion);
 	//testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
 	//testShape->SetScale(valorEscala, valorEscala, valorEscala);
@@ -73,6 +71,7 @@ void Game::updateGame() {
 	}
 	if (input.GetKey(KeyCode::R))
 	{
+		cout << "hola" << endl;
 	//	testShape->UpdateColor(RED);
 	}
 	if (input.GetKey(KeyCode::G))
@@ -83,7 +82,19 @@ void Game::updateGame() {
 	{
 	//	testShape->UpdateColor(BLUE);
 	}
+
+	if (collision->CheckAABBCollisions(testSprite, testSprite2))
+	{
+		cout << "chocan" << endl;
+
+	}
+
+	testSprite2->SetPosition(valorTranslateX, valorTranslateY, -1);
 	
+
+
+	testSprite->DrawSprite();
+	testSprite2->DrawSprite();
 }
 void Game::unload() {
 
