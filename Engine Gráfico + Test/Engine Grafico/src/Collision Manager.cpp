@@ -12,13 +12,14 @@ bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two){
 	glm::vec2 twoScale(two->scalation.x, two->scalation.y);
 	glm::vec2 twoPos(two->position.x, two->position.y);
 
-	bool collisionX = onePos.x + oneScale.x >= twoPos.x &&
-		twoPos.x + twoScale.x >= onePos.x;
+	return ReturnIntersect(onePos.x - (oneScale.x / 2), onePos.x + (oneScale.x / 2), twoPos.x - (twoScale.x / 2), twoPos.x + (twoScale.x / 2)) &&
+		ReturnIntersect(onePos.y - (oneScale.y / 2), onePos.y + (oneScale.y / 2), twoPos.y - (twoScale.y / 2), twoPos.y + (twoScale.y / 2));
+}
 
-	bool collisionY = onePos.y + oneScale.y >= twoPos.y &&
-		twoPos.y + twoScale.y >= onePos.y;
-
-	return collisionX && collisionY;
+bool CollisionManager::ReturnIntersect(float min0, float max0, float min1, float max1) {
+	return glm::max(min0, max0) >= glm::min(min1, max1) &&
+		glm::min(min0, max0) <= glm::max(min1, max1);
+	//Fuente : coding math (episode 14)
 }
 
 //bool CheckCircleObjectCollisions(Entity2D* one, BallObject* two) {
