@@ -15,6 +15,8 @@ public:
 	//Shape* testShape;
 	Sprite* testSprite;
 	Sprite* testSprite2;
+	Sprite* spriteSheet;
+	Animation* spriteSheetAnim;
     void init() override;
     void updateGame() override;
     void unload() override;

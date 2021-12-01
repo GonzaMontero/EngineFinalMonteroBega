@@ -9,6 +9,7 @@
 #include "Sprite.h"
 #include "Input.h"
 #include "Collision Manager.h"
+#include "Animation.h"
 
 #include "Global.h"
 
@@ -25,6 +26,7 @@ public:
 	Renderer render;
 	Input input;
 	CollisionManager *collision;
+	Time timer;
 	void CloseWindow();
 	void update();
 	void initEngine();

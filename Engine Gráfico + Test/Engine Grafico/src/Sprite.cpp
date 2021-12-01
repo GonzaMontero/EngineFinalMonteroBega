@@ -25,6 +25,59 @@
 		}
 	}
 
+	void Sprite::setAnimation(Animation* animation)
+	{
+		anim = animation;
+		_previousFrame = std::numeric_limits<unsigned int>::max_digits10;
+	}
+
+	Animation* Sprite::getAnimation()
+	{
+		return anim;
+	}
+
+	void Sprite::setAnimCoords(float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3)
+	{		
+		vertexs[6] = u0;   vertexs[7] = v0;
+		vertexs[14] = u1;  vertexs[15] = v1;
+		vertexs[22] = u2;  vertexs[23] = v2;
+		vertexs[30] = u3;  vertexs[31] = v3;
+	}
+
+	void Sprite::updateAnimation(Time& time)
+	{
+		if (anim != NULL) {
+			anim->update(time);
+			_currentFrame = anim->getCurrentFrame();
+
+			if (_currentFrame != _previousFrame) {
+				setAnimCoords(anim->getAnimation()[_currentFrame].frameCoordinates[0].u, anim->getAnimation()[_currentFrame].frameCoordinates[0].v,
+					anim->getAnimation()[_currentFrame].frameCoordinates[3].u, anim->getAnimation()[_currentFrame].frameCoordinates[3].v,
+					anim->getAnimation()[_currentFrame].frameCoordinates[2].u, anim->getAnimation()[_currentFrame].frameCoordinates[2].v,
+					anim->getAnimation()[_currentFrame].frameCoordinates[1].u, anim->getAnimation()[_currentFrame].frameCoordinates[1].v);
+				_previousFrame = _currentFrame;
+			}
+			setAnimation(anim);
+		}
+
+	}
+
+	void Sprite::blendSprite()
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	void Sprite::unblendSprite()
+	{
+		glDisable(GL_BLEND);
+	}
+
+	void Sprite::SetCurrentAnimationIndex(int currentAnimation)
+	{
+		if (anim != NULL) anim->setCurrentAnimation(currentAnimation);
+	}
+
 	void Sprite::GenerateVAO() {
 		renderer->GenerateVAO(vao);
 	}

@@ -22,15 +22,15 @@ void BaseGame::CloseWindow()
 void BaseGame::update()
 {
 	render.CreateShader();
-
+	timer.Reset();
 	init();
 
 	while (!ventana.WindowShouldClose())  //mantiene el bucle mientras que no se cierre la ventana
 	{	
-		ventana.ClearBackground(); // limpia los buffers
+		ventana.ClearBackground(); // limpia los buffers		
 
 		updateGame();
-
+		timer.Tick();
 		ventana.FinishWindowCycle(); // swapea los buffers y ejecuta los eventos
 	}
 	

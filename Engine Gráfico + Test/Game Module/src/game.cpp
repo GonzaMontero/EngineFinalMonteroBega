@@ -24,10 +24,21 @@ void Game::init() {
 	valorTranslateX = 250;
 	valorTranslateY = 100;
 
+	spriteSheet = new Sprite(true, "res/spriteSheet.png", &render);
+	spriteSheet->Init();
+	spriteSheet->SetScale(50, 50, -1);
+	spriteSheet->SetPosition(250, 100, -1);
+
+	spriteSheetAnim = new Animation();
+	spriteSheetAnim->addFrame(0, 0, 525 / 7, 75, 525, 75, 1.0, 7, 7);
+	
+	spriteSheet->setAnimation(spriteSheetAnim);
+	spriteSheet->SetCurrentAnimationIndex(0);
+	spriteSheet->SetRotation(0, 3.2, 0);
 }
 void Game::updateGame() {
-
 	
+	spriteSheet->updateAnimation(timer);
 	//testShape->SetRotation(0, 0, valorRotacion);
 	//testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
 	//testShape->SetScale(valorEscala, valorEscala, valorEscala);
@@ -38,11 +49,11 @@ void Game::updateGame() {
 	}
 	if (input.GetKey(KeyCode::Q))
 	{
-		valorRotacion += 1;
+		valorRotacion += 0.1;
 	}
 	if (input.GetKey(KeyCode::E))
 	{
-		valorRotacion -= 1;
+		valorRotacion -= 0.1;
 	}
 	if (input.GetKey(KeyCode::D))
 	{
@@ -89,12 +100,13 @@ void Game::updateGame() {
 
 	}
 
-	testSprite2->SetPosition(valorTranslateX, valorTranslateY, -1);
+	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
 	
-
+	cout << valorRotacion << endl;
 
 	testSprite->DrawSprite();
-	testSprite2->DrawSprite();
+	//testSprite2->DrawSprite();
+	spriteSheet->DrawSprite();
 }
 void Game::unload() {
 

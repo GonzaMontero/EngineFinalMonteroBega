@@ -176,6 +176,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animacion.cpp" />
     <ClCompile Include="src\BaseGame.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Collision Manager.cpp" />
@@ -186,15 +187,18 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\Shape.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\TextureImporter.cpp" />
+    <ClCompile Include="src\TimeManager.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\BaseGame.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Collision Manager.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Entity2D.h" />
     <ClInclude Include="src\Export.h" />
+    <ClInclude Include="src\Frame.h" />
     <ClInclude Include="src\Global.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\renderer.h" />
@@ -202,6 +206,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\TextureImporter.h" />
+    <ClInclude Include="src\TimeManager.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
