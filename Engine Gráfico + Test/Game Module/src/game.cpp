@@ -24,7 +24,7 @@ void Game::init() {
 	valorTranslateX = 250;
 	valorTranslateY = 100;
 
-	spriteSheet = new Sprite(true, "res/spriteSheet.png", &render);
+	spriteSheet = new Sprite(false, "res/spriteSheet.png", &render);
 	spriteSheet->Init();
 	spriteSheet->SetScale(50, 50, -1);
 	spriteSheet->SetPosition(250, 100, -1);
@@ -34,7 +34,7 @@ void Game::init() {
 	
 	spriteSheet->setAnimation(spriteSheetAnim);
 	spriteSheet->SetCurrentAnimationIndex(0);
-	spriteSheet->SetRotation(0, 3.2, 0);
+	spriteSheet->SetRotation(0, 0, 0);
 }
 void Game::updateGame() {
 	
@@ -82,19 +82,12 @@ void Game::updateGame() {
 	}
 	if (input.GetKey(KeyCode::R))
 	{
-		cout << "hola" << endl;
-	//	testShape->UpdateColor(RED);
-	}
-	if (input.GetKey(KeyCode::G))
-	{
-	//	testShape->UpdateColor(GREEN);
-	}
-	if (input.GetKey(KeyCode::B))
-	{
-	//	testShape->UpdateColor(BLUE);
+		cout << spriteSheet->position.x << endl;
+		cout << spriteSheet->position.y << endl;
 	}
 
-	if (collision->CheckAABBCollisions(testSprite, testSprite2))
+
+	if (collision->CheckAABBCollisions(testSprite, spriteSheet))
 	{
 		cout << "chocan" << endl;
 
@@ -102,7 +95,7 @@ void Game::updateGame() {
 
 	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
 	
-	cout << valorRotacion << endl;
+	
 
 	testSprite->DrawSprite();
 	//testSprite2->DrawSprite();

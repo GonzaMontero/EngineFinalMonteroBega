@@ -12,8 +12,21 @@ bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two){
 	glm::vec2 twoScale(two->scalation.x, two->scalation.y);
 	glm::vec2 twoPos(two->position.x, two->position.y);
 
-	return ReturnIntersect(onePos.x - (oneScale.x / 2), onePos.x + (oneScale.x / 2), twoPos.x - (twoScale.x / 2), twoPos.x + (twoScale.x / 2)) &&
-		ReturnIntersect(onePos.y - (oneScale.y / 2), onePos.y + (oneScale.y / 2), twoPos.y - (twoScale.y / 2), twoPos.y + (twoScale.y / 2));
+	bool collisionX = one->position.x + one->scalation.x >= two->position.x - (two->scalation.x)&&
+		one->position.x - (one->scalation.x) <= two->position.x + (two->scalation.x);
+	
+	bool collisionY = one->position.y + one->scalation.y >= two->position.y - (two->scalation.y) &&
+		one->position.y - one->scalation.y <= two->position.y + two->scalation.y;
+
+	if (collisionX && collisionY)
+		return true;
+	else
+	{
+		return false;
+	}
+
+	/*return ReturnIntersect(onePos.x - (oneScale.x ), onePos.x + (oneScale.x), twoPos.x - (twoScale.x / 2), twoPos.x + (twoScale.x / 2)) &&
+		ReturnIntersect(onePos.y - (oneScale.y ), onePos.y + (oneScale.y), twoPos.y - (twoScale.y / 2), twoPos.y + (twoScale.y / 2));*/
 }
 
 bool CollisionManager::ReturnIntersect(float min0, float max0, float min1, float max1) {
