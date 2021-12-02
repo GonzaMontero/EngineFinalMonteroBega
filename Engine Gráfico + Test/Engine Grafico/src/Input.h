@@ -6,6 +6,8 @@
 
 #include <unordered_map>
 
+using namespace std;
+
 enum class ENGINE_API KeyCode {
     SPACE = 32,
     APOSTROPHE = 39,
@@ -141,9 +143,9 @@ struct GLFWwindow;
 class ENGINE_API Input {
     GLFWwindow* _window;
     glm::vec3 mousePosition;
-    //KeyCode keycode;
-	//unordered_map<int, bool> lastPressedKeys;
-	//unordered_map<int, bool> actualPressedKeys;
+    KeyCode keycode;
+	unordered_map<KeyCode, bool> actualPressedKeys;
+	unordered_map<KeyCode, bool> lastPressedKeys;
 public:
     Input();
     Input(GLFWwindow* window);
@@ -151,6 +153,8 @@ public:
     void SetWindow(GLFWwindow* window);
 	bool GetKeyDown(KeyCode key);
 	bool GetKeyUp(KeyCode key);
+	void UpdateKeys();
+	void InitKeys();
     bool GetKey(KeyCode key);
     bool GetKeyRelease(KeyCode key);
     bool GetMouseButton(MouseButtons mb);

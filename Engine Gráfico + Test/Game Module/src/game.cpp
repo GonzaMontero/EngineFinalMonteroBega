@@ -86,7 +86,14 @@ void Game::updateGame() {
 		valorTranslateY -= 1;
 	}
 	
-
+	if (input.GetKeyDown(KeyCode::H))
+	{
+		cout << "aprieta" << endl;
+	}
+	if (input.GetKeyUp(KeyCode::H))
+	{
+		cout << "suelta" << endl;
+	}
 
 	if (collision->CheckAABBCollisions(testSprite, spriteSheet))
 	{

@@ -20,6 +20,7 @@ public:
 	glm::vec3 position;
 	glm::vec3 rotation;
 	glm::vec3 scalation;
+	
 
 	Entity(Renderer* _renderer);
 	void SetPosition(float x, float y, float z);
