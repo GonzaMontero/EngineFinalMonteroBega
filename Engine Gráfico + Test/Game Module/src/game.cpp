@@ -29,6 +29,9 @@ void Game::init() {
 	spriteSheet->SetScale(80, 80, -1);
 	spriteSheet->SetPosition(250, 100, -1);
 
+	testSprite->SetTrigger(true);
+
+
 	// 961  832
 
 	playerAnim[0] = new Animation();
@@ -119,7 +122,18 @@ void Game::updateGame() {
 
 	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
 
+	if (collision->CheckAABBCollisions(spriteSheet, testSprite)) {
+		if (testSprite->isTrigger) {
+			cout << "Chocan" << endl;
+			if (testSprite->freeze) {
 
+			}
+			else {
+				cout << spriteSheet->position.y << endl;
+				collision->MoveObject(spriteSheet, testSprite);
+			}
+		}
+	}
 
 	testSprite->DrawSprite();
 	//testSprite2->DrawSprite();

@@ -13,7 +13,7 @@ public:
 	
 	bool CheckAABBCollisions(Entity2D* one, Entity2D* two);
 	sides CheckOverlapCollisions(Entity2D* one, Entity2D* two);
-	void MoveObject(Entity2D* player, Entity2D* object, float speedPlayer);
+	void MoveObject(Entity2D* player, Entity2D* object);
 
 private:
 	bool ReturnIntersect(float min0,float max0,float min1,float max1);

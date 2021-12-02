@@ -1,10 +1,10 @@
 #include "Collision Manager.h"
 
-CollisionManager::CollisionManager(){
+CollisionManager::CollisionManager() {
 
 }
 
-bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two){
+bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two) {
 
 	glm::vec2 oneScale(one->scalation.x, one->scalation.y);
 	glm::vec2 onePos(one->position.x, one->position.y);
@@ -12,21 +12,21 @@ bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two){
 	glm::vec2 twoScale(two->scalation.x, two->scalation.y);
 	glm::vec2 twoPos(two->position.x, two->position.y);
 
-	//bool collisionX = one->position.x + one->scalation.x >= two->position.x - (two->scalation.x)&&
-//	one->position.x - (one->scalation.x) <= two->position.x + (two->scalation.x);
+	bool collisionX = one->position.x + one->scalation.x >= two->position.x - (two->scalation.x) &&
+		one->position.x - (one->scalation.x) <= two->position.x + (two->scalation.x);
 
-//bool collisionY = one->position.y + one->scalation.y >= two->position.y - (two->scalation.y) &&
-//	one->position.y - one->scalation.y <= two->position.y + two->scalation.y;
+	bool collisionY = one->position.y + one->scalation.y >= two->position.y - (two->scalation.y) &&
+		one->position.y - one->scalation.y <= two->position.y + two->scalation.y;
 
-//if (collisionX && collisionY)
-//	return true;
-//else
-//{
-//	return false;
-//}
+	if (collisionX && collisionY)
+		return true;
+	else
+	{
+		return false;
+	}
 
-	return ReturnIntersect(onePos.x - (oneScale.x), onePos.x + (oneScale.x), twoPos.x - (twoScale.x), twoPos.x + (twoScale.x)) &&
-		ReturnIntersect(onePos.y - (oneScale.y), onePos.y + (oneScale.y), twoPos.y - (twoScale.y), twoPos.y + (twoScale.y));
+	//return ReturnIntersect(onePos.x - (oneScale.x), onePos.x + (oneScale.x), twoPos.x - (twoScale.x), twoPos.x + (twoScale.x)) &&
+	//	ReturnIntersect(onePos.y - (oneScale.y), onePos.y + (oneScale.y), twoPos.y - (twoScale.y), twoPos.y + (twoScale.y));
 
 }
 
@@ -36,7 +36,7 @@ bool CollisionManager::ReturnIntersect(float min0, float max0, float min1, float
 	//Fuente : coding math (episode 14)
 }
 
-CollisionManager::sides CollisionManager::CheckOverlapCollisions(Entity2D * one, Entity2D * two)
+CollisionManager::sides CollisionManager::CheckOverlapCollisions(Entity2D* one, Entity2D* two)
 {
 	glm::vec2 oneScale(one->scalation.x, one->scalation.y);
 	glm::vec2 onePos(one->position.x, one->position.y);
@@ -77,27 +77,30 @@ CollisionManager::sides CollisionManager::CheckOverlapCollisions(Entity2D * one,
 	return sides::none;
 }
 
-void CollisionManager::MoveObject(Entity2D* player, Entity2D* object, float speedPlayer)
+void CollisionManager::MoveObject(Entity2D* player, Entity2D* object)
 {
+	float movement = 0.0f;
 	sides cPosition = CheckOverlapCollisions(player, object);
 	switch (cPosition) {
 	case sides::none:
 		break;
 	case sides::top:
-		object->position = glm::vec3(object->position.x, object->position.y + speedPlayer, object->position.z);
-		/*object->SetPosition(object->position.x, object->position.y + speedPlayer, object->position.z);*/
+		//object->position = glm::vec3(object->position.x, object->position.y + speedPlayer, object->position.z);
+		movement = (player->position.y + player->scalation.y) - (object->position.y - object->scalation.y);
+		cout << player->position.y << endl;
+		object->SetPosition(object->position.x, object->position.y - movement, object->position.z);
 		//entity1->setPosition(entity1->transform.position.x, entity1->transform.position.y + speedEntity1, entity1->transform.position.z);
 		break;
 	case sides::right:
-		object->position = glm::vec3(object->position.x + speedPlayer, object->position.y, object->position.z);
+		object->position = glm::vec3(object->position.x + movement, object->position.y, object->position.z);
 		//entity1->setPosition(entity1->transform.position.x + speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
 		break;
 	case sides::bottom:
-		object->position = glm::vec3(object->position.x, object->position.y - speedPlayer, object->position.z);
+		object->position = glm::vec3(object->position.x, object->position.y - movement, object->position.z);
 		//entity1->setPosition(entity1->transform.position.x, entity1->transform.position.y - speedEntity1, entity1->transform.position.z);
 		break;
 	case sides::left:
-		object->position = glm::vec3(object->position.x - speedPlayer, object->position.y, object->position.z);
+		object->position = glm::vec3(object->position.x - movement, object->position.y, object->position.z);
 		//entity1->setPosition(entity1->transform.position.x - speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
 		break;
 	default:
