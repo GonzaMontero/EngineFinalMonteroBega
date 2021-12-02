@@ -21,6 +21,8 @@ public:
 	glm::vec3 rotation;
 	glm::vec3 scalation;
 	
+	bool isTrigger;
+	bool freeze;
 
 	Entity(Renderer* _renderer);
 	void SetPosition(float x, float y, float z);
@@ -31,5 +33,8 @@ public:
 	void SetRotationZ(float z);
 	void Translate(float x, float y, float z);
 	void UpdateModel();
+
+	void SetTrigger(bool collide);
+	void SetFreeze(bool solid);
 };
 #endif // !ENTITY_H
