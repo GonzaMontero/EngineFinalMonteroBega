@@ -14,7 +14,7 @@ void Game::init() {
 	valorEscala = 1;
 	testSprite = new Sprite(true, "res/meme2.png", &render);
 	testSprite->Init();
-	testSprite->SetScale(80, 80, -1);
+	testSprite->SetScale(130, 130, -1);
 	testSprite->SetPosition(300, 300, -1);
 
 	testSprite2 = new Sprite(false, "res/JPGExample.jpg", &render);
@@ -26,16 +26,13 @@ void Game::init() {
 
 	spriteSheet = new Sprite(true, "res/link_sprite_sheet.png", &render);
 	spriteSheet->Init();
-	spriteSheet->SetScale(30, 30, -1);
+	spriteSheet->SetScale(80, 80, -1);
 	spriteSheet->SetPosition(250, 100, -1);
 
-	testSprite->SetFreeze(true);
-	testSprite->SetTrigger(true);
-
 	// 961  832
-	
+
 	playerAnim[0] = new Animation();
-	playerAnim[0]->addFrame(0, 0, 961 / 10, 832/8, 961, 832, 1.0, 10, 10,0);
+	playerAnim[0]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 0);
 
 	playerAnim[1] = new Animation();
 	playerAnim[1]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 1);
@@ -57,62 +54,72 @@ void Game::init() {
 
 	playerAnim[7] = new Animation();
 	playerAnim[7]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 7);
-	
+
 
 	spriteSheet->setAnimation(playerAnim[7]);
 	spriteSheet->SetCurrentAnimationIndex(0);
 	spriteSheet->SetRotation(0, 0, 0);
 }
 void Game::updateGame() {
-	
+
 	spriteSheet->updateAnimation(timer);
 
 	if (input.GetKey(KeyCode::D))
 	{
-		spriteSheet->setAnimation(playerAnim[2]);
 		valorTranslateX += 1;
 	}
 	if (input.GetKey(KeyCode::A))
 	{
-		spriteSheet->setAnimation(playerAnim[0]);
-		valorTranslateX -= 1;		
+		valorTranslateX -= 1;
 	}
 
 	if (input.GetKey(KeyCode::W))
 	{
-		spriteSheet->setAnimation(playerAnim[1]);
 		valorTranslateY += 1;
 	}
 	if (input.GetKey(KeyCode::S))
 	{
-		spriteSheet->setAnimation(playerAnim[3]);
 		valorTranslateY -= 1;
 	}
-	
-	if (input.GetKeyDown(KeyCode::H))
+
+	if (input.GetKeyDown(KeyCode::S))
 	{
-		cout << "aprieta" << endl;
+		spriteSheet->setAnimation(playerAnim[3]);
 	}
-	if (input.GetKeyUp(KeyCode::H))
+	if (input.GetKeyDown(KeyCode::W))
 	{
-		cout << "suelta" << endl;
+		spriteSheet->setAnimation(playerAnim[1]);
+	}
+	if (input.GetKeyDown(KeyCode::A))
+	{
+		spriteSheet->setAnimation(playerAnim[0]);
+	}
+	if (input.GetKeyDown(KeyCode::D))
+	{
+		spriteSheet->setAnimation(playerAnim[2]);
 	}
 
-	if (collision->CheckAABBCollisions(spriteSheet, testSprite)) {
-		if (testSprite->isTrigger) {
-			cout << "Chocan" << endl;
-			if (testSprite->freeze) {
-
-			}
-			else {
-				collision->MoveObject(spriteSheet, testSprite, valorTranslateX);
-			}
-		}
+	if (input.GetKeyUp(KeyCode::S))
+	{
+		spriteSheet->setAnimation(playerAnim[7]);
 	}
+	if (input.GetKeyUp(KeyCode::W))
+	{
+		spriteSheet->setAnimation(playerAnim[5]);
+	}
+	if (input.GetKeyUp(KeyCode::A))
+	{
+		spriteSheet->setAnimation(playerAnim[4]);
+	}
+	if (input.GetKeyUp(KeyCode::D))
+	{
+		spriteSheet->setAnimation(playerAnim[6]);
+	}
+
 
 	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
-	
-	
+
+
 
 	testSprite->DrawSprite();
 	//testSprite2->DrawSprite();
