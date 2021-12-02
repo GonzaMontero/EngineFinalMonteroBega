@@ -22,9 +22,9 @@ void Entity::SetPosition(float x, float y, float z) { //Set position funciona to
 }
 
 void Entity::SetScale(float x, float y, float z) { //Set scale aumenta o disminuye el tamaño del sprite (desconozco los límites exactos, ya que sirve para escalar
-	scalation.x = x;
-	scalation.y = y;
-	scalation.z = z;
+	scalation.x = x/2;
+	scalation.y = y/2;
+	scalation.z = z/2;
 
 	scale = glm::scale(glm::mat4(1.0f), scalation); //Actualiza la matriz de escala con los datos nuevos
 	UpdateModel(); //Modifica la TRS matrix (translate * rotation * scale)
