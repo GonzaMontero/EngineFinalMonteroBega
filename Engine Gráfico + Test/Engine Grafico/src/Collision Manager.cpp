@@ -25,8 +25,6 @@ bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two){
 		return false;
 	}
 
-	/*return ReturnIntersect(onePos.x - (oneScale.x ), onePos.x + (oneScale.x), twoPos.x - (twoScale.x / 2), twoPos.x + (twoScale.x / 2)) &&
-		ReturnIntersect(onePos.y - (oneScale.y ), onePos.y + (oneScale.y), twoPos.y - (twoScale.y / 2), twoPos.y + (twoScale.y / 2));*/
 }
 
 bool CollisionManager::ReturnIntersect(float min0, float max0, float min1, float max1) {

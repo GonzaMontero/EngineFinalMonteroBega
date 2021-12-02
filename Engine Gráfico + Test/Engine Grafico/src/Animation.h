@@ -23,6 +23,7 @@ public:
 	~Animation();
 	void update(Time& time);
 	void addFrame(float frameX, float frameY, int spriteWidth, int spriteHeigth, int textureWidth, int textureHeigth, float timeToAnim, int totalFrames, int countFilas);
+	void addFrame(float frameX, float frameY, int spriteWidth, int spriteHeigth, int textureWidth, int textureHeigth, float timeToAnim, int totalFrames, int counColumnas, int countFila);
 	int getCurrentFrame();
 	vector<Frame>& getAnimation();
 	void setCurrentAnimation(int currentAnimation);

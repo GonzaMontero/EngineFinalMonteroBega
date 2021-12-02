@@ -4,6 +4,8 @@
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
+#include <unordered_map>
+
 enum class ENGINE_API KeyCode {
     SPACE = 32,
     APOSTROPHE = 39,
@@ -132,19 +134,25 @@ enum class ENGINE_API MouseButtons {
     RIGHT_MOUSE_BUTTON = 1
 };
 
+
+
 struct GLFWwindow;
 
 class ENGINE_API Input {
     GLFWwindow* _window;
     glm::vec3 mousePosition;
     //KeyCode keycode;
+	//unordered_map<int, bool> lastPressedKeys;
+	//unordered_map<int, bool> actualPressedKeys;
 public:
     Input();
     Input(GLFWwindow* window);
     ~Input();
     void SetWindow(GLFWwindow* window);
+	bool GetKeyDown(KeyCode key);
+	bool GetKeyUp(KeyCode key);
     bool GetKey(KeyCode key);
-    bool GetKeyUp(KeyCode key);
+    bool GetKeyRelease(KeyCode key);
     bool GetMouseButton(MouseButtons mb);
     bool GetMouseButtonUp(MouseButtons mb);
     glm::vec2 GetMousePosition2D();

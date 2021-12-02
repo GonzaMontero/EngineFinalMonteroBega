@@ -24,67 +24,68 @@ void Game::init() {
 	valorTranslateX = 250;
 	valorTranslateY = 100;
 
-	spriteSheet = new Sprite(false, "res/spriteSheet.png", &render);
+	spriteSheet = new Sprite(true, "res/link_sprite_sheet.png", &render);
 	spriteSheet->Init();
-	spriteSheet->SetScale(50, 50, -1);
+	spriteSheet->SetScale(30, 30, -1);
 	spriteSheet->SetPosition(250, 100, -1);
 
-	spriteSheetAnim = new Animation();
-	spriteSheetAnim->addFrame(0, 0, 525 / 7, 75, 525, 75, 1.0, 7, 7);
+	// 961  832
 	
-	spriteSheet->setAnimation(spriteSheetAnim);
+	playerAnim[0] = new Animation();
+	playerAnim[0]->addFrame(0, 0, 961 / 10, 832/8, 961, 832, 1.0, 10, 10,0);
+
+	playerAnim[1] = new Animation();
+	playerAnim[1]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 1);
+
+	playerAnim[2] = new Animation();
+	playerAnim[2]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 2);
+
+	playerAnim[3] = new Animation();
+	playerAnim[3]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 3);
+
+	playerAnim[4] = new Animation();
+	playerAnim[4]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 4);
+
+	playerAnim[5] = new Animation();
+	playerAnim[5]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 1, 1, 5);
+
+	playerAnim[6] = new Animation();
+	playerAnim[6]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 6);
+
+	playerAnim[7] = new Animation();
+	playerAnim[7]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 7);
+	
+
+	spriteSheet->setAnimation(playerAnim[7]);
 	spriteSheet->SetCurrentAnimationIndex(0);
 	spriteSheet->SetRotation(0, 0, 0);
 }
 void Game::updateGame() {
 	
 	spriteSheet->updateAnimation(timer);
-	//testShape->SetRotation(0, 0, valorRotacion);
-	//testShape->SetPosition(valorTranslateX, valorTranslateY, 1);
-	//testShape->SetScale(valorEscala, valorEscala, valorEscala);
-    //testShape->Draw();
-	if(input.GetKey(KeyCode::M))
-	{
-	//	testShape->EpilepsyMode();
-	}
-	if (input.GetKey(KeyCode::Q))
-	{
-		valorRotacion += 0.1;
-	}
-	if (input.GetKey(KeyCode::E))
-	{
-		valorRotacion -= 0.1;
-	}
+
 	if (input.GetKey(KeyCode::D))
 	{
+		spriteSheet->setAnimation(playerAnim[2]);
 		valorTranslateX += 1;
 	}
 	if (input.GetKey(KeyCode::A))
 	{
-		valorTranslateX -= 1;
+		spriteSheet->setAnimation(playerAnim[0]);
+		valorTranslateX -= 1;		
 	}
 
 	if (input.GetKey(KeyCode::W))
 	{
+		spriteSheet->setAnimation(playerAnim[1]);
 		valorTranslateY += 1;
 	}
 	if (input.GetKey(KeyCode::S))
 	{
+		spriteSheet->setAnimation(playerAnim[3]);
 		valorTranslateY -= 1;
 	}
-	if (input.GetKey(KeyCode::Z))
-	{
-		valorEscala -= 1;
-	}
-	if (input.GetKey(KeyCode::X))
-	{
-		valorEscala += 1;
-	}
-	if (input.GetKey(KeyCode::R))
-	{
-		cout << spriteSheet->position.x << endl;
-		cout << spriteSheet->position.y << endl;
-	}
+	
 
 
 	if (collision->CheckAABBCollisions(testSprite, spriteSheet))

@@ -21,9 +21,30 @@ void Input::SetWindow(GLFWwindow* window) {
 
 bool Input::GetKey(KeyCode key) {
     return glfwGetKey(_window, static_cast<int>(key)) == GLFW_PRESS;
+	
+}
+
+bool Input::GetKeyDown(KeyCode key) {
+	if (GetKey(key))
+	{
+		for (size_t i = 0; i < 2; i++)
+		{
+			/*if (lastPressedKeys[i].pressed == false)
+			{
+				lastPressedKeys[i].key = key;
+				lastPressedKeys[i].pressed = true;
+			}*/
+		}
+	}
+	return false;
 }
 
 bool Input::GetKeyUp(KeyCode key) {
+
+	return glfwGetKey(_window, static_cast<int>(key)) == GLFW_RELEASE;
+}
+
+bool Input::GetKeyRelease(KeyCode key) {
     return glfwGetKey(_window, static_cast<int>(key)) == GLFW_RELEASE;
 }
 

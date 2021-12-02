@@ -16,7 +16,7 @@ public:
 	Sprite* testSprite;
 	Sprite* testSprite2;
 	Sprite* spriteSheet;
-	Animation* spriteSheetAnim;
+	Animation* playerAnim[8];
     void init() override;
     void updateGame() override;
     void unload() override;
