@@ -86,3 +86,13 @@ void Entity::UpdateModel()
 {
 	model = translate * rotateX * rotateY * rotateZ * scale;
 }
+
+void Entity::SetTrigger(bool trigger)
+{
+	isTrigger = trigger;
+}
+
+void Entity::SetFreeze(bool frozen)
+{
+	freeze = frozen;
+}

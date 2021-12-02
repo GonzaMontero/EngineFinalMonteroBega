@@ -29,6 +29,9 @@ void Game::init() {
 	spriteSheet->SetScale(30, 30, -1);
 	spriteSheet->SetPosition(250, 100, -1);
 
+	testSprite->SetFreeze(true);
+	testSprite->SetTrigger(true);
+
 	// 961  832
 	
 	playerAnim[0] = new Animation();
@@ -95,10 +98,16 @@ void Game::updateGame() {
 		cout << "suelta" << endl;
 	}
 
-	if (collision->CheckAABBCollisions(testSprite, spriteSheet))
-	{
-		cout << "chocan" << endl;
+	if (collision->CheckAABBCollisions(spriteSheet, testSprite)) {
+		if (testSprite->isTrigger) {
+			cout << "Chocan" << endl;
+			if (testSprite->freeze) {
 
+			}
+			else {
+				collision->MoveObject(spriteSheet, testSprite, valorTranslateX);
+			}
+		}
 	}
 
 	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
