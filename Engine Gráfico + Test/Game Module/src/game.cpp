@@ -30,9 +30,9 @@ void Game::init() {
 	spriteSheet->SetPosition(250, 100, -1);
 
 	// 961  832
-	
+
 	playerAnim[0] = new Animation();
-	playerAnim[0]->addFrame(0, 0, 961 / 10, 832/8, 961, 832, 1.0, 10, 10,0);
+	playerAnim[0]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 0);
 
 	playerAnim[1] = new Animation();
 	playerAnim[1]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 1);
@@ -54,14 +54,14 @@ void Game::init() {
 
 	playerAnim[7] = new Animation();
 	playerAnim[7]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 7);
-	
+
 
 	spriteSheet->setAnimation(playerAnim[7]);
 	spriteSheet->SetCurrentAnimationIndex(0);
 	spriteSheet->SetRotation(0, 0, 0);
 }
 void Game::updateGame() {
-	
+
 	spriteSheet->updateAnimation(timer);
 
 	if (input.GetKey(KeyCode::D))
@@ -70,7 +70,7 @@ void Game::updateGame() {
 	}
 	if (input.GetKey(KeyCode::A))
 	{
-		valorTranslateX -= 1;		
+		valorTranslateX -= 1;
 	}
 
 	if (input.GetKey(KeyCode::W))
@@ -81,7 +81,7 @@ void Game::updateGame() {
 	{
 		valorTranslateY -= 1;
 	}
-	
+
 	if (input.GetKeyDown(KeyCode::S))
 	{
 		spriteSheet->setAnimation(playerAnim[3]);
@@ -115,11 +115,11 @@ void Game::updateGame() {
 	{
 		spriteSheet->setAnimation(playerAnim[6]);
 	}
-	
+
 
 	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
-	
-	
+
+
 
 	testSprite->DrawSprite();
 	//testSprite2->DrawSprite();
