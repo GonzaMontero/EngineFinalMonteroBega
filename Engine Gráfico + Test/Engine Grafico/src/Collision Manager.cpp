@@ -21,6 +21,9 @@ bool CollisionManager::CheckAABBCollisions(Entity2D* one, Entity2D* two, float p
 	if (collisionX && collisionY)
 	{
 		if (two->freeze) {
+			MovePlayer(one, two, playerSpeed);
+		}
+		else {
 			MoveObject(one, two, playerSpeed);
 		}
 		return true;
@@ -82,7 +85,7 @@ CollisionManager::sides CollisionManager::CheckOverlapCollisions(Entity2D* one, 
 	return sides::none;
 }
 
-void CollisionManager::MoveObject(Entity2D* player, Entity2D* object, float playerSpeed)
+void CollisionManager::MovePlayer(Entity2D* player, Entity2D* object, float playerSpeed)
 {
 	sides cPosition = CheckOverlapCollisions(player, object);
 	switch (cPosition) {
@@ -99,6 +102,29 @@ void CollisionManager::MoveObject(Entity2D* player, Entity2D* object, float play
 		break;
 	case sides::left:
 		player->SetPosition(player->position.x - playerSpeed, player->position.y, player->position.z);
+		break;
+	default:
+		break;
+	}
+}
+
+void CollisionManager::MoveObject(Entity2D* player, Entity2D* object, float playerSpeed)
+{
+	sides cPosition = CheckOverlapCollisions(player, object);
+	switch (cPosition) {
+	case sides::none:
+		break;
+	case sides::top:
+		object->SetPosition(object->position.x, object->position.y - playerSpeed, object->position.z);
+		break;
+	case sides::right:
+		object->SetPosition(object->position.x - playerSpeed, object->position.y, object->position.z);
+		break;
+	case sides::bottom:
+		object->SetPosition(object->position.x, object->position.y + playerSpeed, object->position.z);
+		break;
+	case sides::left:
+		object->SetPosition(object->position.x + playerSpeed, object->position.y, object->position.z);
 		break;
 	default:
 		break;

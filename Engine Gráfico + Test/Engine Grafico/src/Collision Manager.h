@@ -13,6 +13,7 @@ public:
 	
 	bool CheckAABBCollisions(Entity2D* one, Entity2D* two, float playerSpeed);
 	sides CheckOverlapCollisions(Entity2D* one, Entity2D* two);
+	void MovePlayer(Entity2D* player, Entity2D* object, float playerSpeed);
 	void MoveObject(Entity2D* player, Entity2D* object, float playerSpeed);
 
 private:

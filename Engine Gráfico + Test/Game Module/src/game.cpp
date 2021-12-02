@@ -10,23 +10,26 @@ void Game::init() {
 	//testShape->SetPosition(0, 0 ,0);
 	valorRotacion = 0;
 	valorEscala = 1;
+
 	testSprite = new Sprite(true, "res/meme2.png", &render);
 	testSprite->Init();
 	testSprite->SetScale(130, 130, -1);
 	testSprite->SetPosition(300, 300, -1);
+	testSprite->SetTrigger(true);
+	testSprite->SetFreeze(false);
 
 	testSprite2 = new Sprite(false, "res/JPGExample.jpg", &render);
 	testSprite2->Init();
 	testSprite2->SetScale(50, 50, -1);
 	testSprite2->SetPosition(250, 100, -1);
+	testSprite2->SetTrigger(true);
+	testSprite2->SetFreeze(true);
 
 	spriteSheet = new Sprite(true, "res/link_sprite_sheet.png", &render);
 	spriteSheet->Init();
 	spriteSheet->SetScale(80, 80, -1);
-	spriteSheet->SetPosition(250, 100, -1);
+	spriteSheet->SetPosition(50, 100, -1);
 
-	testSprite->SetTrigger(true);
-	testSprite->SetFreeze(true);
 
 	playerSpeed = 100;
 
@@ -115,14 +118,13 @@ void Game::updateGame() {
 	if (input.GetKeyUp(KeyCode::D))
 	{
 		spriteSheet->setAnimation(playerAnim[6]);
-	}
-	
+	}	
 
 	collision->CheckAABBCollisions(spriteSheet, testSprite, playerSpeed * timer.GetDeltaTime());
-
+	collision->CheckAABBCollisions(spriteSheet, testSprite2, playerSpeed * timer.GetDeltaTime());
 
 	testSprite->DrawSprite();
-	//testSprite2->DrawSprite();
+	testSprite2->DrawSprite();
 	spriteSheet->DrawSprite();
 }
 void Game::unload() {
