@@ -125,13 +125,6 @@ void Game::updateGame() {
 	if (collision->CheckAABBCollisions(spriteSheet, testSprite)) {
 		if (testSprite->isTrigger) {
 			cout << "Chocan" << endl;
-			if (testSprite->freeze) {
-
-			}
-			else {
-				cout << spriteSheet->position.y << endl;
-				collision->MoveObject(spriteSheet, testSprite);
-			}
 		}
 	}
 
