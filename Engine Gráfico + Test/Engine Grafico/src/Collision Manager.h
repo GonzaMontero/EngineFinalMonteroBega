@@ -11,9 +11,9 @@ public:
 
 	CollisionManager();
 	
-	bool CheckAABBCollisions(Entity2D* one, Entity2D* two);
+	bool CheckAABBCollisions(Entity2D* one, Entity2D* two, float playerSpeed);
 	sides CheckOverlapCollisions(Entity2D* one, Entity2D* two);
-	void MoveObject(Entity2D* player, Entity2D* object);
+	void MoveObject(Entity2D* player, Entity2D* object, float playerSpeed);
 
 private:
 	bool ReturnIntersect(float min0,float max0,float min1,float max1);

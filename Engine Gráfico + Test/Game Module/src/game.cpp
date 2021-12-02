@@ -9,8 +9,6 @@ void Game::init() {
 	//testShape->Init(WHITE);
 	//testShape->SetPosition(0, 0 ,0);
 	valorRotacion = 0;
-	valorTranslateX = 0;
-	valorTranslateY = 0;
 	valorEscala = 1;
 	testSprite = new Sprite(true, "res/meme2.png", &render);
 	testSprite->Init();
@@ -21,8 +19,6 @@ void Game::init() {
 	testSprite2->Init();
 	testSprite2->SetScale(50, 50, -1);
 	testSprite2->SetPosition(250, 100, -1);
-	valorTranslateX = 250;
-	valorTranslateY = 100;
 
 	spriteSheet = new Sprite(true, "res/link_sprite_sheet.png", &render);
 	spriteSheet->Init();
@@ -30,7 +26,9 @@ void Game::init() {
 	spriteSheet->SetPosition(250, 100, -1);
 
 	testSprite->SetTrigger(true);
+	testSprite->SetFreeze(true);
 
+	playerSpeed = 100;
 
 	// 961  832
 
@@ -69,20 +67,20 @@ void Game::updateGame() {
 
 	if (input.GetKey(KeyCode::D))
 	{
-		valorTranslateX += 1;
+		spriteSheet->SetPosition(spriteSheet->position.x + (playerSpeed * timer.GetDeltaTime()), spriteSheet->position.y, -1);
 	}
 	if (input.GetKey(KeyCode::A))
 	{
-		valorTranslateX -= 1;
+		spriteSheet->SetPosition(spriteSheet->position.x - (playerSpeed*timer.GetDeltaTime()), spriteSheet->position.y, -1);
 	}
 
 	if (input.GetKey(KeyCode::W))
 	{
-		valorTranslateY += 1;
+		spriteSheet->SetPosition(spriteSheet->position.x, spriteSheet->position.y + (playerSpeed * timer.GetDeltaTime()), -1);
 	}
 	if (input.GetKey(KeyCode::S))
 	{
-		valorTranslateY -= 1;
+		spriteSheet->SetPosition(spriteSheet->position.x, spriteSheet->position.y - (playerSpeed * timer.GetDeltaTime()), -1);
 	}
 
 	if (input.GetKeyDown(KeyCode::S))
@@ -118,20 +116,14 @@ void Game::updateGame() {
 	{
 		spriteSheet->setAnimation(playerAnim[6]);
 	}
+	
 
+	collision->CheckAABBCollisions(spriteSheet, testSprite, playerSpeed * timer.GetDeltaTime());
 
-	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
-
-	if (collision->CheckAABBCollisions(spriteSheet, testSprite)) {
-		if (testSprite->isTrigger) {
-			cout << "Chocan" << endl;
-		}
-	}
 
 	testSprite->DrawSprite();
 	//testSprite2->DrawSprite();
 	spriteSheet->DrawSprite();
 }
 void Game::unload() {
-
 }

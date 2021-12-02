@@ -9,8 +9,7 @@ public:
     ~Game();
     float valorRotacion;
 	float valorEscala;
-	float valorTranslateX;
-	float valorTranslateY;
+	float playerSpeed;
 	Color color;
 	//Shape* testShape;
 	Sprite* testSprite;
