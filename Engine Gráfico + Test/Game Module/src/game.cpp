@@ -14,7 +14,7 @@ void Game::init() {
 	valorEscala = 1;
 	testSprite = new Sprite(true, "res/meme2.png", &render);
 	testSprite->Init();
-	testSprite->SetScale(80, 80, -1);
+	testSprite->SetScale(130, 130, -1);
 	testSprite->SetPosition(300, 300, -1);
 
 	testSprite2 = new Sprite(false, "res/JPGExample.jpg", &render);
@@ -26,7 +26,7 @@ void Game::init() {
 
 	spriteSheet = new Sprite(true, "res/link_sprite_sheet.png", &render);
 	spriteSheet->Init();
-	spriteSheet->SetScale(30, 30, -1);
+	spriteSheet->SetScale(80, 80, -1);
 	spriteSheet->SetPosition(250, 100, -1);
 
 	// 961  832
@@ -66,40 +66,56 @@ void Game::updateGame() {
 
 	if (input.GetKey(KeyCode::D))
 	{
-		spriteSheet->setAnimation(playerAnim[2]);
 		valorTranslateX += 1;
 	}
 	if (input.GetKey(KeyCode::A))
 	{
-		spriteSheet->setAnimation(playerAnim[0]);
 		valorTranslateX -= 1;		
 	}
 
 	if (input.GetKey(KeyCode::W))
 	{
-		spriteSheet->setAnimation(playerAnim[1]);
 		valorTranslateY += 1;
 	}
 	if (input.GetKey(KeyCode::S))
 	{
-		spriteSheet->setAnimation(playerAnim[3]);
 		valorTranslateY -= 1;
 	}
 	
-	if (input.GetKeyDown(KeyCode::H))
+	if (input.GetKeyDown(KeyCode::S))
 	{
-		cout << "aprieta" << endl;
+		spriteSheet->setAnimation(playerAnim[3]);
 	}
-	if (input.GetKeyUp(KeyCode::H))
+	if (input.GetKeyDown(KeyCode::W))
 	{
-		cout << "suelta" << endl;
+		spriteSheet->setAnimation(playerAnim[1]);
+	}
+	if (input.GetKeyDown(KeyCode::A))
+	{
+		spriteSheet->setAnimation(playerAnim[0]);
+	}
+	if (input.GetKeyDown(KeyCode::D))
+	{
+		spriteSheet->setAnimation(playerAnim[2]);
 	}
 
-	if (collision->CheckAABBCollisions(testSprite, spriteSheet))
+	if (input.GetKeyUp(KeyCode::S))
 	{
-		cout << "chocan" << endl;
-
+		spriteSheet->setAnimation(playerAnim[7]);
 	}
+	if (input.GetKeyUp(KeyCode::W))
+	{
+		spriteSheet->setAnimation(playerAnim[5]);
+	}
+	if (input.GetKeyUp(KeyCode::A))
+	{
+		spriteSheet->setAnimation(playerAnim[4]);
+	}
+	if (input.GetKeyUp(KeyCode::D))
+	{
+		spriteSheet->setAnimation(playerAnim[6]);
+	}
+	
 
 	spriteSheet->SetPosition(valorTranslateX, valorTranslateY, -1);
 	
