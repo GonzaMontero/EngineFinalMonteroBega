@@ -31,7 +31,7 @@ public:
 	Renderer();
 	~Renderer();
 	Camera camera;
-	void Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix);
+	void Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix, int shapeType);
 	void CreateShader();
 	void initRender(unsigned int vao, unsigned int vbo, unsigned int ibo);
 	unsigned int shaderId;

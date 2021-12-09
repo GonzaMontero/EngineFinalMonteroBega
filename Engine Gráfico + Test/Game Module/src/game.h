@@ -11,10 +11,10 @@ public:
 	float valorEscala;
 	float playerSpeed;
 	Color color;
-	//Shape* testShape;
-	Sprite* testSprite;
-	Sprite* testSprite2;
-	Sprite* spriteSheet;
+	Shape* testShape;
+	//Sprite* testSprite;
+	//Sprite* testSprite2;
+	//Sprite* spriteSheet;
 	Animation* playerAnim[8];
     void init() override;
     void updateGame() override;

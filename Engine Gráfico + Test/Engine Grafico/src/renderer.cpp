@@ -72,8 +72,8 @@ Renderer::~Renderer() {
 	//glDeleteProgram(shader);
 }
 
-void Renderer::Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix )
-{	
+void Renderer::Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix , int shapeType )
+{		
 	unsigned int model = glGetUniformLocation(shaderId,"trsmatrix");
 	unsigned int projInd = glGetUniformLocation(shaderId, "proj");
 	unsigned int viewInd = glGetUniformLocation(shaderId, "view");
@@ -87,11 +87,22 @@ void Renderer::Draw(unsigned int *indices, float *vertices, glm::mat4 _trsmatrix
 	glUniformMatrix4fv(projInd, 1, GL_FALSE, glm::value_ptr(camera.proj));
 	glUniformMatrix4fv(viewInd, 1, GL_FALSE, glm::value_ptr(camera.view));
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * 18, vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * 3, indices, GL_STATIC_DRAW); 
+	switch (shapeType)
+	{
+	case 0:
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * 18, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * 3, indices, GL_STATIC_DRAW);
+		break;
+	case 1:
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * 24, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * 6, indices, GL_STATIC_DRAW);
+		break;
+	default:
+		break;
+	}
 	// le dice al buffer, donde guardar, que tanto espacio tiene disponible, que tiene que guardar y para que se va a usar 
 	
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);  //  hace el render de las primitivas en base a los del array
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);  //  hace el render de las primitivas en base a los del array
 	//se usa si no tenes un index buffer, Dibuja segun un buffer, los parametros son: tipo de primitiva queres dibujar, cabtudad de elementos a ser renderizados, tipo de valores en el indice, desde donde comienza a leer la data
 }
 
