@@ -1,11 +1,12 @@
 #include "game.h"
 Game::Game() {
+	map = new Tilemap();
 	testShape = new Shape(&render);
-
 }
 Game::~Game() {
 }
 void Game::init() {
+	map->LoadTileMap("../res/Tilemaps/TilesPokemonTest.tmx");
 	testShape->Init(RED, QUAD);
 	testShape->SetScale(50, 50, 1);
 	testShape->SetPosition(120, 110 ,0);

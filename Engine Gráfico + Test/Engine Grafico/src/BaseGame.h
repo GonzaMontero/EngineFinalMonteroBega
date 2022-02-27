@@ -10,6 +10,7 @@
 #include "Input.h"
 #include "Collision Manager.h"
 #include "Animation.h"
+#include "Tilemap.h"
 
 #include "Global.h"
 
@@ -27,6 +28,7 @@ public:
 	Input input;
 	CollisionManager *collision;
 	Time timer;
+	Tilemap *map;
 	void CloseWindow();
 	void update();
 	void initEngine();
