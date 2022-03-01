@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "Sprite.h"
 #include "TextureImporter.h"
+#include "renderer.h"
 //#include ""
 
 #include <vector>
@@ -12,6 +13,7 @@ private:
 	TextureImporter *tex;
 	vector<Tile*> tiles;
 	vector<vector<vector<int>>> grid;
+	Renderer* rend;
 	int tilemapWidth = 5;
 	int tilemapHeight = 5;
 	int tileWidth = 1;

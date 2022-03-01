@@ -3,11 +3,13 @@
 
 #include "Sprite.h"
 
-class ENGINE_API Tile :Sprite {
+class ENGINE_API Tile :public Sprite {
 private:
 	int id;
 	bool block;
 public:
+	Tile();
+	~Tile();
 	void SetID(int id) { this->id = id; }
 	int GetID() { return id; }
 	void SetBlock(bool block) { this->block = block; }

@@ -6,7 +6,6 @@
 	Sprite::Sprite(bool transparency, Renderer* _renderer) : Entity2D(_renderer) {
 		_transparency = transparency;
 		_texImporter = new TextureImporter();
-
 	}
 
 	Sprite::Sprite(bool transparency, const char* path, Renderer* _renderer) : Entity2D(_renderer) {
@@ -16,6 +15,12 @@
 
 		cout << "width: " << _width << endl;
 		cout << "height: " << _height << endl;
+	}
+
+	Sprite::Sprite(): Entity2D()
+	{
+		_transparency = false;
+		renderer = nullptr;
 	}
 
 	Sprite::~Sprite() {

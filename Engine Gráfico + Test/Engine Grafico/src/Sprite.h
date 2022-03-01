@@ -66,6 +66,7 @@ private:
 public:
 	Sprite(bool transparency, Renderer* renderer);
 	Sprite(bool transparency, const char* path, Renderer* renderer);
+	Sprite();
 	~Sprite();
 
 	

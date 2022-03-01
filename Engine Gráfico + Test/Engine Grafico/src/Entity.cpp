@@ -12,6 +12,18 @@ Entity::Entity(Renderer* _renderer)
 	model = glm::mat4(1.0);
 }
 
+Entity::Entity()
+{
+	renderer = nullptr;
+
+	translate = glm::mat4(1.0);
+	scale = glm::mat4(1.0);
+	rotateX = glm::mat4(1.0);
+	rotateY = glm::mat4(1.0);
+	rotateZ = glm::mat4(1.0);
+	model = glm::mat4(1.0);
+}
+
 void Entity::SetPosition(float x, float y, float z) { //Set position funciona tomando las coordenadas X,Y,Z (que van de -1 a 1) y te transporta el shape
 	position.x = x;
 	position.y = y;
