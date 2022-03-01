@@ -72,6 +72,9 @@
     <ClCompile Include="src\Libraries\xmltest.cpp">
       <Filter>Libraries</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BaseGame.h">

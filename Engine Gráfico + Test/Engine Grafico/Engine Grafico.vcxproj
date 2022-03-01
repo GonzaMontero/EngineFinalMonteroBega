@@ -189,6 +189,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\Shape.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\TextureImporter.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Tilemap.cpp" />
     <ClCompile Include="src\TimeManager.cpp" />
     <ClCompile Include="src\Window.cpp" />
