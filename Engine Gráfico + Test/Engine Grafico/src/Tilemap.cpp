@@ -44,20 +44,20 @@ void Tilemap::LoadTileMap(const char* filepath)
 		return;
 	}
 	int layers = 0;
-	vector<XMLElement>layerElement;
+	vector<XMLElement*>layerElement;
 	for (XMLElement* child = mapElement->FirstChildElement(); child; child = child->NextSiblingElement()) {
 		string name = child->Name();
 		string layer = "layer";
 		if (child != nullptr && name == layer) {
 			layers++;
-			layerElement.push_back(*child);
+			layerElement.push_back(child);
 		}
 	}
 	cout << layers << endl;
 	grid.resize(layers);
 	for (int i = 0; i < grid.size(); i++)
 	{
-		XMLText* dataElement = layerElement[i].FirstChildElement("data")->FirstChild()->ToText();
+		XMLText* dataElement = layerElement[i]->FirstChildElement("data")->FirstChild()->ToText();
 		if (dataElement == nullptr) {
 			cout << "Error loading tilemap :(" << endl;
 			return;
@@ -84,9 +84,9 @@ void Tilemap::LoadTileMap(const char* filepath)
 	}	
 }
 
-void Tilemap::LoadTile()
+void Tilemap::LoadTile(const char* filepath)
 {
-	tex->SetPath("../res/Tilemaps/TILES.png"); //Aca va el tileset
+	tex->SetPath(filepath); //Aca va el tileset
 	tex->LoadImage(tileWidth, tileHeight, true);
 	int xPos = 50;
 	int yPos = 700;
@@ -102,7 +102,7 @@ void Tilemap::LoadTile()
 				newTile->SetBlock(false);
 				newTile->SetID(grid[l][y][x]);	
 				newTile->SetRenderer(rend);
-				newTile->SetPath("../res/Tilemaps/TILES.png");
+				newTile->SetPath(filepath);
 				newTile->Init();
 				newTile->Translate(xPos, yPos, 1 - 0.5f);
 				newTile->SetScale(tileWidth, tileHeight,1);
@@ -115,8 +115,7 @@ void Tilemap::LoadTile()
 				}
 				else {
 					//newTile->SetPropertiesPath("res/tilemap/Ground.tsx"); IGNORAR
-					//newTile->SetUVs(GetTileFromID(newTile->GetID() - 1));
-					//tiles.push_back(newTile);
+					//newTile->SetUVs(GetTileFromID(newTile->GetID() - 1));					
 					tiles.push_back(newTile);
 					xPos += newTile->scalation.x + tileWidth;
 				}

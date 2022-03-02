@@ -7,6 +7,7 @@ Game::~Game() {
 }
 void Game::init() {
 	map->LoadTileMap("../res/Tilemaps/TilesPokemonTest.tmx");
+	map->LoadTile("../res/Tilemaps/TILES.png");
 	testShape->Init(RED, QUAD);
 	testShape->SetScale(50, 50, 1);
 	testShape->SetPosition(120, 110 ,0);
@@ -129,6 +130,7 @@ void Game::updateGame() {
 	//testSprite2->DrawSprite();
 	//spriteSheet->DrawSprite();
 	testShape->Draw(QUAD);
+	map->DrawTileMap();
 }
 void Game::unload() {
 }

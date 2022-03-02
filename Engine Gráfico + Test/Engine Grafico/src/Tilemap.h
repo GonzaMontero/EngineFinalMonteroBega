@@ -22,7 +22,7 @@ public:
 	Tilemap();
 	~Tilemap();
 	void LoadTileMap(const char* filepath);
-	void LoadTile();
+	void LoadTile(const char* filepath);
 	void DrawTileMap();
 };
 
