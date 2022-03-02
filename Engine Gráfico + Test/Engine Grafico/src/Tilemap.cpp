@@ -98,10 +98,11 @@ void Tilemap::LoadTile(const char* filepath)
 				if (grid[l][y][x] == 21) {
 					std::cout << grid[l][y][x] << std::endl;
 				}
-				Tile* newTile = new Tile();
+				Tile* newTile = new Tile(true,filepath,rend);
 				newTile->SetBlock(false);
 				newTile->SetID(grid[l][y][x]);	
 				newTile->SetRenderer(rend);
+				
 				newTile->SetPath(filepath);
 				newTile->Init();
 				newTile->Translate(xPos, yPos, 1 - 0.5f);

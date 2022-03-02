@@ -8,7 +8,7 @@ private:
 	int id;
 	bool block;
 public:
-	Tile();
+	Tile(bool transparency, const char* path, Renderer* _renderer);
 	~Tile();
 	void SetID(int id) { this->id = id; }
 	int GetID() { return id; }
