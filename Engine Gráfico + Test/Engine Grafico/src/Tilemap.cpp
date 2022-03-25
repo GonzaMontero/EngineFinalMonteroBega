@@ -130,7 +130,7 @@ void Tilemap::LoadTile(const char* filepath)
 
 void Tilemap::DrawTileMap()
 {
-	for (short i = 0; i < tiles.size(); i++) {
+	for (int i = 0; i < tiles.size(); i++) {
 		tiles[i]->DrawSprite();
 	}
 }
