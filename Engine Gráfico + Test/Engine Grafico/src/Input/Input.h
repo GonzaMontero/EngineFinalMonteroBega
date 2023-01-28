@@ -1,6 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
-#include "export.h"
+
+#include "../Utils/Export.h"
+#include "glm/glm.hpp"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
@@ -143,25 +145,18 @@ struct GLFWwindow;
 class ENGINE_API Input {
     GLFWwindow* _window;
     glm::vec3 mousePosition;
-    KeyCode keycode;
-	unordered_map<KeyCode, bool> actualPressedKeys;
-	unordered_map<KeyCode, bool> lastPressedKeys;
 public:
-    Input();
-    Input(GLFWwindow* window);
-    ~Input();
-    void SetWindow(GLFWwindow* window);
-	bool GetKeyDown(KeyCode key);
+	Input();
+	Input(GLFWwindow* window);
+	~Input();
+	void SetWindow(GLFWwindow* window);
+	bool GetKey(KeyCode key);
 	bool GetKeyUp(KeyCode key);
-	void UpdateKeys();
-	void InitKeys();
-    bool GetKey(KeyCode key);
-    bool GetKeyRelease(KeyCode key);
-    bool GetMouseButton(MouseButtons mb);
-    bool GetMouseButtonUp(MouseButtons mb);
-    glm::vec2 GetMousePosition2D();
-    glm::vec3 GetMousePosition3D();
-    void UnloadWindow();
+	bool GetMouseButton(MouseButtons mb);
+	bool GetMouseButtonUp(MouseButtons mb);
+	glm::vec2 GetMousePosition2D();
+	glm::vec3 GetMousePosition3D();
+	void UnloadWindow();
 };
 
 #endif // !INPUT_H
