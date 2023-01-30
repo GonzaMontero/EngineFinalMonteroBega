@@ -1,26 +1,43 @@
 #include"glew.h"
 #include"glfw3.h"
 #include"Sprite.h"
+#include "../Sprite/Animation.h"
+#include "../Utils/TimeManager.h"
 
-
-	Sprite::Sprite(bool transparency, Renderer* _renderer) : Entity2D(_renderer) {
-		_transparency = transparency;
+namespace Engine {
+	Sprite::Sprite() {
+		_transparency = true;
+		_renderer = NULL;
 		_texImporter = new TextureImporter();
-	}
 
-	Sprite::Sprite(bool transparency, const char* path, Renderer* _renderer) : Entity2D(_renderer) {
+		uv[0].u = 1; uv[0].v = 1;
+		uv[1].u = 1; uv[1].v = 0;
+		uv[2].u = 0; uv[2].v = 0;
+		uv[3].u = 0; uv[3].v = 1;
+	}
+	Sprite::Sprite(bool transparency, Renderer* renderer, Shader shader) : Entity2D() {
 		_transparency = transparency;
-		_texImporter = new TextureImporter(path);	
-		LoadSprite(_width, _height, path);
+		_renderer = renderer;
+		this->shader = shader;
+		_texImporter = new TextureImporter();
 
-		cout << "width: " << _width << endl;
-		cout << "height: " << _height << endl;
+		uv[0].u = 1; uv[0].v = 1;
+		uv[1].u = 1; uv[1].v = 0;
+		uv[2].u = 0; uv[2].v = 0;
+		uv[3].u = 0; uv[3].v = 1;
 	}
 
-	Sprite::Sprite(): Entity2D()
-	{
-		_transparency = false;
-		renderer = nullptr;
+	Sprite::Sprite(bool transparency, const char* path, Renderer* renderer, Shader shader) : Entity2D() {
+		_transparency = transparency;
+		_renderer = renderer;
+		_texImporter = new TextureImporter();
+		this->shader = shader;
+		_texImporter->SetPath(path);
+
+		uv[0].u = 1; uv[0].v = 1;
+		uv[1].u = 1; uv[1].v = 0;
+		uv[2].u = 0; uv[2].v = 0;
+		uv[3].u = 0; uv[3].v = 1;
 	}
 
 	Sprite::~Sprite() {
@@ -30,85 +47,48 @@
 		}
 	}
 
-	void Sprite::setAnimation(Animation* animation)
-	{
-		anim = animation;
-		_previousFrame = std::numeric_limits<unsigned int>::max_digits10;
-	}
-
-	Animation* Sprite::getAnimation()
-	{
-		return anim;
-	}
-
-	void Sprite::setAnimCoords(float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3)
-	{		
-		vertexs[6] = u0;   vertexs[7] = v0;
-		vertexs[14] = u1;  vertexs[15] = v1;
-		vertexs[22] = u2;  vertexs[23] = v2;
-		vertexs[30] = u3;  vertexs[31] = v3;
-	}
-
-	void Sprite::updateAnimation(Time& time)
-	{
-		if (anim != NULL) {
-			anim->update(time);
-			_currentFrame = anim->getCurrentFrame();
-
-			if (_currentFrame != _previousFrame) {
-				setAnimCoords(anim->getAnimation()[_currentFrame].frameCoordinates[0].u, anim->getAnimation()[_currentFrame].frameCoordinates[0].v,
-					anim->getAnimation()[_currentFrame].frameCoordinates[3].u, anim->getAnimation()[_currentFrame].frameCoordinates[3].v,
-					anim->getAnimation()[_currentFrame].frameCoordinates[2].u, anim->getAnimation()[_currentFrame].frameCoordinates[2].v,
-					anim->getAnimation()[_currentFrame].frameCoordinates[1].u, anim->getAnimation()[_currentFrame].frameCoordinates[1].v);
-				_previousFrame = _currentFrame;
-			}
-			setAnimation(anim);
-		}
-
-	}
-
-	void Sprite::blendSprite()
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
-
-	void Sprite::unblendSprite()
-	{
-		glDisable(GL_BLEND);
-	}
-
-	void Sprite::SetCurrentAnimationIndex(int currentAnimation)
-	{
-		if (anim != NULL) anim->setCurrentAnimation(currentAnimation);
-	}
-
 	void Sprite::GenerateVAO() {
-		renderer->GenerateVAO(vao);
+		_renderer->GenerateVAO(_vao);
 	}
 
 	void Sprite::BindVAO() {
-		renderer->BindVAO(vao);
+		_renderer->BindVAO(_vao);
 	}
 
-	void Sprite::BindVBO(float* vertices, int AmmountOfVertices) {
-		renderer->BindVBO(vbo, vertices, AmmountOfVertices);
+	void Sprite::BindVBO() {
+		_renderer->BindVBO(_vbo, _vertices, 32);
 	}
 
-	void Sprite::BindEBO(unsigned int* indices, int AmmountOfVertices) {
-		renderer->BindEBO(ebo, indices, AmmountOfVertices);
+	void Sprite::BindEBO() {
+		_renderer->BindEBO(_ebo, _quadIndices, 6);
 	}
 
 	void Sprite::Init() {
-		renderer->SetTexAttribPointer();
-		glEnable(GL_TEXTURE_2D);
+		LoadSprite();
+		_renderer->SetTexAttribPointer(shader.GetID());
 		BindBuffers();
 	}
 
-	void Sprite::LoadSprite(int width, int height, const char* path) {
+	void Sprite::Init(unsigned int texture) {
+		_texture = texture;
+		_renderer->SetTexAttribPointer(shader.GetID());
+		BindBuffers();
+	}
+
+	void Sprite::LoadSprite() {
+		if (_texImporter) {
+			_texImporter->LoadImage(_width, _height, _transparency);
+			_texture = _texImporter->GetTexture();
+		}
+		else
+			std::cout << "Couldn't find image" << std::endl;
+	}
+
+
+	void Sprite::LoadSprite(const char* path) {
 		if (_texImporter) {
 			_texImporter->SetPath(path);
-			_texImporter->LoadImage(width, height, _transparency);
+			_texImporter->LoadImage(_width, _height, _transparency);
 		}
 		else
 			std::cout << "Couldn't find image" << std::endl;
@@ -117,8 +97,8 @@
 	void Sprite::BindBuffers() {
 		GenerateVAO();
 		BindVAO();
-		BindVBO(vertexs, 32);
-		BindEBO(indices, 6);
+		BindVBO();
+		BindEBO();
 	}
 
 	void Sprite::BindTexture() {
@@ -133,25 +113,130 @@
 
 	void Sprite::UnBlendSprite() {
 		glDisable(GL_BLEND);
-	}	
+	}
+
+	void Sprite::Color(float r, float g, float b) {
+		_vertices[3] = r;  _vertices[4] = g;  _vertices[5] = b;
+		_vertices[11] = r; _vertices[12] = g; _vertices[13] = b;
+		_vertices[19] = r; _vertices[20] = g; _vertices[21] = b;
+		_vertices[27] = r; _vertices[28] = g; _vertices[29] = b;
+	}
+
+	void Sprite::Color(glm::vec3 color) {
+		_vertices[3] = color.x;  _vertices[4] = color.y;  _vertices[5] = color.z;
+		_vertices[11] = color.x; _vertices[12] = color.y; _vertices[13] = color.z;
+		_vertices[19] = color.x; _vertices[20] = color.y; _vertices[21] = color.z;
+		_vertices[27] = color.x; _vertices[28] = color.y; _vertices[29] = color.z;
+	}
+
+	void Sprite::SetUVs(glm::vec4 uvRect) {
+		//				x + ancho                   y + alto
+		uv[0].u = uvRect.x + uvRect.z; uv[0].v = uvRect.y + uvRect.w;    // top right
+		//				 x + ancho                   y
+		uv[1].u = uvRect.x + uvRect.z; uv[1].v = uvRect.y;				 // bottom right
+		//				x                  y
+		uv[2].u = uvRect.x; uv[2].v = uvRect.y;							// bottom left
+		//				x					y + alto
+		uv[3].u = uvRect.x; uv[3].v = uvRect.y + uvRect.w;				// top left
+
+		UpdateUVs();
+	}
+
+	void Sprite::SetUVs(float sheetHeight, float sheetWidth, float spriteHeight, float spriteWidth, int x, int y) {
+		uv[0].u = ((x + 1) * spriteWidth) / sheetWidth; uv[0].v = ((y + 1) * spriteHeight) / sheetHeight;    // top right
+		uv[1].u = ((x + 1) * spriteWidth) / sheetWidth; uv[1].v = (y * spriteHeight) / sheetHeight;				 // bottom right
+		uv[2].u = (x * spriteWidth) / sheetWidth;      uv[2].v = (y * spriteHeight) / sheetHeight;							// bottom left
+		uv[3].u = (x * spriteWidth) / sheetWidth;      uv[3].v = ((y + 1) * spriteHeight) / sheetHeight;				// top left
+
+		UpdateUVs();
+	}
+
+
+	void Sprite::UpdateUVs() {
+		_vertices[6] = uv[0].u;  _vertices[7] = uv[0].v;   // top Right
+		_vertices[14] = uv[1].u; _vertices[15] = uv[1].v;   // bottom Right
+		_vertices[22] = uv[2].u; _vertices[23] = uv[2].v;   // bottom Left
+		_vertices[30] = uv[3].u; _vertices[31] = uv[3].v;   // top Left
+	}
 
 	void Sprite::DrawSprite() {
-		glActiveTexture(GL_TEXTURE0); ///sacar?
-		UpdateModel();
+		UpdateMatrices();
 		if (_transparency) {
 			BlendSprite();
 			BindTexture();
-			renderer->DrawSprite(vao, vbo, vertexs,32, model, indices);
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
 			UnBlendSprite();
 			glDisable(GL_TEXTURE_2D);
 		}
 		else {
 			BindTexture();
-			renderer->DrawSprite(vao, vbo, vertexs, 32, model, indices);
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
-	
+
+	void Sprite::DrawFromUVs(glm::vec4 uv) {
+		UpdateMatrices();
+		SetUVs(uv);
+		if (_transparency) {
+			BlendSprite();
+			BindTexture();
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+			UnBlendSprite();
+			glDisable(GL_TEXTURE_2D);
+		}
+		else {
+			BindTexture();
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
+
+	void Sprite::DrawAnimation(glm::vec4 uvRect) {
+		UpdateMatrices();
+		SetUVs(uvRect);
+		if (_transparency) {
+			BlendSprite();
+			BindTexture();
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+			UnBlendSprite();
+			glDisable(GL_TEXTURE_2D);
+		}
+		else {
+			BindTexture();
+			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+			glDisable(GL_TEXTURE_2D);
+		}
+	}
+
+	void Sprite::SetWidth(int width) {
+		_width = width;
+	}
+
+	int Sprite::GetWidth() {
+		return _width;
+	}
+
+	void Sprite::SetHeight(int height) {
+		_height = height;
+	}
+
+	int Sprite::GetHeight() {
+		return _height;
+	}
+
+	void Sprite::SetRenderer(Renderer* renderer) {
+		_renderer = renderer;
+	}
+
+	void Sprite::SetShader(Shader shader) {
+		this->shader = shader;
+	}
+
+	Renderer* Sprite::GetRenderer() {
+		return _renderer;
+	}
+
 	void Sprite::SetPath(const char* path) {
 		if (_texImporter)
 			_texImporter->SetPath(path);
@@ -166,12 +251,15 @@
 			return nullptr;
 	}
 
+	void Sprite::SetTransparency(bool value) {
+		_transparency = value;
+	}
+
 	void Sprite::UnbindBuffers() {
-		renderer->UnbindBuffers();
+		_renderer->UnbindBuffers();
 	}
 
 	void Sprite::DeleteBuffer() {
-		renderer->DeleteBuffers(vao, vbo, ebo);
+		_renderer->DeleteBuffers(_vao, _vbo, _ebo);
 	}
-
-
+}

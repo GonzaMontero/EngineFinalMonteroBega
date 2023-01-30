@@ -3,7 +3,7 @@
 
 #include "Export.h"
 
-
+namespace Engine {
 	class ENGINE_API TextureImporter {
 	private:
 		const char* _path;
@@ -20,5 +20,6 @@
 		const char* GetPath();
 		unsigned int GetTexture();
 	};
+}
 
 #endif

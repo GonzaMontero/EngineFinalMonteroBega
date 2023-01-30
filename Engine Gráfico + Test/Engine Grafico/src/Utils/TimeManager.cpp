@@ -1,5 +1,6 @@
 #include "TimeManager.h"
 
+using namespace Engine;
 
 Time::Time() {
 	_time = 0.0f;

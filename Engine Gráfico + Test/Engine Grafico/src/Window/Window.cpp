@@ -1,63 +1,71 @@
 #include "glew.h"
 #include "glfw3.h"
+
 #include "Window.h"
+#include <iostream>
+
+using namespace Engine;
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+	glViewport(0, 0, width, height);
+}
 
 Window::Window() {
-
+	_window = NULL;
+	_width = 800;
+	_height = 600;
 }
+
+Window::Window(int width, int height) {
+	_window = NULL;
+	_width = width;
+	_height = height;
+}
+
 Window::~Window() {
 
 }
 
-int Window::Start(int width, int height, const char* windowName)
-{
-	//pregunta si la library está inicializada
-	if (!glfwInit())
-		return -1;
+int Window::CreateWindow(const char* name) {
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a windowed mode window and its OpenGL context / con los parametros que pedimos
-	window = glfwCreateWindow(width, height, windowName, NULL, NULL);
-	if (!window) // si no hay ventana por la razon que sea, cierra el ciclo de glfw y hay que volver a llamar a glfwInit
+	glewExperimental = true;
+	if (!glfwInit())
 	{
-		glfwTerminate(); 
+		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
 	}
 
-	// Hace que el context en el que hagamos las cosas ahora sea la ventana que acabamos de crear (podemos tener varias ventanas en simultaneo)/
-	glfwMakeContextCurrent(window);
-
-
-	glewExperimental = GL_TRUE;
-	glewInit();   /// Crea el punto de entrada para las extenciones de glew (necesita un contexto previo)
-
-	std::cout << glGetString(GL_VERSION) << std::endl; // nos dice la version de gl
-
-
+	_window = glfwCreateWindow(_width, _height, name, NULL, NULL);
+	if (_window == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(_window);
+	glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 }
 
-void Window::ClearBackground()
-{
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // especifica los valores RGBA con los que se va a limpiar los buffers  
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // limpia los buffers con los valores que seleccionamos en el glClearColor en la funcion de arriba
+GLFWwindow* Window::GetWindow() {
+	return _window;
 }
 
-bool Window::WindowShouldClose()
-{
-	// devuelve true si la ventan no tiene que cerrarse
-	return glfwWindowShouldClose(window);  
+void Window::SetWidth(int width) {
+	_width = width;
 }
 
-void Window::FinishWindowCycle()
-{
-	// Swap front and back buffers
-	glfwSwapBuffers(window);
-
-	// Poll for and process events 
-	glfwPollEvents();
+int Window::GetWidth() {
+	return _width;
 }
 
-void Window::CloseWindow()
-{
-	// cierra la ventana
-	glfwTerminate();
+void Window::SetHeight(int height) {
+	_height = height;
+}
+
+int Window::GetHeight() {
+	return _height;
 }

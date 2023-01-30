@@ -1,19 +1,42 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Sprite.h"
 
-class ENGINE_API Tile :public Sprite {
-private:
-	int id;
-	bool block;
-public:
-	Tile(bool transparency, const char* path, Renderer* _renderer);
-	~Tile();
-	void SetID(int id) { this->id = id; }
-	int GetID() { return id; }
-	void SetBlock(bool block) { this->block = block; }
-	bool GetBlock() { return block; }
-};
+#include "../Utils/Export.h"
+#include "../Renderer/renderer.h"
+#include "../Sprite/Sprite.h"
+
+namespace Engine {
+	class ENGINE_API Tile : public Sprite {
+	private:
+		unsigned int _id;
+		bool _isWalkable;
+		int _width;
+		int _height;
+		int _posX;
+		int _posY;
+		Renderer* _renderer;
+	public:
+		Tile();
+		Tile(unsigned int id, bool isWalkable);
+		Tile(unsigned int id, bool isWalkable, int width, int height, Renderer* renderer);
+		Tile(unsigned int id, bool isWalkable, int width, int height, int posX, int posY, Renderer* renderer);
+		~Tile();
+		void SetID(unsigned int id);
+		void SetWidth(int width);
+		void SetHeight(int height);
+		void SetIsWalkable(const char* path);
+		void SetPosX(int posX);
+		void SetPosY(int posY);
+		unsigned int GetID();
+		int GetWidth();
+		int GetHeight();
+		bool GetIsWalkable();
+		int GetPosX();
+		int GetPosY();
+		void Draw();
+	};
+}
+
 #endif // !TILE_H
 

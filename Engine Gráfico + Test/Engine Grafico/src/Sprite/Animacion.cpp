@@ -1,136 +1,100 @@
-#include "animation.h"
+#include "Animation.h"
+#include "../Utils/TimeManager.h"
 #include <iostream>
 
-Animation::Animation()
-{
-	_currentTime = 0;
-	_currentFrame = 0;
-	_length = 0;
+Engine::Animation::Animation() {
+	sprite = NULL;
+	dimensions = glm::ivec2(0, 0);
+	state = AnimationState::idle;
 }
 
-Animation::~Animation() {}
+Engine::Animation::~Animation() {
+}
 
-void Animation::update(Time& timer)
-{
-	_currentTime = (timer.GetTime() * _length);
+void Engine::Animation::Init(Sprite* texture, const glm::ivec2& tileDims) {
+	sprite = texture;
+	dimensions = tileDims;
 
-	while (_currentTime >= _length) {
-		_currentTime -= _length;
+}
+
+glm::vec4 Engine::Animation::GetUVs(int index) {
+	int xTile = index % dimensions.x; // se hace para que cuando el indice sea mayor a la dimension en x, vuelva a ser 0, es decir, se "reinicia" el ciclo en x
+	int yTile = index / dimensions.x;
+
+	//                      x  y   w   h
+	glm::vec4 uv = glm::vec4(0, 0, 0, 0);
+
+	uv.x = xTile / static_cast<float>(dimensions.x); // X
+	uv.y = yTile / static_cast<float>(dimensions.y); // Y
+	uv.z = 1.0f / dimensions.x; // Ancho / W
+	uv.w = 1.0f / dimensions.y; // Alto / H
+
+	return uv;
+}
+
+void Engine::Animation::UpdateIndex(Time& time) {
+	float length = 1.0f * 1000;
+	_currentTime += time.GetDeltaTime() * animationSpeed;
+
+	while (_currentTime > length) {
+		_currentTime -= length;
 	}
-	float frameLength = _length / _animations[_currentAnimation].size();
-	_currentFrame = static_cast<int>(_currentTime / frameLength);
-}
-void Animation::addFrame(float frameX, float frameY, int spriteWidth, int spriteHeigth, int textureWidth, int textureHeigth, float timeToAnim, int totalFrames, int counColumnas)
-{
-	int miliseconds = 1000;
-	_length = timeToAnim * miliseconds;
 
-	float index_X = 0;
-	float index_Y = 0;
-	Frame frame;
-	for (int i = 0; i < totalFrames; i++) {
-		//--------
-		frame.frameCoordinates[0].u = ((frameX + index_X) / textureWidth);
-		frame.frameCoordinates[0].v = ((spriteHeigth + index_Y) / textureHeigth);
+	int framesAmmount = (animation[_currentAnimation]._endIndex - animation[_currentAnimation]._beginIndex);
 
-		frame.frameCoordinates[1].u = (((frameX + index_X) + spriteWidth) / textureWidth);
-		frame.frameCoordinates[1].v = ((spriteHeigth + index_Y) / textureHeigth);
 
-		frame.frameCoordinates[2].u = (((frameX + index_X) + spriteWidth) / textureWidth);
-		frame.frameCoordinates[2].v = ((frameY + index_Y) / textureHeigth);
+	if (!animation[_currentAnimation].hasEnded) { // pregunto si la animacion no termino
+		_actualCurrentIndex = animation[_currentAnimation]._beginIndex;
 
-		frame.frameCoordinates[3].u = ((frameX + index_X) / textureWidth);
-		frame.frameCoordinates[3].v = ((frameY + index_Y) / textureHeigth);
+		_actualCurrentIndex = _actualCurrentIndex + static_cast<int>(_currentTime) % framesAmmount;
 
-		_totalFrames.push_back(frame);
-		index_X += spriteWidth;
-
-		if (i > 0)
-		{
-			if (i % counColumnas == 0)
-			{
-				index_Y += spriteHeigth;
-				_animations.push_back(_totalFrames);
-				_totalFrames.clear();
-			}
+		if (!animation[_currentAnimation].loop && _actualCurrentIndex >= animation[_currentAnimation]._endIndex - 1) { // pregunto si la animacion no es loopeable y si ya llego al ultimo indice
+			_actualCurrentIndex = animation[_currentAnimation]._endIndex - 1; //seteo el indice al ultimo frame de la animacion
+			animation[_currentAnimation].hasEnded = true;					// indico que termino la animación
 		}
 	}
-}
-void Animation::addFrame(float frameX, float frameY, int spriteWidth, int spriteHeigth, int textureWidth, int textureHeigth, float timeToAnim, int totalFrames, int counColumnas, int indexFila)
-{
-	int miliseconds = 1000;
-	_length = timeToAnim * miliseconds;
-
-	float index_X = 0;
-	float index_Y = indexFila * spriteHeigth;
-	Frame frame;
-	for (int i = 0; i < totalFrames; i++) {
-		//--------
-		frame.frameCoordinates[0].u = ((frameX + index_X) / textureWidth);
-		frame.frameCoordinates[0].v = ((spriteHeigth + index_Y) / textureHeigth);
-
-		frame.frameCoordinates[1].u = (((frameX + index_X) + spriteWidth) / textureWidth);
-		frame.frameCoordinates[1].v = ((spriteHeigth + index_Y) / textureHeigth);
-
-		frame.frameCoordinates[2].u = (((frameX + index_X) + spriteWidth) / textureWidth);
-		frame.frameCoordinates[2].v = ((frameY + index_Y) / textureHeigth);
-
-		frame.frameCoordinates[3].u = ((frameX + index_X) / textureWidth);
-		frame.frameCoordinates[3].v = ((frameY + index_Y) / textureHeigth);
-
-		_totalFrames.push_back(frame);
-		index_X += spriteWidth;
-
-		
-		
-		
+	else {
+		_actualCurrentIndex = animation[_currentAnimation]._endIndex - 1; // si termino la animacion y no es loopeable, seteo el indice al ultimo frame de la animación
 	}
-	_animations.push_back(_totalFrames);
-	_totalFrames.clear();
-}
-void Animation::addFrame(float frameX, float frameY, int spriteWidth, int spriteHeigth, int textureWidth, int textureHeigth, float timeToAnim)
-{
-	_length = timeToAnim;
 
-	Frame frame;
-
-	frame.frameCoordinates[0].u = ((frameX) / textureWidth);
-	frame.frameCoordinates[0].v = ((spriteHeigth + frameY) / textureHeigth);
-
-
-	frame.frameCoordinates[1].u = (((frameX)+spriteWidth) / textureWidth);
-	frame.frameCoordinates[1].v = ((spriteHeigth + frameY) / textureHeigth);
-
-	frame.frameCoordinates[2].u = (((frameX)+spriteWidth) / textureWidth);
-	frame.frameCoordinates[2].v = ((frameY) / textureHeigth);
-
-	frame.frameCoordinates[3].u = ((frameX) / textureWidth);
-	frame.frameCoordinates[3].v = ((frameY) / textureHeigth);
-
-	_totalFrames.push_back(frame);
 }
 
-void Animation::addAnimation()
-{
-	if (_totalFrames.size() > 0)
-	{
-		_animations.push_back(_totalFrames);
-		_totalFrames.clear();
+void Engine::Animation::SetAnimationSpeed(float speed) {
+	if (speed < 0)
+		speed *= -1;
+
+	animation[_currentAnimation].animationSpeed = speed * 10;
+}
+
+int Engine::Animation::GetCurrentIndex() {
+	return _actualCurrentIndex;
+}
+
+void Engine::Animation::AddAnimation(int beginIndex, int endIndex, bool isLoopable, float animationSpeed) {
+	AnimationData newAnim;
+	newAnim._beginIndex = beginIndex;
+	newAnim._endIndex = endIndex;
+	newAnim.loop = isLoopable;
+	newAnim.animationSpeed = animationSpeed * 10;
+	animation.push_back(newAnim);
+}
+
+Engine::AnimationData Engine::Animation::GetCurrentAnimation() {
+	return animation[_currentAnimation];
+}
+
+void Engine::Animation::SetAnimation(int index) {
+	_currentAnimation = index;
+	_firstIndex = animation[_currentAnimation]._beginIndex;
+	_lastIndex = animation[_currentAnimation]._endIndex;
+	if (animationSpeed != animation[_currentAnimation].animationSpeed)
+		animationSpeed = animation[_currentAnimation].animationSpeed;
+
+	if (_currentIndex < _firstIndex || _currentIndex > _lastIndex)
+		_actualCurrentIndex = _firstIndex;
+
+	if (animation[_currentAnimation].hasEnded || (_actualCurrentIndex >= _lastIndex || _actualCurrentIndex < _firstIndex)) {
+		animation[_currentAnimation].hasEnded = false;
+		_currentTime = 0;
 	}
-}
-int Animation::getCurrentFrame()
-{
-	return _currentFrame;
-}
-
-void Animation::setCurrentAnimation(int currentAnimation) {
-	_currentAnimation = currentAnimation;
-}
-
-vector<Frame>& Animation::getAnimation()
-{
-	if (_currentAnimation < _animations.size())
-		return _animations[_currentAnimation];
-
-	return _animations[_animations.size() - 1];
 }

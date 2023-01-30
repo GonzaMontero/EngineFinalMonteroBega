@@ -1,47 +1,66 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 
-#include "Export.h"
-#include "Entity2D.h"
+#include "../Utils/Export.h"
+#include "../Entity/Entity2D.h"
+#include "../Shader/Shader.h"
+#include "../Renderer/renderer.h"
 
-enum ShapeType
-{
-	TRI = 0, QUAD = 1
-};
-class ENGINE_API Shape: public Entity2D {
-public:
-	ShapeType shape;
-	float vertexs[18] = {
-		//X     Y     Z     R      G    B
-	   -0.5f,   -0.5f, 0.0f, color.R, color.G, color.B,
-		0.5f,   -0.5f, 0.0f, color.R, color.G, color.B,
-		0.0f,  0.5f, 0.0f, color.R, color.G, color.B
+namespace Engine {
+
+	enum class ENGINE_API Type
+	{
+		triangle, quad
 	};
 
-	unsigned int indices[3] = {
-		0,1,2
+	class ENGINE_API Shape : public Entity2D {
+	private:
+		unsigned int _vao = 0;
+		unsigned int _vbo = 0;
+		unsigned int _ebo = 0;
+
+		float _triVertices[18] = {
+			-0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f,
+			 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+		};
+
+		unsigned int _triIndices[3] = {
+			0,1,2
+		};
+		float _quadVertices[24] = {
+			0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right
+			0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+		   -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
+		   -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f   // top left 
+		};
+		unsigned int _quadIndices[6] = {
+			0,1,3,
+			1,2,3
+		};
+
+		Type _type;
+		Renderer* _renderer;
+		Shader _shader;
+
+		void GenerateVAO();
+		void BindVAO();
+		void BindVBO(float* vertices, int verticesAmmount);
+		void BindEBO(unsigned int* indices, int indicesAmmount);
+		void UnbindBuffers();
+		void DeleteBuffer();
+	public:
+		Shape();
+		Shape(Type type, Renderer* renderer, Shader shader);
+		~Shape();
+		void SetRenderer(Renderer* renderer);
+		void SetShader(Shader shader);
+		void Init();
+		void Color(float r, float g, float b);
+		void Color(glm::vec3 color);
+		void Draw();
+
 	};
 
-	float vertexsQuad[24] = {
-		//X     Y     Z     R      G    B
-		-0.5f, -0.5f, 0.0f, color.R, color.G, color.B,
-		-0.5f, 0.5f, 0.0f, color.R, color.G, color.B,
-		0.5f,  0.5f, 0.0f, color.R, color.G, color.B,
-		0.5f,  -0.5f, 0.0f, color.R, color.G, color.B
-	};
-
-	unsigned int indicesQuad[6] = {
-		0,1,3,1,2,3
-	};
-
-	Shape(Renderer* _renderer);
-	unsigned int vbo; // vertex buffer object  //  Guarda los arrays de vertices, basicamente, cada punto de la shape (y en este caso color tambien)
-	unsigned int ebo;  // index buffer object  //  Guarda un array de los indices/elementos, basicamente clasifica los vertices para que al dibujar figuras que usan el mismo vertice no tenga que repetirlo
-	unsigned int vao; // vertex array object   //  Buffer interno de openGL 
-	Color color;
-	void Init(Color newColor, ShapeType shape);
-	void UpdateColor(Color newColor);
-	void EpilepsyMode();
-	void Draw(ShapeType shape);
-};
+}
 #endif // !SHAPE_H
