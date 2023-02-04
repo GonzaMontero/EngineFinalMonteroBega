@@ -1,136 +1,119 @@
-#include "game.h"
+#include "Game.h"
+
+float speed = 100.f;
+
 Game::Game() {
-	map = new Tilemap();
-	testShape = new Shape(&render);
+
 }
+
 Game::~Game() {
+	if (_sprite != NULL) {
+		delete _sprite;
+		_sprite = NULL;
+	}
+
+	if (_player != NULL) {
+		delete _player;
+		_player = NULL;
+	}
+
+	if (_map != NULL) {
+		delete _map;
+		_map = NULL;
+	}
 }
-void Game::init() {
-	map->LoadTileMap("../res/Tilemaps/TilesPokemonTest.tmx");
-	map->LoadTile("res/TILES.png");
-	testShape->Init(RED, QUAD);
-	testShape->SetScale(50, 50, 1);
-	testShape->SetPosition(120, 110 ,0);
-	valorRotacion = 0;
-	valorEscala = 1;
 
-	//testSprite = new Sprite(true, "res/meme2.png", &render);
-	//testSprite->Init();
-	//testSprite->SetScale(130, 130, -1);
-	//testSprite->SetPosition(300, 300, -1);
-	//testSprite->SetTrigger(true);
-	//testSprite->SetFreeze(false);
+void Game::InitGame() {
 
-	//testSprite2 = new Sprite(false, "res/JPGExample.jpg", &render);
-	//testSprite2->Init();
-	//testSprite2->SetScale(50, 50, -1);
-	//testSprite2->SetPosition(250, 100, -1);
-	//testSprite2->SetTrigger(true);
-	//testSprite2->SetFreeze(true);
+	_sprite = new Engine::Sprite(true, "res/textures/samurai.png", GetRenderer(), textureShader);
+	_player = new Animation();
 
-	//spriteSheet = new Sprite(true, "res/link_sprite_sheet.png", &render);
-	//spriteSheet->Init();
-	//spriteSheet->SetScale(80, 80, -1);
-	//spriteSheet->SetPosition(50, 100, -1);
+	_map = new Tilemap(glm::ivec2(16, 16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
+	_map->SetTilesInfo("res/tilemap/Tiles.tsx");
+	_map->LoadMap("res/tilemap/Map1.tmx");
+
+	_sprite->Init();
 
 
-	playerSpeed = 100;
+	_player->Init(_sprite, glm::ivec2(6, 3));
 
-	// 961  832
+	_player->AddAnimation(0, 6, false, 1.f);
+	_player->AddAnimation(6, 11, false, 1.f);
+	_player->AddAnimation(12, 14, true, .4f);
+	_player->SetAnimation(2);
 
-	//playerAnim[0] = new Animation();
-	//playerAnim[0]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 0);
-	//
-	//playerAnim[1] = new Animation();
-	//playerAnim[1]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 1);
-	//
-	//playerAnim[2] = new Animation();
-	//playerAnim[2]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 2);
-	//
-	//playerAnim[3] = new Animation();
-	//playerAnim[3]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 10, 10, 3);
-	//
-	//playerAnim[4] = new Animation();
-	//playerAnim[4]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 4);
-	//
-	//playerAnim[5] = new Animation();
-	//playerAnim[5]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 1, 1, 5);
-	//
-	//playerAnim[6] = new Animation();
-	//playerAnim[6]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 6);
-	//
-	//playerAnim[7] = new Animation();
-	//playerAnim[7]->addFrame(0, 0, 961 / 10, 832 / 8, 961, 832, 1.0, 3, 3, 7);
-	//
-	//
-	//spriteSheet->setAnimation(playerAnim[7]);
-	//spriteSheet->SetCurrentAnimationIndex(0);
-	//spriteSheet->SetRotation(0, 0, 0);
+
+	_sprite->Scale(50.0f, 50.0f, 1.0f);
+
+	_sprite->Color(1.0f, 1.0f, 1.0f);
+	_sprite->transform.position = glm::vec3(300, 300, 1);
 }
-void Game::updateGame() {
 
-	//spriteSheet->updateAnimation(timer);
-
-	if (input.GetKey(KeyCode::D))
-	{
-		//spriteSheet->SetPosition(spriteSheet->position.x + (playerSpeed * timer.GetDeltaTime()), spriteSheet->position.y, -1);
+void Game::PlayerInputs() {
+	if (input.GetKey(KeyCode::W)) {
+		_sprite->transform.position.y += speed * time.GetDeltaTime();
 	}
-	if (input.GetKey(KeyCode::A))
-	{
-		//spriteSheet->SetPosition(spriteSheet->position.x - (playerSpeed*timer.GetDeltaTime()), spriteSheet->position.y, -1);
+	else if (input.GetKey(KeyCode::S)) {
+		_sprite->transform.position.y -= speed * time.GetDeltaTime();
 	}
-
-	if (input.GetKey(KeyCode::W))
-	{
-		//spriteSheet->SetPosition(spriteSheet->position.x, spriteSheet->position.y + (playerSpeed * timer.GetDeltaTime()), -1);
+	else if (input.GetKey(KeyCode::D)) {
+		_sprite->transform.position.x += speed * time.GetDeltaTime();
 	}
-	if (input.GetKey(KeyCode::S))
-	{
-		//spriteSheet->SetPosition(spriteSheet->position.x, spriteSheet->position.y - (playerSpeed * timer.GetDeltaTime()), -1);
+	else if (input.GetKey(KeyCode::A)) {
+		_sprite->transform.position.x -= speed * time.GetDeltaTime();
 	}
-
-	if (input.GetKeyDown(KeyCode::S))
-	{
-		//spriteSheet->setAnimation(playerAnim[3]);
+	else if (input.GetKey(KeyCode::X)) {
+		_sprite->transform.scale.x -= speed * time.GetDeltaTime();
 	}
-	if (input.GetKeyDown(KeyCode::W))
-	{
-		//spriteSheet->setAnimation(playerAnim[1]);
+	else if (input.GetKey(KeyCode::C)) {
+		_sprite->transform.scale.x += speed * time.GetDeltaTime();
 	}
-	if (input.GetKeyDown(KeyCode::A))
-	{
-		//->setAnimation(playerAnim[0]);
+	else if (input.GetKey(KeyCode::Y)) {
+		_sprite->transform.scale.y -= speed * time.GetDeltaTime();
 	}
-	if (input.GetKeyDown(KeyCode::D))
-	{
-		//spriteSheet->setAnimation(playerAnim[2]);
+	else if (input.GetKey(KeyCode::U)) {
+		_sprite->transform.scale.y += speed * time.GetDeltaTime();
 	}
 
-	if (input.GetKeyUp(KeyCode::S))
-	{
-		//spriteSheet->setAnimation(playerAnim[7]);
+	if (input.GetMouseButton(MouseButtons::LEFT_MOUSE_BUTTON)) {
+		_player->SetAnimation(0);
 	}
-	if (input.GetKeyUp(KeyCode::W))
-	{
-		//spriteSheet->setAnimation(playerAnim[7]);
+	if (input.GetMouseButton(MouseButtons::RIGHT_MOUSE_BUTTON)) {
+		_player->SetAnimation(1);
 	}
-	if (input.GetKeyUp(KeyCode::A))
-	{
-		//spriteSheet->setAnimation(playerAnim[4]);
-	}
-	if (input.GetKeyUp(KeyCode::D))
-	{
-		//spriteSheet->setAnimation(playerAnim[6]);
-	}	
-
-	//collision->CheckAABBCollisions(spriteSheet, testSprite, playerSpeed * timer.GetDeltaTime());
-	//collision->CheckAABBCollisions(spriteSheet, testSprite2, playerSpeed * timer.GetDeltaTime());
-
-	//testSprite->DrawSprite();
-	//testSprite2->DrawSprite();
-	//spriteSheet->DrawSprite();
-	testShape->Draw(QUAD);
-	map->DrawTileMap();
 }
-void Game::unload() {
+void Game::UpdateGame() {
+
+	PlayerInputs();
+
+	if (!_player->GetCurrentAnimation().loop && _player->GetCurrentAnimation().hasEnded) {
+		_player->SetAnimation(2);
+	}
+
+	_map->Draw();
+
+	_map->CheckCollisionWithTileMap(_sprite, _sprite->transform.position, speed * time.GetDeltaTime());
+
+	_player->UpdateIndex(time);
+
+	_sprite->DrawAnimation(_player->GetUVs(_player->GetCurrentIndex()));
+
+}
+
+void Game::UnloadGame() {
+
+	if (_sprite != NULL) {
+		delete _sprite;
+		_sprite = NULL;
+	}
+
+	if (_player != NULL) {
+		delete _player;
+		_player = NULL;
+	}
+
+	if (_map != NULL) {
+		delete _map;
+		_map = NULL;
+	}
 }

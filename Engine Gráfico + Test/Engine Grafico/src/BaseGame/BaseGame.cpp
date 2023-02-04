@@ -8,7 +8,7 @@ using namespace Engine;
 BaseGame::BaseGame() {
 	_renderer = new Renderer();
 	_window = new Window(1280, 720);
-	_camera = new Camera(_renderer, ProjectionType::ortographic);
+	_camera = new Camera(_renderer, ProjectionType::orthographic);
 	_collisionManager = new CollisionManager();
 }
 
@@ -39,7 +39,7 @@ void BaseGame::Execute() {
 }
 
 int BaseGame::Init() {
-	_window->CreateWindow("Unreal Engine pero con Intellisense");
+	_window->CreateWindow("Engine Final Montero-Bega");
 
 	if (!_renderer->InitializeGlew()) {
 		return 0;
@@ -47,8 +47,9 @@ int BaseGame::Init() {
 
 	basicShader.Create("..//Engine//src//Shaders//vertex.vert", "..//Engine//src//Shaders//fragment.frag");
 	textureShader.Create("..//Engine//src//Shaders//texture_vert.vert", "..//Engine//src//Shaders//texture_frag.frag");
+
 	glEnable(GL_DEPTH_TEST);
-	_camera->transform.position = glm::vec3(0.0f, 0.0f, -3.0f);
+
 	_camera->SetView(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	_camera->SetProjection(ProjectionType::orthographic);
 	_camera->Init(basicShader);
@@ -62,7 +63,7 @@ int BaseGame::Init() {
 	InitGame();
 }
 
-void Base::Update() {
+void BaseGame::Update() {
 	float speed = 0.01f;
 	while (!glfwWindowShouldClose(_window->GetWindow())) {
 		_renderer->BeginFrame(0.0f, 0.0f, 0.0f);
@@ -75,7 +76,7 @@ void Base::Update() {
 	}
 }
 
-void Base::Unload() {
+void BaseGame::Unload() {
 	UnloadGame();
 	glfwTerminate();
 }

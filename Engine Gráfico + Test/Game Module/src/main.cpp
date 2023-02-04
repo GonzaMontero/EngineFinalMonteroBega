@@ -3,15 +3,11 @@
 int main() {
 	Game* game = new Game();
 
-	game -> initEngine();
-
 	if (game != NULL) {
 
-		game->update();
-
-		game->unload();
-
+		game->Execute();
 		delete game;
+		game = NULL;
 	}
 	return 0;
 }

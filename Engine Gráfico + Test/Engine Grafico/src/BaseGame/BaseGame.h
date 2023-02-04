@@ -11,6 +11,8 @@
 #include "../Collision/Collision Manager.h"
 #include "../Sprite/Animation.h"
 #include "../Tilemap/Tilemap.h"
+#include "../Camera/Camera.h"
+#include "../Utils/TimeManager.h"
 
 
 namespace Engine {
