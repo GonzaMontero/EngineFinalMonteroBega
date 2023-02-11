@@ -24,6 +24,7 @@ Camera::~Camera() {
 
 void Camera::SetView(glm::vec3 direction, glm::vec3 up) {
 	_view = glm::translate(_view, transform.position);
+	//hola
 }
 
 void Camera::SetProjection(ProjectionType type) {

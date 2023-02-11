@@ -105,8 +105,8 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y  "$(SolutionDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
-copy /Y  "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s
+      <Command>copy /Y  "$(SolutionDir)lib\glew\lib\RLibs\Win32" "$(TargetDir)" /e /h /y /s
+copy /Y  "$(SolutionDir)include" "$(TargetDir)" /e /h /y /s 
 copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

@@ -12,7 +12,7 @@ namespace Engine {
 		orthographic, perspective
 	};
 
-	class ENGINE_API Camera {
+	class ENGINE_API Camera:public Entity2D {
 	private:
 		Renderer* _renderer;
 		ProjectionType _type;
