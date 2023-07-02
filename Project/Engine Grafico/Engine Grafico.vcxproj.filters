@@ -58,6 +58,9 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{0849127d-7f5d-4e4c-bc90-504cb914d4cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Shaders">
+      <UniqueIdentifier>{fbdb7480-3ecd-4969-a6b6-8d3824e2597d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Libraries\tinyxml2.cpp">
@@ -186,6 +189,18 @@
     </None>
     <None Include="..\res\shader\TextureVertex.shader">
       <Filter>res\shader</Filter>
+    </None>
+    <None Include="src\Shader\shader\fragment.frag">
+      <Filter>Shader\Shaders</Filter>
+    </None>
+    <None Include="src\Shader\shader\texture_frag.frag">
+      <Filter>Shader\Shaders</Filter>
+    </None>
+    <None Include="src\Shader\shader\texture_vert.vert">
+      <Filter>Shader\Shaders</Filter>
+    </None>
+    <None Include="src\Shader\shader\vertex.vert">
+      <Filter>Shader\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

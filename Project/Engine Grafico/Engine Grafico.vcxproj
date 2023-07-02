@@ -221,6 +221,10 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <None Include="..\res\shader\TextureFragment.shader" />
     <None Include="..\res\shader\TextureVertex.shader" />
     <None Include="..\res\shader\Vertex.shader" />
+    <None Include="src\Shader\shader\fragment.frag" />
+    <None Include="src\Shader\shader\texture_frag.frag" />
+    <None Include="src\Shader\shader\texture_vert.vert" />
+    <None Include="src\Shader\shader\vertex.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
