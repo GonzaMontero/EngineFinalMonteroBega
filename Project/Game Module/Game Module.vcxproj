@@ -104,7 +104,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\glm;$(ProjectDir)src;$(SolutionDir)Engine Grafico\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine Grafico\lib\glm\ext;$(SolutionDir)Engine Grafico\lib\glm\gtc;$(SolutionDir)Engine Grafico\lib\glm;$(ProjectDir)src;$(SolutionDir)Engine Grafico\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
