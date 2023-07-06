@@ -64,6 +64,9 @@
     <Filter Include="Light">
       <UniqueIdentifier>{774783ac-a9c5-4793-b46c-8a99225539e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{d4042522-8cb6-41db-8c18-1c3878f8a971}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Libraries\tinyxml2.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="src\Light\Light.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material\Material.cpp">
+      <Filter>Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="src\Light\Light.h">
       <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material\Material.h">
+      <Filter>Material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -184,6 +184,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\Libraries\tinyxml2.cpp" />
     <ClCompile Include="src\Libraries\xmltest.cpp" />
     <ClCompile Include="src\Light\Light.cpp" />
+    <ClCompile Include="src\Material\Material.cpp" />
     <ClCompile Include="src\Renderer\renderer.cpp" />
     <ClCompile Include="src\Shader\Shader.cpp" />
     <ClCompile Include="src\Shape\Shape.cpp" />
@@ -205,6 +206,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Libraries\tinyxml2.h" />
     <ClInclude Include="src\Light\Light.h" />
+    <ClInclude Include="src\Material\Material.h" />
     <ClInclude Include="src\Renderer\renderer.h" />
     <ClInclude Include="src\Shader\Shader.h" />
     <ClInclude Include="src\Shape\Shape.h" />
