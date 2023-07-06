@@ -16,22 +16,31 @@ Game::~Game() {
 		delete _shape2;
 		_shape2 = NULL;
 	}
+
+	if (_light != NULL) {
+		delete _light;
+		_light = NULL;
+	}
 }
 
 void Game::InitGame() {
-	_shape = new Shape(Type::quad, GetRenderer(), basicShader);
-	_shape2 = new Shape(Type::quad, GetRenderer(), basicShader);
+	_shape = new Shape(Type::lightCube, GetRenderer(), basicShader);
+	_shape2 = new Shape(Type::cube, GetRenderer(), basicShader);
+	_light = new Light(GetRenderer(), basicShader);
 
 	_shape->Init();
 	_shape2->Init();
 
-	_shape->Color(1.0f, 0.0f, 0.0f);
+	_light->transform.position = glm::vec3(0.0f, 0.0f, 1.0f);
+	_light->SetColor(1.0f, 1.0f, 0.0f);
+
+	//_shape->Color(1.0f, 0.0f, 0.0f);
 	_shape->transform.position = glm::vec3(0.0f, 0.0f, -5.0f);
-	_shape->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
+	_shape->transform.scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
 	_shape2->Color(0.0f, 0.0f, 1.0f);
 	_shape2->transform.position = glm::vec3(2.0f, 0.0f, -10.0f);
-	_shape2->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
+	_shape2->transform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
 
 	_shape->RotateX(1.0f * speed * time.GetDeltaTime());
 }
@@ -50,6 +59,18 @@ void Game::PlayerInputs() {
 	else if (input.GetKey(KeyCode::A)) {
 		_shape->transform.position.x -= speed * time.GetDeltaTime();
 	}
+	else if (input.GetKey(KeyCode::LEFT)) {
+		_light->transform.position.x -= speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::RIGHT)) {
+		_light->transform.position.x += speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::UP)) {
+		_light->transform.position.z -= speed * time.GetDeltaTime();
+	}
+	else if (input.GetKey(KeyCode::DOWN)) {
+		_light->transform.position.z += speed * time.GetDeltaTime();
+	}
 }
 
 void Game::UpdateGame() {
@@ -60,6 +81,7 @@ void Game::UpdateGame() {
 
 	_shape->Draw();
 	_shape2->Draw();
+	_light->Draw();
 }
 
 void Game::UnloadGame() {
@@ -72,5 +94,10 @@ void Game::UnloadGame() {
 	if (_shape2 != NULL) {
 		delete _shape2;
 		_shape2 = NULL;
+	}
+
+	if (_light != NULL) {
+		delete _light;
+		_light = NULL;
 	}
 }

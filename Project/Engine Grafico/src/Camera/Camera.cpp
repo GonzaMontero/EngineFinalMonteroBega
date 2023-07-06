@@ -26,7 +26,7 @@ Camera::Camera(Renderer* renderer, ProjectionType type, CamMode mode) {
 
 	_mode = mode;
 
-	_rotationAngle = 10.0f;
+	_rotationAngle = 5.0f;
 }
 
 Camera::~Camera() {

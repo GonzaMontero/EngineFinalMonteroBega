@@ -30,8 +30,24 @@ void Shape::BindVAO() {
 	_renderer->BindVAO(_vao);
 }
 
+void Shape::GenerateLightVAO() {
+	_renderer->GenerateLightVAO(_lightvao);
+}
+
+void Shape::BindLightVAO() {
+	_renderer->BindLightVAO(_lightvao);
+}
+
+void Shape::BindBufferLight() {
+	_renderer->BindBufferLight(_lightvbo);
+}
+
 void Shape::BindVBO(float* vertices, int verticesAmmount) {
 	_renderer->BindVBO(_vbo, vertices, verticesAmmount);
+}
+
+void Shape::BindLightVBO(float* vertices, int verticesAmmount) {
+	_renderer->BindLightVBO(_lightvbo, vertices, verticesAmmount);
 }
 
 void Shape::BindEBO(unsigned int* indices, int indicesAmmount) {
@@ -46,10 +62,28 @@ void Shape::Init() {
 	case Engine::Type::triangle:
 		BindVBO(_triVertices, 18);
 		BindEBO(_triIndices, 3);
+		_shader.SetVertexAttributes("position", 6);
+		_shader.SetColorAttributes("color", 6);
 		break;
 	case Engine::Type::quad:
 		BindVBO(_quadVertices, 24);
 		BindEBO(_quadIndices, 6);
+		_shader.SetVertexAttributes("position", 6);
+		_shader.SetColorAttributes("color", 6);
+		break;
+	case Engine::Type::cube:
+		BindVBO(_cubeVertices2, 216);
+		BindEBO(_cubeIndices2, 36);
+		_shader.SetVertexAttributes("position", 9);
+		_shader.SetColorAttributes("color", 9);
+		_shader.SetNormalAttributes("aNormal", 9);
+		break;
+	case Engine::Type::lightCube:
+		BindVBO(_cubeVertices2, 216);
+		BindEBO(_cubeIndices2, 36);
+		_shader.SetVertexAttributes("position", 9);
+		_shader.SetColorAttributes("color", 9);
+		_shader.SetNormalAttributes("aNormal", 9);
 		break;
 	}
 	_shader.SetVertexAttributes("position", 6);
@@ -104,6 +138,12 @@ void Shape::Draw() {
 	case Engine::Type::quad:
 		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _quadVertices, 24, _quadIndices, 6);
 		break;
+	case Engine::Type::cube:
+		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _cubeVertices2, 48, _cubeIndices2, 36);
+		break;
+	case Engine::Type::lightCube:
+		_renderer->DrawLightCube(_shader, GetModel(), _vao, _vbo, _cubeVertices2, 324, _cubeIndices2, 36);
+		break;
 	}
 }
 
@@ -112,5 +152,5 @@ void Shape::UnbindBuffers() {
 }
 
 void Shape::DeleteBuffer() {
-	_renderer->DeleteBuffers(_vao, _vbo, _ebo);
+	_renderer->DeleteBuffers(_vao, _vbo, _ebo, _lightvao);
 }

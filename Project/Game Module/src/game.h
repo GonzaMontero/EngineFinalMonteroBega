@@ -18,6 +18,7 @@ private:
 	Vector2 shapePos;
 	Shape* _shape = NULL;
 	Shape* _shape2 = NULL;
+	Light* _light = NULL;
 public:
 	Game();
 	~Game();

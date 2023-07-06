@@ -183,6 +183,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Libraries\tinyxml2.cpp" />
     <ClCompile Include="src\Libraries\xmltest.cpp" />
+    <ClCompile Include="src\Light\Light.cpp" />
     <ClCompile Include="src\Renderer\renderer.cpp" />
     <ClCompile Include="src\Shader\Shader.cpp" />
     <ClCompile Include="src\Shape\Shape.cpp" />
@@ -203,6 +204,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\Global.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Libraries\tinyxml2.h" />
+    <ClInclude Include="src\Light\Light.h" />
     <ClInclude Include="src\Renderer\renderer.h" />
     <ClInclude Include="src\Shader\Shader.h" />
     <ClInclude Include="src\Shape\Shape.h" />
@@ -222,6 +224,8 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <None Include="..\res\shader\TextureVertex.shader" />
     <None Include="..\res\shader\Vertex.shader" />
     <None Include="src\Shader\shader\fragment.frag" />
+    <None Include="src\Shader\shader\lightFragmentShader.frag" />
+    <None Include="src\Shader\shader\lightVertexShader.vert" />
     <None Include="src\Shader\shader\texture_frag.frag" />
     <None Include="src\Shader\shader\texture_vert.vert" />
     <None Include="src\Shader\shader\vertex.vert" />

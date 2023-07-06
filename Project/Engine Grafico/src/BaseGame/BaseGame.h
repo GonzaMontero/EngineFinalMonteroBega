@@ -16,6 +16,7 @@
 #include "../Tilemap/Tile.h"
 #include "../Tilemap/Tilemap.h"
 #include "../xml_lib/tinyxml2.h"
+#include "../Light/Light.h"
 
 namespace Engine {
 	class ENGINE_API BaseGame {
@@ -29,6 +30,7 @@ namespace Engine {
 		Camera* _camera;
 		Shader basicShader;
 		Shader textureShader;
+		//Shader lightShader;
 		Renderer* GetRenderer();
 		Window* GetWindow();
 		CollisionManager* _collisionManager;

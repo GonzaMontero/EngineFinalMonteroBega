@@ -61,6 +61,9 @@
     <Filter Include="Shader\Shaders">
       <UniqueIdentifier>{fbdb7480-3ecd-4969-a6b6-8d3824e2597d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{774783ac-a9c5-4793-b46c-8a99225539e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Libraries\tinyxml2.cpp">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="src\Shader\Shader.cpp">
       <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Light\Light.cpp">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +182,9 @@
     <ClInclude Include="src\Shader\Shader.h">
       <Filter>Shader</Filter>
     </ClInclude>
+    <ClInclude Include="src\Light\Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\res\shader\Fragment.shader">
@@ -200,6 +209,12 @@
       <Filter>Shader\Shaders</Filter>
     </None>
     <None Include="src\Shader\shader\vertex.vert">
+      <Filter>Shader\Shaders</Filter>
+    </None>
+    <None Include="src\Shader\shader\lightFragmentShader.frag">
+      <Filter>Shader\Shaders</Filter>
+    </None>
+    <None Include="src\Shader\shader\lightVertexShader.vert">
       <Filter>Shader\Shaders</Filter>
     </None>
   </ItemGroup>
