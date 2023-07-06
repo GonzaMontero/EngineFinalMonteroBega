@@ -106,16 +106,20 @@ void Renderer::SetTexAttribPointer(unsigned int shaderID) {
 	CreateAtribPointers(texAttrib, 2, 8, 6);
 }
 
-void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount) {
+void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, Material* material) {
 	BindVAO(vao);
 	UpdateBuffers(vbo, vertices, verticesAmount);
 	shader.SetVertexAttributes("position", 9); //especificamos como leer los datos del vertice y se lo pasamos al shader
 	shader.SetColorAttributes("color", 9);
 	//Crear en la clase shader un metodo para leer los nuevos datos de normales
-	shader.SetNormalAttributes("aNormal", 9);
+	shader.SetNormalAttributes("aNormal", 9); //ya esta
 	shader.SetVertexAttributes("position", 6); //especificamos como leer los datos del vertice y se lo pasamos al shader
 	shader.SetColorAttributes("color", 6);
 	shader.Use(model);
+	//Aplicamos el material de cada shape respectivamente
+	//El material se va a setear en el constructor de cada shape
+	material->ApplyMaterial(shader);
+
 	glUniform3f(glGetUniformLocation(shader.GetID(), "objectColor"), 1.0f, 0.5f, 0.31f);
 	glUniform3f(glGetUniformLocation(shader.GetID(), "lightColor"), 1.0f, 1.0f, 1.0f);
 	glDrawElements(GL_TRIANGLES, indicesAmmount, GL_UNSIGNED_INT, 0);
@@ -131,17 +135,7 @@ void Renderer::DrawBasicLight(Shader& shader, glm::vec3 lightPos, glm::vec3 ligh
 	//light color
 	unsigned int lightColorLoc = glGetUniformLocation(shader.GetID(), "lightColor");
 	glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
-	//Seteamos los valores del material que queremos lograr, seteamos los vectores del struct uniforme llamado Material
-	//El Shader ahora toma estos valores del material para hacer los calculos pertinentes de la iluminacion
-	//Cuando este la clase material pasarlo a su clase
-	glUniform3f(glGetUniformLocation(shader.GetID(), "material.ambient"), 1.0f, 0.5f, 0.31f);
-	glUniform3f(glGetUniformLocation(shader.GetID(), "material.diffuse"), 1.0f, 0.5f, 0.31f);
-	glUniform3f(glGetUniformLocation(shader.GetID(), "material.specular"), 0.5f, 0.5f, 0.5f);
-	glUniform1f(glGetUniformLocation(shader.GetID(), "material.shininess"), 32.0f);
-
-	// jugamos con los valores de los componentes de la luz
-	//Estos efectos extra que generamos y hacemos que la luz reaccione diferente al material del objeto
-	//Pasarlos a Light class
+	
 	glm::vec3 lColor;
 	lColor.x = sin(glfwGetTime() * 0.2f);
 	lColor.y = sin(glfwGetTime() * 0.7f);
@@ -150,8 +144,8 @@ void Renderer::DrawBasicLight(Shader& shader, glm::vec3 lightPos, glm::vec3 ligh
 	glm::vec3 diffuseColor = lColor * glm::vec3(0.5f);
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
-	glUniform3f(glGetUniformLocation(shader.GetID(), "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
-	glUniform3f(glGetUniformLocation(shader.GetID(), "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
+	glUniform3f(glGetUniformLocation(shader.GetID(), "light.ambient"), 1.0f, 1.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(shader.GetID(), "light.diffuse"), 1.0f, 1.0f, 1.0f);
 	glUniform3f(glGetUniformLocation(shader.GetID(), "light.specular"), 1.0f, 1.0f, 1.0f);
 }
 

@@ -24,7 +24,7 @@ Game::~Game() {
 }
 
 void Game::InitGame() {
-	_shape = new Shape(Type::lightCube, GetRenderer(), basicShader);
+	_shape = new Shape(Type::cube, GetRenderer(), basicShader);
 	_shape2 = new Shape(Type::cube, GetRenderer(), basicShader);
 	_light = new Light(GetRenderer(), basicShader);
 

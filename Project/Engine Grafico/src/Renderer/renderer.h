@@ -3,6 +3,7 @@
 
 #include "../Utils/Export.h"
 #include "../Shader/Shader.h"
+#include "../Material/Material.h"
 #include <mat4x4.hpp>
 
 struct GLFWwindow;
@@ -30,8 +31,7 @@ namespace Engine {
 		void DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo);
 		void CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition);
 		void SetTexAttribPointer(unsigned int shaderID);
-		void Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount);
-		void DrawLight(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount);
+		void Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, Material* material);
 		void DrawLightCube(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount);
 		void DrawBasicLight(Shader& shader, glm::vec3 lightPos, glm::vec3 lightColor);
 		void DrawSprite(Shader &shader, unsigned int &vao, unsigned int &vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, glm::mat4 model);

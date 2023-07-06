@@ -5,6 +5,7 @@
 #include "../Entity/Entity2D.h"
 #include "../Shader/Shader.h"
 #include "../Renderer/renderer.h"
+#include "../Material/Material.h"
 
 namespace Engine {
 
@@ -129,6 +130,7 @@ namespace Engine {
 		Type _type;
 		Renderer* _renderer;
 		Shader _shader;
+		Material* _material;
 
 		void GenerateVAO();
 		void BindVAO();
