@@ -5,6 +5,8 @@
 #include "../Renderer/renderer.h"
 #include "../Shader/Shader.h"
 #include "../Entity/Entity2D.h"
+#include "../Input/Input.h"
+#include "../Utils/TimeManager.h"
 
 
 namespace Engine {
@@ -18,6 +20,20 @@ namespace Engine {
 		ProjectionType _type;
 		glm::mat4 _view;
 		glm::mat4 _projection;
+		Input inputCam;
+		Time time;
+
+		glm::vec3 _cameraPos;
+		glm::vec3 _cameraFront;
+		glm::vec3 _cameraUp;
+
+		float _roll;
+		float _lastX;
+		float _lastY;
+		float _yaw;
+		float _pitch;
+		bool _firstMouse;
+
 	public:
 		Camera(Renderer* renderer, ProjectionType type);
 		~Camera();
@@ -25,11 +41,34 @@ namespace Engine {
 		void SetView(glm::vec3 direction, glm::vec3 up);
 		void SetProjection(ProjectionType type);
 
-		void Init(Shader& shader);
+		void Init(Shader& shader, GLFWwindow* window);
+
+		void SetLookAt();
+		void SetCameraPos(glm::vec3 cameraPos);
+		void SetCameraFront(glm::vec3 cameraFront);
+		void SetCameraUp(glm::vec3 cameraUp);
+		glm::vec3 GetCameraPos();
+		glm::vec3 GetCameraFront();
+		glm::vec3 GetCameraUp();
+
+		void RotateCamera();
 
 		glm::mat4 GetView();
 		glm::mat4 GetProjection();
 		glm::mat4 GetMVP();
+
+		void SetYaw(float yaw);
+		void SetPitch(float pitch);
+		void SetLastX(float lastX);
+		void SetLastY(float lastY);
+		float GetYaw();
+		float GetPitch();
+		float GetLastX();
+		float GetLastY();
+		void RotateYaw(float yaw);
+		void RotatePitch(float pitch);
+
+		void UpdateRotation();
 
 		ProjectionType GetProjectionType();
 		void Draw(Shader& shader);

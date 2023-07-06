@@ -56,12 +56,15 @@ int BaseGame::Init() {
 
 	_camera->transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
 
-	_camera->SetView(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	_camera->SetProjection(ProjectionType::perspective);
+	_camera->Init(basicShader, _window->GetWindow());
 
-	_camera->Init(basicShader);
-	_camera->Init(textureShader);
+	_camera->Init(basicShader, _window->GetWindow());
 
+	_camera->SetCameraPos(glm::vec3(0.0f, 0.0f, 3.0f));
+	_camera->SetCameraFront(glm::vec3(0.0, 0.0, -1.0f));
+
+	_camera->SetCameraUp(glm::vec3(0.0, 1.0, 0.0));
 
 	input.SetWindow(_window->GetWindow());
 
@@ -71,7 +74,8 @@ int BaseGame::Init() {
 }
 
 void BaseGame::Update() {
-	float speed = 0.01f;
+	float speed = 50.0f;
+	float rotationSpeed = 50.0f;
 
 	while (!glfwWindowShouldClose(_window->GetWindow())) 
 	{
@@ -79,13 +83,37 @@ void BaseGame::Update() {
 
 		UpdateGame();
 
-		_camera->SetView(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		if (input.GetKey(KeyCode::W))
+			_camera->transform.position += (speed * time.GetDeltaTime()) * _camera->GetCameraFront();
 
-		//_camera->Draw(basicShader);
-		_camera->Draw(textureShader);
+		if (input.GetKey(KeyCode::S))
+			_camera->transform.position -= (speed * time.GetDeltaTime()) * _camera->GetCameraFront();
 
-		//int modelLoc = glGetUniformLocation(textureShader.GetID(), "model");
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		if (input.GetKey(KeyCode::A))
+			_camera->transform.position -= glm::normalize(glm::cross(_camera->GetCameraFront(), _camera->GetCameraUp())) * (speed * time.GetDeltaTime());
+
+		if (input.GetKey(KeyCode::D))
+			_camera->transform.position += glm::normalize(glm::cross(_camera->GetCameraFront(), _camera->GetCameraUp())) * (speed * time.GetDeltaTime());
+
+		if (input.GetKey(KeyCode::DOWN)) {
+			_camera->RotatePitch(-rotationSpeed * time.GetDeltaTime());
+		}
+
+		if (input.GetKey(KeyCode::UP)) {
+			_camera->RotatePitch(rotationSpeed * time.GetDeltaTime());
+		}
+
+		if (input.GetKey(KeyCode::LEFT)) {
+			_camera->RotateYaw(-rotationSpeed * time.GetDeltaTime());
+		}
+
+		if (input.GetKey(KeyCode::RIGHT)) {
+			_camera->RotateYaw(rotationSpeed * time.GetDeltaTime());
+		}
+
+		_camera->UpdateRotation();
+		_camera->SetLookAt();
+		_camera->Draw(basicShader);
 
 		time.CalculateFPS();
 		time.Tick();

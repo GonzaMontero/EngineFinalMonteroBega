@@ -19,25 +19,14 @@ void Game::InitGame() {
 	_shape->Init();
 
 	_shape->Color(1.0f, 0.0f, 0.0f);
-	_shape->transform.position = glm::vec3(0, 0, -30.0f);
+	_shape->transform.position = glm::vec3(0.0f, 0.0f, -30.0f);
 	_shape->transform.scale = glm::vec3(10.0f, 10.0f, 1.0f);
 
 	_shape->RotateX(1.0f * speed * time.GetDeltaTime());
 }
 
 void Game::PlayerInputs() {
-	if (input.GetKey(KeyCode::W)) {
-		_shape->transform.position.y += speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::S)) {
-		_shape->transform.position.y -= speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::D)) {
-		_shape->transform.position.x += speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::A)) {
-		_shape->transform.position.x -= speed * time.GetDeltaTime();
-	}
+
 }
 void Game::UpdateGame() {
 
