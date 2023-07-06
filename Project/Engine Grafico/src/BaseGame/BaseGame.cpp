@@ -8,7 +8,7 @@ using namespace Engine;
 BaseGame::BaseGame() {
 	_renderer = new Renderer();
 	_window = new Window(1280, 720);
-	_camera = new Camera(_renderer, ProjectionType::orthographic);
+	_camera = new Camera(_renderer, ProjectionType::perspective);
 	_collisionManager = new CollisionManager();
 }
 
@@ -54,10 +54,10 @@ int BaseGame::Init() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	_camera->transform.position = glm::vec3(0.0f, 0.0f, -3.0f);
+	_camera->transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
 
 	_camera->SetView(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	_camera->SetProjection(ProjectionType::orthographic);
+	_camera->SetProjection(ProjectionType::perspective);
 
 	_camera->Init(basicShader);
 	_camera->Init(textureShader);
@@ -79,8 +79,13 @@ void BaseGame::Update() {
 
 		UpdateGame();
 
-		_camera->Draw(basicShader);
+		_camera->SetView(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+		//_camera->Draw(basicShader);
 		_camera->Draw(textureShader);
+
+		//int modelLoc = glGetUniformLocation(textureShader.GetID(), "model");
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 		time.CalculateFPS();
 		time.Tick();

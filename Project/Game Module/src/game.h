@@ -16,9 +16,10 @@ private:
 	float _time = 0;
 	
 	Vector2 shapePos;
-	Sprite* _sprite = NULL;
-	Animation* _player = NULL;
-	Tilemap* _map = NULL;
+	Shape* _shape = NULL;
+	//Sprite* _sprite = NULL;
+	//Animation* _player = NULL;
+	//Tilemap* _map = NULL;
 public:
 	Game();
 	~Game();
