@@ -17,9 +17,7 @@ private:
 	
 	Vector2 shapePos;
 	Shape* _shape = NULL;
-	//Sprite* _sprite = NULL;
-	//Animation* _player = NULL;
-	//Tilemap* _map = NULL;
+	Shape* _shape2 = NULL;
 public:
 	Game();
 	~Game();

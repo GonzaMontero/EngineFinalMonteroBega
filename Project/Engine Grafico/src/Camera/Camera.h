@@ -14,10 +14,15 @@ namespace Engine {
 		orthographic, perspective
 	};
 
+	enum class ENGINE_API CamMode {
+		firstPerson, thirdPerson
+	};
+
 	class ENGINE_API Camera:public Entity2D {
 	private:
 		Renderer* _renderer;
 		ProjectionType _type;
+		CamMode _mode;
 		glm::mat4 _view;
 		glm::mat4 _projection;
 		Input inputCam;
@@ -33,9 +38,10 @@ namespace Engine {
 		float _yaw;
 		float _pitch;
 		bool _firstMouse;
+		float _rotationAngle;
 
 	public:
-		Camera(Renderer* renderer, ProjectionType type);
+		Camera(Renderer* renderer, ProjectionType type, CamMode mode);
 		~Camera();
 
 		void SetView(glm::vec3 direction, glm::vec3 up);
@@ -44,6 +50,12 @@ namespace Engine {
 		void Init(Shader& shader, GLFWwindow* window);
 
 		void SetLookAt();
+
+		void SetCameraMode(CamMode mode);
+		void SetLookAt(glm::vec3 forward);
+		void FollowTarget(glm::vec3 positionTarget);
+		void RotateAroundTarget(float x, float z);
+
 		void SetCameraPos(glm::vec3 cameraPos);
 		void SetCameraFront(glm::vec3 cameraFront);
 		void SetCameraUp(glm::vec3 cameraUp);
