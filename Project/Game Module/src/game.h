@@ -19,6 +19,8 @@ private:
 	Shape* _shape = NULL;
 	Shape* _shape2 = NULL;
 	Light* _light = NULL;
+	Sprite* _sprite = NULL;
+
 public:
 	Game();
 	~Game();

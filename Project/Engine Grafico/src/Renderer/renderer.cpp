@@ -96,26 +96,29 @@ void Renderer::CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmou
 	glEnableVertexAttribArray(shaderAttribIndex);
 }
 
-void Renderer::SetTexAttribPointer(unsigned int shaderID) {
-	GLuint posAttrib = glGetAttribLocation(shaderID, "aPos");
-	GLuint colorAttrib = glGetAttribLocation(shaderID, "aColor"); // no daba el valor correcto porque no usaba la variable en el main
-	GLuint texAttrib = glGetAttribLocation(shaderID, "aTexCoord");
-	glUniform1i((glGetUniformLocation(shaderID, "mainTexture")), 0);
-	CreateAtribPointers(posAttrib, 3, 8, 0);
-	CreateAtribPointers(colorAttrib, 3, 8, 3);
-	CreateAtribPointers(texAttrib, 2, 8, 6);
-}
+//void Renderer::SetTexAttribPointer(unsigned int shaderID) {
+//	//GLuint posAttrib = glGetAttribLocation(shaderID, "aPos");
+//	//GLuint colorAttrib = glGetAttribLocation(shaderID, "aColor"); // no daba el valor correcto porque no usaba la variable en el main
+//	//GLuint texAttrib = glGetAttribLocation(shaderID, "aTexCoord");
+//	glUniform1i((glGetUniformLocation(shaderID, "mainTexture")), 0);
+//	//CreateAtribPointers(posAttrib, 3, 11, 0);
+//	//CreateAtribPointers(colorAttrib, 3, 11, 3);
+//	//CreateAtribPointers(texAttrib, 2, 11, 9);
+//}
 
 void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, Material* material) {
 	BindVAO(vao);
+
 	UpdateBuffers(vbo, vertices, verticesAmount);
-	shader.SetVertexAttributes("position", 9); //especificamos como leer los datos del vertice y se lo pasamos al shader
-	shader.SetColorAttributes("color", 9);
+	shader.SetVertexAttributes("position", 11); //especificamos como leer los datos del vertice y se lo pasamos al shader
+	shader.SetColorAttributes("color", 11);
+
 	//Crear en la clase shader un metodo para leer los nuevos datos de normales
-	shader.SetNormalAttributes("aNormal", 9); //ya esta
-	shader.SetVertexAttributes("position", 6); //especificamos como leer los datos del vertice y se lo pasamos al shader
-	shader.SetColorAttributes("color", 6);
+	shader.SetNormalAttributes("aNormal", 11);
+	shader.SetTypeOfshape("type", 0);
+
 	shader.Use(model);
+
 	//Aplicamos el material de cada shape respectivamente
 	//El material se va a setear en el constructor de cada shape
 	material->ApplyMaterial(shader);
@@ -135,7 +138,12 @@ void Renderer::DrawBasicLight(Shader& shader, glm::vec3 lightPos, glm::vec3 ligh
 	//light color
 	unsigned int lightColorLoc = glGetUniformLocation(shader.GetID(), "lightColor");
 	glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
-	
+
+	glUniform3f(glGetUniformLocation(shader.GetID(), "material.ambient"), 1.0f, 0.5f, 0.31f);
+	glUniform3f(glGetUniformLocation(shader.GetID(), "material.diffuse"), 1.0f, 0.5f, 0.31f);
+	glUniform3f(glGetUniformLocation(shader.GetID(), "material.specular"), 0.5f, 0.5f, 0.5f);
+	glUniform1f(glGetUniformLocation(shader.GetID(), "material.shininess"), 32.0f);
+
 	glm::vec3 lColor;
 	lColor.x = sin(glfwGetTime() * 0.2f);
 	lColor.y = sin(glfwGetTime() * 0.7f);
@@ -144,17 +152,24 @@ void Renderer::DrawBasicLight(Shader& shader, glm::vec3 lightPos, glm::vec3 ligh
 	glm::vec3 diffuseColor = lColor * glm::vec3(0.5f);
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
-	glUniform3f(glGetUniformLocation(shader.GetID(), "light.ambient"), 1.0f, 1.0f, 1.0f);
-	glUniform3f(glGetUniformLocation(shader.GetID(), "light.diffuse"), 1.0f, 1.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(shader.GetID(), "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
+	glUniform3f(glGetUniformLocation(shader.GetID(), "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
 	glUniform3f(glGetUniformLocation(shader.GetID(), "light.specular"), 1.0f, 1.0f, 1.0f);
 }
 
 void Renderer::DrawSprite(Shader& shader, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, glm::mat4 model) {
 	BindVAO(vao);
+
 	UpdateBuffers(vbo, vertices, verticesAmount);
-	SetTexAttribPointer(shader.GetID());
+	shader.SetVertexAttributes("position", 11);
+	shader.SetColorAttributes("color", 11);
+	shader.SetNormalAttributes("aNormal", 11);
+	shader.SetTextureAttributes("uv", 11);
+	shader.SetTypeOfshape("type", 1);
+	shader.SetSamplerTexture("mainTexture", 0);
+	//SetTexAttribPointer(shader.GetID());
 	shader.Use(model);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, indicesAmmount, GL_UNSIGNED_INT, 0);
 	UnbindBuffers();
 }
 
@@ -162,10 +177,16 @@ void Renderer::DrawLightCube(Shader& shader, glm::mat4 model, unsigned int& vao,
 {
 	BindVAO(vao);
 	UpdateBuffers(vbo, vertices, verticesAmount);
+
+	shader.SetVertexAttributes("position", 9);
+	//SetTexAttribPointer(shader.GetID());
+	shader.SetNormalAttributes("aNormal", 9);
+
 	//Para crear los punteros de atributos de vertices (AttribPointer)
 	//shader.SetVertexAttributes("position", 6);
 	shader.Use(model);
 	glUniform3f(glGetUniformLocation(shader.GetID(), "objectColor"), 1.0f, 1.0f, 1.0f);
+
 	//shader.SetColorAttributes("color",6);
 	glDrawElements(GL_TRIANGLES, indicesAmmount, GL_UNSIGNED_INT, 0);
 	UnbindBuffers();

@@ -50,7 +50,7 @@ int BaseGame::Init() {
 	}
 
 	basicShader.Create("..//Engine Grafico//src//Shader//shader//vertex.vert", "..//Engine Grafico//src//Shader//shader//fragment.frag");
-	textureShader.Create("..//Engine Grafico//src//Shader//shader//texture_vert.vert", "..//Engine Grafico//src//Shader//shader//texture_frag.frag");
+	//textureShader.Create("..//Engine Grafico//src//Shader//shader//texture_vert.vert", "..//Engine Grafico//src//Shader//shader//texture_frag.frag");
 	//lightShader.Create("..//Engine Grafico//src//Shader//shader//lightVertexShader.vert", "..//Engine Grafico//src//Shader//shader//lightFragmentShader.frag");
 
 	glEnable(GL_DEPTH_TEST);
