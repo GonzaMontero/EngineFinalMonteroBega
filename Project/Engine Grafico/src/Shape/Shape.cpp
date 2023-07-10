@@ -7,14 +7,21 @@ using namespace Engine;
 Shape::Shape() : Entity2D() {
 	_type = Type::triangle;
 	_renderer = NULL;
-	_material = new Material(MaterialType::esmerald); //Probando el material esmerald, hacer que el usuario eliga el material
+	_material = new Material(MaterialType::yellow_rubber); //Probando el material esmerald, hacer que el usuario eliga el material
 }
 
 Shape::Shape(Type type, Renderer* renderer, Shader shader) : Entity2D() {
 	_type = type;
 	_renderer = renderer;
 	_shader = shader;
-	_material = new Material(MaterialType::esmerald);
+	_material = new Material(MaterialType::lambert);
+}
+
+Shape::Shape(Type type, Renderer* renderer, Shader shader, MaterialType materialType) : Entity2D() {
+	_type = type;
+	_renderer = renderer;
+	_shader = shader;
+	_material = new Material(materialType);
 }
 
 Shape::Shape(Type type, Renderer* renderer, Shader shader, const char* texPath, bool isTransparent) : Entity2D() {
@@ -200,7 +207,7 @@ void Shape::Draw() {
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, _texImporter->GetTexture());
 				glActiveTexture(GL_TEXTURE0);
-				_renderer->DrawSprite(_shader, _vao, _vbo, _cubeTextureVertices, 396, _cubeIndices, 36, GetModel());
+				_renderer->DrawSprite(_shader, _vao, _vbo, _cubeTextureVertices, 396, _cubeIndices, 36, GetModel(), _material);
 				UnBlendSprite();
 				glDisable(GL_TEXTURE_2D);
 
@@ -208,7 +215,7 @@ void Shape::Draw() {
 			else {
 				glBindTexture(GL_TEXTURE_2D, _texImporter->GetTexture());
 				glActiveTexture(GL_TEXTURE0);
-				_renderer->DrawSprite(_shader, _vao, _vbo, _cubeTextureVertices, 396, _cubeIndices, 36, GetModel());
+				_renderer->DrawSprite(_shader, _vao, _vbo, _cubeTextureVertices, 396, _cubeIndices, 36, GetModel(), _material);
 				glDisable(GL_TEXTURE_2D);
 			}
 		}

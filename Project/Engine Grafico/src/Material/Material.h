@@ -10,6 +10,7 @@
 namespace Engine {
 	enum class ENGINE_API MaterialType {
 		lambert,
+		lambertPro,
 		esmerald,
 		jade,
 		obsidian,

@@ -36,16 +36,33 @@ Sprite::Sprite(bool transparency, const char* path, Renderer* renderer, Shader s
 	this->shader = shader;
 	_texImporter->SetPath(path);
 
-	//uv[0].u = 1; uv[0].v = 1;
-	//uv[1].u = 1; uv[1].v = 0;
-	//uv[2].u = 0; uv[2].v = 0;
-	//uv[3].u = 0; uv[3].v = 1;
+}
+
+Sprite::Sprite(bool transparency, const char* path, const char* specPath, Renderer* renderer, Shader shader, MaterialType materialType) : Entity2D() {
+	_transparency = transparency;
+	_renderer = renderer;
+	_texImporter = new TextureImporter(path);
+	_texImporter2 = new TextureImporter(specPath);
+	this->shader = shader;
+	_diffPath = path;
+	_specPath = specPath;
+	_material = new Material(materialType);
 }
 
 Sprite::~Sprite() {
 	if (_texImporter != NULL) {
 		delete _texImporter;
 		_texImporter = NULL;
+	}
+
+	if (_texImporter2 != NULL) {
+		delete _texImporter2;
+		_texImporter2 = NULL;
+	}
+
+	if (_material != NULL) {
+		delete _material;
+		_material = NULL;
 	}
 }
 
@@ -72,7 +89,7 @@ void Sprite::Init() {
 	shader.SetNormalAttributes("aNormal", 11);
 	shader.SetTextureAttributes("uv", 11);
 	//_renderer->SetTexAttribPointer(shader.GetID());
-	shader.SetSamplerTexture("mainTexture", 0);
+	//shader.SetSamplerTexture("mainTexture", 0);
 	shader.SetTypeOfshape("type", 1);
 	//necesario para pasar los datos a la veriable uniforme de textura
 	BindBuffers();
@@ -88,6 +105,13 @@ void Sprite::LoadSprite() {
 	if (_texImporter) {
 		_texImporter->LoadImage(_width, _height, _transparency);
 		_texture = _texImporter->GetTexture();
+	}
+	else
+		std::cout << "Couldn't find image" << std::endl;
+
+	if (_texImporter2) {
+		_texImporter2->LoadImage(_width, _height, _transparency);
+		_texture = _texImporter2->GetTexture();
 	}
 	else
 		std::cout << "Couldn't find image" << std::endl;
@@ -111,8 +135,16 @@ void Sprite::BindBuffers() {
 }
 
 void Sprite::BindTexture() {
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, _texImporter->GetTexture());
-	glActiveTexture(GL_TEXTURE0);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, _texImporter2->GetTexture());
+}
+
+void Sprite::BindSecondTexture() {
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, _texImporter->GetTexture());
 }
 
 void Sprite::BlendSprite() {
@@ -173,13 +205,15 @@ void Sprite::DrawSprite() {
 	if (_transparency) {
 		BlendSprite();
 		BindTexture();
-		_renderer->DrawSprite(shader, _vao, _vbo, _cubeVertices2, 396, _cubeIndices2, 36, GetModel());
+		//BindSecondTexture();
+		_renderer->DrawSprite(shader, _vao, _vbo, _cubeVertices2, 396, _cubeIndices2, 36, GetModel(), _material);
 		UnBlendSprite();
 		glDisable(GL_TEXTURE_2D);
 	}
 	else {
 		BindTexture();
-		_renderer->DrawSprite(shader, _vao, _vbo, _cubeVertices2, 396, _cubeIndices2, 36, GetModel());
+		//BindSecondTexture();
+		_renderer->DrawSprite(shader, _vao, _vbo, _cubeVertices2, 396, _cubeIndices2, 36, GetModel(), _material);
 		glDisable(GL_TEXTURE_2D);
 	}
 }
@@ -190,13 +224,13 @@ void Sprite::DrawFromUVs(glm::vec4 uv) {
 	if (_transparency) {
 		BlendSprite();
 		BindTexture();
-		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel(), _material);
 		UnBlendSprite();
 		glDisable(GL_TEXTURE_2D);
 	}
 	else {
 		BindTexture();
-		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel(), _material);
 		glDisable(GL_TEXTURE_2D);
 	}
 }
@@ -207,13 +241,13 @@ void Sprite::DrawAnimation(glm::vec4 uvRect) {
 	if (_transparency) {
 		BlendSprite();
 		BindTexture();
-		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel(), _material);
 		UnBlendSprite();
 		glDisable(GL_TEXTURE_2D);
 	}
 	else {
 		BindTexture();
-		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
+		_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel(), _material);
 		glDisable(GL_TEXTURE_2D);
 	}
 }

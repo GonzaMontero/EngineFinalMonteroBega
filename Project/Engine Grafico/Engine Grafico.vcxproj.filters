@@ -155,9 +155,6 @@
     <ClInclude Include="src\Input\Input.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Renderer\renderer.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="src\Shape\Shape.h">
       <Filter>Shape</Filter>
     </ClInclude>
@@ -193,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="src\Material\Material.h">
       <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\renderer.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

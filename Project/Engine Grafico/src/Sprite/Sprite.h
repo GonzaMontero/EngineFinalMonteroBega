@@ -6,6 +6,7 @@
 #include "../Utils/Export.h"
 #include "../Utils/TextureImporter.h"
 #include "../Renderer/renderer.h"
+#include "../Material/Material.h"
 
 namespace Engine {
 	class Animation;
@@ -23,8 +24,13 @@ namespace Engine {
 		bool _transparency;
 		Renderer* _renderer;
 		TextureImporter* _texImporter;
+		TextureImporter* _texImporter2;
+		Material* _material;
 		UVs uv[4];
 		unsigned int _texture = 0;
+		unsigned int _textureSpec = 1;
+		const char* _diffPath;
+		const char* _specPath;
 
 		unsigned int _vao = 0;
 		unsigned int _vbo = 0;
@@ -50,33 +56,33 @@ namespace Engine {
 			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f, 0.0f, 1.0f,//4
 			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, -1.0f, 0.0f, 0.0f,//5
 
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  0.0f, 0.0f,//6
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 0.0f,//7
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,//8
-			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,//9
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 1.0f,  0.0f, 1.0f,//10
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f,  0.0f, 0.0f,//11
+			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  0.0f, 0.0f,//6
+			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  1.0f, 0.0f,//7
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,//8
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  1.0f, 1.0f,//9
+			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  0.0f, 1.0f,//10
+			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f,  0.0f, 1.0f,  0.0f, 0.0f,//11
 
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//12
-			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,//13
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//14
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//15
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,//16
-			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//17
+			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//12
+			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,//13
+			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//14
+			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//15
+			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,//16
+			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//17
 
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//18
-			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f, 1.0f, 1.0f,//19
-			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//20
-			 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//21
-			 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f,  0.0f,  0.0f, 0.0f, 0.0f,//22
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//23
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//18
+			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, 1.0f, 1.0f,//19
+			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//20
+			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, 0.0f, 1.0f,//21
+			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, 0.0f, 0.0f,//22
+			 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  0.0f, 1.0f, 0.0f,//23
 
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, 1.0f,//24
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 1.0f,//25
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f,//26
-			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f,//27
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, 0.0f,//28
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, -1.0f,  0.0f, 0.0f, 1.0f,//29
+			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f, 1.0f,//24
+			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f, 1.0f, 1.0f,//25
+			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f,//26
+			 0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f, 1.0f, 0.0f,//27
+			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f, 0.0f,//28
+			-0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 1.0f, 0.0f, -1.0f,  0.0f, 0.0f, 1.0f,//29
 
 			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f,  1.0f,  0.0f, 0.0f, 1.0f,//30
 			 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 0.0f,  1.0f,  0.0f, 1.0f, 1.0f,//31
@@ -111,6 +117,7 @@ namespace Engine {
 		void DeleteBuffer();
 		void BindBuffers();
 		void BindTexture();
+		void BindSecondTexture(); //Temporary Measure
 		void BlendSprite();
 		void UnBlendSprite();
 		void LoadSprite();
@@ -124,6 +131,7 @@ namespace Engine {
 		Sprite();
 		Sprite(bool transparency, Renderer* renderer, Shader shader);
 		Sprite(bool transparency, const char* path, Renderer* renderer, Shader shader);
+		Sprite(bool transparency, const char* path, const char* specPath, Renderer* renderer, Shader shader, MaterialType materialType);
 		~Sprite();
 		void Init();
 		void Init(unsigned int texture);
