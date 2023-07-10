@@ -17,13 +17,14 @@
 #include "../Tilemap/Tilemap.h"
 #include "../xml_lib/tinyxml2.h"
 #include "../Light/Light.h"
+#include "../Model Importer/ModelImp.h"
 
 namespace Engine {
 	class ENGINE_API BaseGame {
 	private:
 		Renderer* _renderer;
 		Window* _window;
-
+		ModelImp* _model;
 	protected:
 		//void mouse_callback(GLFWwindow* window, double posX, double posY);
 

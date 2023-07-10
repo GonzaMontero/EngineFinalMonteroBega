@@ -97,6 +97,14 @@ void Renderer::CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmou
 	glEnableVertexAttribArray(shaderAttribIndex);
 }
 
+void Renderer::SetShader(Shader& shader) {
+	_shader = shader;
+}
+
+Shader& Renderer::GetShader() {
+	return _shader;
+}
+
 //void Renderer::SetTexAttribPointer(unsigned int shaderID) {
 //	//GLuint posAttrib = glGetAttribLocation(shaderID, "aPos");
 //	//GLuint colorAttrib = glGetAttribLocation(shaderID, "aColor"); // no daba el valor correcto porque no usaba la variable en el main
@@ -129,6 +137,30 @@ void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned
 	glDrawElements(GL_TRIANGLES, indicesAmmount, GL_UNSIGNED_INT, 0);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	UnbindBuffers();
+}
+
+void Renderer::DrawSpotLight(Shader& shader, glm::vec3 lightPos, glm::vec3 lightDir, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff) {
+	shader.Use();
+	unsigned int lightPosLocation = glGetUniformLocation(shader.GetID(), "spotLight.position");
+	glUniform3fv(lightPosLocation, 1, glm::value_ptr(lightPos));
+	unsigned int lightDirLocation = glGetUniformLocation(shader.GetID(), "spotLight.direction");
+	glUniform3fv(lightDirLocation, 1, glm::value_ptr(lightDir));
+	unsigned int lightAmbientLocation = glGetUniformLocation(shader.GetID(), "spotLight.ambient");
+	glUniform3fv(lightAmbientLocation, 1, glm::value_ptr(ambient));
+	unsigned int lightDiffuseLocation = glGetUniformLocation(shader.GetID(), "spotLight.diffuse");
+	glUniform3fv(lightDiffuseLocation, 1, glm::value_ptr(diffuse));
+	unsigned int lightSpecularLocation = glGetUniformLocation(shader.GetID(), "spotLight.specular");
+	glUniform3fv(lightSpecularLocation, 1, glm::value_ptr(specular));
+	unsigned int lightConstantLocation = glGetUniformLocation(shader.GetID(), "spotLight.constant");
+	glUniform1f(lightConstantLocation, constant);
+	unsigned int lightLinearLocation = glGetUniformLocation(shader.GetID(), "spotLight.linear");
+	glUniform1f(lightLinearLocation, linear);
+	unsigned int lightQuadraticLocation = glGetUniformLocation(shader.GetID(), "spotLight.quadratic");
+	glUniform1f(lightQuadraticLocation, quadratic);
+	unsigned int lightCutOffLocation = glGetUniformLocation(shader.GetID(), "spotLight.cutOff");
+	glUniform1f(lightCutOffLocation, cutOff);
+	unsigned int lightOuterCutOff = glGetUniformLocation(shader.GetID(), "spotLight.outerCutOff");
+	glUniform1f(lightOuterCutOff, outerCutOff);
 }
 
 void Renderer::DrawPointLight(Shader& shader, glm::vec3 lightPos, glm::vec3 lightColor, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic, int cantOfLights, int numberOfLight){
@@ -165,7 +197,7 @@ void Renderer::DrawPointLight(Shader& shader, glm::vec3 lightPos, glm::vec3 ligh
 	glUniform1f(pointLightQuadraticLoc, quadratic);
 }
 
-void Renderer::DrawDirectionalLight(Shader& shader, glm::vec3 lightPos, glm::vec3 lightColor, glm::vec3 direction) {
+void Renderer::DrawDirectionalLight(Shader& shader, glm::vec3 lightPos, glm::vec3 lightColor, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) {
 	shader.Use();
 
 	//light pos
@@ -176,9 +208,15 @@ void Renderer::DrawDirectionalLight(Shader& shader, glm::vec3 lightPos, glm::vec
 	unsigned int lightColorLoc = glGetUniformLocation(shader.GetID(), "lightColor");
 	glUniform3fv(lightColorLoc, 1, glm::value_ptr(lightColor));
 
-	glUniform3f(glGetUniformLocation(shader.GetID(), "dirLight.ambient"), 1.0f, 1.0f, 1.0f);
-	glUniform3f(glGetUniformLocation(shader.GetID(), "dirLight.diffuse"), 1.0f, 1.0f, 1.0f);
-	glUniform3f(glGetUniformLocation(shader.GetID(), "dirLight.specular"), 1.0f, 1.0f, 1.0f);
+	unsigned int lightAmbientLoc = glGetUniformLocation(shader.GetID(), "dirLight.ambient");
+	glUniform3fv(lightAmbientLoc, 1, glm::value_ptr(ambient));
+
+	unsigned int lightDiffuseLoc = glGetUniformLocation(shader.GetID(), "dirLight.diffuse");
+	glUniform3fv(lightDiffuseLoc, 1, glm::value_ptr(diffuse));
+
+	unsigned int lightSpecularLoc = glGetUniformLocation(shader.GetID(), "dirLight.specular");
+	glUniform3fv(lightSpecularLoc, 1, glm::value_ptr(specular));
+
 	unsigned int lightDirectionLoc = glGetUniformLocation(shader.GetID(), "dirLight.direction");
 	glUniform3fv(lightDirectionLoc, 1, glm::value_ptr(direction));
 }

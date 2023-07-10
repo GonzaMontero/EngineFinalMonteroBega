@@ -67,6 +67,9 @@
     <Filter Include="Material">
       <UniqueIdentifier>{d4042522-8cb6-41db-8c18-1c3878f8a971}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model Importer">
+      <UniqueIdentifier>{7301f316-2b92-4ebb-893d-a566c2a25409}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Libraries\tinyxml2.cpp">
@@ -125,6 +128,12 @@
     </ClCompile>
     <ClCompile Include="src\Material\Material.cpp">
       <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model Importer\Mesh.cpp">
+      <Filter>Model Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model Importer\ModelImp.cpp">
+      <Filter>Model Importer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="src\Renderer\renderer.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model Importer\Mesh.h">
+      <Filter>Model Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model Importer\ModelImp.h">
+      <Filter>Model Importer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

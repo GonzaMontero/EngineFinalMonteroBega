@@ -104,12 +104,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine Grafico\lib\glm\ext;$(SolutionDir)Engine Grafico\lib\glm\gtc;$(SolutionDir)Engine Grafico\lib\glm;$(ProjectDir)src;$(SolutionDir)Engine Grafico\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine Grafico\lib\glm\ext;$(SolutionDir)Engine Grafico\lib\glm\gtc;$(SolutionDir)Engine Grafico\lib\assimp\1.4.0\Assimp\include;$(SolutionDir)Engine Grafico\lib\glm;$(ProjectDir)src;$(SolutionDir)Engine Grafico\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)Game Module;$(SolutionDir)Engine Grafico\bin\Debug\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine Grafico.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Game Module;$(SolutionDir)Engine Grafico\lib\assimp\1.4.0\Assimp\Lib;$(SolutionDir)Engine Grafico\bin\Debug\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;Engine Grafico.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

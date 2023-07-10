@@ -8,6 +8,8 @@
 #include "../Input/Input.h"
 #include "../Utils/TimeManager.h"
 
+using namespace std;
+
 
 namespace Engine {
 	enum class ENGINE_API ProjectionType {
@@ -33,8 +35,6 @@ namespace Engine {
 		glm::vec3 _cameraUp;
 
 		float _roll;
-		float _lastX;
-		float _lastY;
 		float _yaw;
 		float _pitch;
 		bool _firstMouse;
@@ -56,10 +56,8 @@ namespace Engine {
 		void FollowTarget(glm::vec3 positionTarget);
 		void RotateAroundTarget(float x, float z);
 
-		void SetCameraPos(glm::vec3 cameraPos);
 		void SetCameraFront(glm::vec3 cameraFront);
 		void SetCameraUp(glm::vec3 cameraUp);
-		glm::vec3 GetCameraPos();
 		glm::vec3 GetCameraFront();
 		glm::vec3 GetCameraUp();
 
@@ -71,12 +69,8 @@ namespace Engine {
 
 		void SetYaw(float yaw);
 		void SetPitch(float pitch);
-		void SetLastX(float lastX);
-		void SetLastY(float lastY);
 		float GetYaw();
 		float GetPitch();
-		float GetLastX();
-		float GetLastY();
 		void RotateYaw(float yaw);
 		void RotatePitch(float pitch);
 

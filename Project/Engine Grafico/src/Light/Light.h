@@ -21,8 +21,11 @@ namespace Engine {
 		float _constant;
 		float _linear;
 		float _quadratic;
+		float _cutOff;
+		float _outerCutOff;
 		glm::vec3 _color;
 		LightType _type;
+		bool _turnOn;
 	public:
 		Light();
 		Light(Renderer* renderer, Shader shader);
@@ -40,8 +43,13 @@ namespace Engine {
 		void SetConstant(float constant);
 		void SetLinear(float linear);
 		void SetQuadratic(float quadratic);
+		void SetCutOff(float cutOff);
+		void SetOuterCutOff(float outerCutOff);
+		void SetTurnOnState(bool state);
+		bool GetTurnState();
 		void DrawDirectionalLight();
 		void DrawPointLight(int numberOfLight);
+		void DrawSpotLight();
 	};
 
 	static int _lightCount = 0;

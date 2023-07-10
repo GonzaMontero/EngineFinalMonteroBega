@@ -8,7 +8,7 @@ using namespace Engine;
 BaseGame::BaseGame() {
 	_renderer = new Renderer();
 	_window = new Window(1280, 720);
-	_camera = new Camera(_renderer, ProjectionType::perspective, CamMode::thirdPerson);
+	_camera = new Camera(_renderer, ProjectionType::perspective, CamMode::firstPerson);
 	_collisionManager = new CollisionManager();
 }
 
@@ -50,8 +50,8 @@ int BaseGame::Init() {
 	}
 
 	basicShader.Create("..//Engine Grafico//src//Shader//shader//vertex.vert", "..//Engine Grafico//src//Shader//shader//fragment.frag");
-	//textureShader.Create("..//Engine Grafico//src//Shader//shader//texture_vert.vert", "..//Engine Grafico//src//Shader//shader//texture_frag.frag");
-	//lightShader.Create("..//Engine Grafico//src//Shader//shader//lightVertexShader.vert", "..//Engine Grafico//src//Shader//shader//lightFragmentShader.frag");
+	stbi_set_flip_vertically_on_load(true);
+	//_renderer->SetShader(basicShader);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -62,8 +62,8 @@ int BaseGame::Init() {
 
 	_camera->Init(basicShader, _window->GetWindow());
 
-	_camera->SetCameraPos(glm::vec3(0.0f, 0.0f, 5.0f));
-	_camera->SetCameraFront(glm::vec3(0.0, 0.0, -2.0f));
+	//_camera->SetCameraPos(glm::vec3(0.0f, 0.0f, 5.0f));
+	_camera->transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
 
 	_camera->SetCameraUp(glm::vec3(0.0, 1.0, 0.0));
 
@@ -83,39 +83,7 @@ void BaseGame::Update() {
 		_renderer->BeginFrame(0.0f, 0.0f, 0.0f);
 
 		UpdateGame();
-
-	/*	if (input.GetKey(KeyCode::W))
-			_camera->transform.position += (speed * time.GetDeltaTime()) * _camera->GetCameraFront();
-
-		if (input.GetKey(KeyCode::S))
-			_camera->transform.position -= (speed * time.GetDeltaTime()) * _camera->GetCameraFront();
-
-		if (input.GetKey(KeyCode::A))
-			_camera->transform.position -= glm::normalize(glm::cross(_camera->GetCameraFront(), _camera->GetCameraUp())) * (speed * time.GetDeltaTime());
-
-		if (input.GetKey(KeyCode::D))
-			_camera->transform.position += glm::normalize(glm::cross(_camera->GetCameraFront(), _camera->GetCameraUp())) * (speed * time.GetDeltaTime());*/
-
-		if (input.GetKey(KeyCode::DOWN)) {
-			_camera->RotatePitch(-rotationSpeed * time.GetDeltaTime());
-		}
-
-		if (input.GetKey(KeyCode::UP)) {
-			_camera->RotatePitch(rotationSpeed * time.GetDeltaTime());
-		}
-
-		if (input.GetKey(KeyCode::LEFT)) {
-			_camera->RotateYaw(-rotationSpeed * time.GetDeltaTime());
-		}
-
-		if (input.GetKey(KeyCode::RIGHT)) {
-			_camera->RotateYaw(rotationSpeed * time.GetDeltaTime());
-		}
-
-		_camera->UpdateRotation();
-		/*_camera->SetLookAt();*/
-		_camera->Draw(basicShader);
-
+		
 		time.CalculateFPS();
 		time.Tick();
 

@@ -96,18 +96,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\glfw\include\GLFW;$(ProjectDir)lib\glew\include\GL;$(ProjectDir)lib\glm;$(ProjectDir)lib\glm\gtc;$(ProjectDir)lib\glm\ext;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\glfw\include\GLFW;$(ProjectDir)lib\glew\include\GL;$(ProjectDir)lib\glm;$(ProjectDir)lib\glm\gtc;$(ProjectDir)lib\glm\ext;$(ProjectDir)lib\assimp\1.4.0\Assimp\include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\glew\lib\RLibs\Win32;$(ProjectDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\glew\lib\RLibs\Win32;$(ProjectDir)lib\glfw\lib-vc2019;$(ProjectDir)lib\assimp\1.4.0\Assimp\Lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc140-mt.lib;opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y  "$(ProjectDir)lib\glew\lib\RLibs\Win32" "$(SolutionDir)Game Module\bin\Debug\Win32"
 copy /Y  "$(ProjectDir)include" "$(SolutionDir)Game Module\bin\Debug\Win32"
-copy /Y  "$(ProjectDir)bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
+copy /Y  "$(ProjectDir)bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"
+copy /Y "$(ProjectDir)lib\assimp\1.4.0\Assimp\Lib\assimp-vc140-mt.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -185,6 +186,8 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\Libraries\xmltest.cpp" />
     <ClCompile Include="src\Light\Light.cpp" />
     <ClCompile Include="src\Material\Material.cpp" />
+    <ClCompile Include="src\Model Importer\Mesh.cpp" />
+    <ClCompile Include="src\Model Importer\ModelImp.cpp" />
     <ClCompile Include="src\Renderer\renderer.cpp" />
     <ClCompile Include="src\Shader\Shader.cpp" />
     <ClCompile Include="src\Shape\Shape.cpp" />
@@ -207,6 +210,8 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\Libraries\tinyxml2.h" />
     <ClInclude Include="src\Light\Light.h" />
     <ClInclude Include="src\Material\Material.h" />
+    <ClInclude Include="src\Model Importer\Mesh.h" />
+    <ClInclude Include="src\Model Importer\ModelImp.h" />
     <ClInclude Include="src\Renderer\renderer.h" />
     <ClInclude Include="src\Shader\Shader.h" />
     <ClInclude Include="src\Shape\Shape.h" />
