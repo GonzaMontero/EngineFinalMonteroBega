@@ -4,7 +4,7 @@
 
 using namespace Engine;
 
-Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, Shader shader, Renderer* renderer) : Entity2D()
+Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, Shader shader) : Entity2D()
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -20,22 +20,38 @@ Mesh::~Mesh() {
 }
 
 void Mesh::SetUpMesh() {
-	_renderer->GenerateVAO(_vao);
+	glGenVertexArrays(1, &_vao);
+	glGenBuffers(1, &_vbo);
+	glGenBuffers(1, &_ebo);
 
-	_renderer->BindVAO(_vao);
+	glBindVertexArray(_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
-	_renderer->GenerateVBO(_vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-	_renderer->UpdateMeshBuffers(_vbo, vertices.size() * sizeof(Vertex), &vertices[0]);
+	_shader.SetTypeOfshape("type", 2);
 
-	_renderer->BindMeshEBO(_ebo, indices.size() * sizeof(unsigned int), &indices[0]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
-	_renderer->SetMeshAttribPointers(_shader, 3, sizeof(Vertex), 0, offsetof(Vertex, Normal), offsetof(Vertex, TexCoords));
+	//Especificar al shader las posiciones, las normales y las uv del mesh
+	_positionAttrib = glGetAttribLocation(_shader.GetID(), "position");
+	glVertexAttribPointer(_positionAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glEnableVertexAttribArray(_positionAttrib);
+
+	_normalAttrib = glGetAttribLocation(_shader.GetID(), "aNormal");
+	glVertexAttribPointer(_normalAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+	glEnableVertexAttribArray(_normalAttrib);
+
+	_textureAttrib = glGetAttribLocation(_shader.GetID(), "uv");
+	glVertexAttribPointer(_textureAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	glEnableVertexAttribArray(_textureAttrib);
 
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader& shader) {	
+void Mesh::Draw(Shader& shader) {
+	//Pasar este codigo a renderer y que reciba como parametros todos los datos necesarios
 	UpdateMatrices();
 	UpdateModel();
 	unsigned int diffuseNr = 1;
@@ -60,18 +76,29 @@ void Mesh::Draw(Shader& shader) {
 		glBindTexture(GL_TEXTURE_2D, textures[i].id);
 	}
 
-	_renderer->BindVAO(_vao);
-
-	_renderer->UpdateMeshBuffers(_vbo, vertices.size() * sizeof(Vertex), &vertices[0]);
+	glBindVertexArray(_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
 	shader.Use(GetModel());
 
 	shader.SetTypeOfshape("type", 2);
 
-	_renderer->SetMeshAttribPointers(shader, 3, sizeof(Vertex), 0, offsetof(Vertex, Normal), offsetof(Vertex, TexCoords));
+	_positionAttrib = glGetAttribLocation(shader.GetID(), "position");
+	glVertexAttribPointer(_positionAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glEnableVertexAttribArray(_positionAttrib);
 
+	_normalAttrib = glGetAttribLocation(shader.GetID(), "aNormal");
+	glVertexAttribPointer(_normalAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+	glEnableVertexAttribArray(_normalAttrib);
 
+	_textureAttrib = glGetAttribLocation(shader.GetID(), "uv");
+	glVertexAttribPointer(_textureAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	glEnableVertexAttribArray(_textureAttrib);
+
+	//glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-
 	glBindVertexArray(0);
 }
