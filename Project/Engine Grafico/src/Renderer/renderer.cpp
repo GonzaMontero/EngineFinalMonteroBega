@@ -43,49 +43,74 @@ void Renderer::BeginFrame(float r, float g, float b) {
 	glClearColor(r, g, b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
 void Renderer::EndFrame(GLFWwindow* window) {
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }
+
 void Renderer::GenerateVAO(unsigned int& vao) {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 }
+
+void Renderer::GenerateVBO(unsigned int& vbo) {
+	glGenBuffers(1, &vbo);
+}
+
 void Renderer::BindVAO(unsigned int& vao) {
 	glBindVertexArray(vao);
 }
+
 void Renderer::BindVBO(unsigned int& vbo, float* vertices, int verticesAmmount) {
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * verticesAmmount, vertices, GL_STATIC_DRAW);
 }
+
 void Renderer::BindLightVBO(unsigned int& lightvbo, float* vertices, int verticesAmmount) {
 	glGenBuffers(1, &lightvbo);
 	glBindBuffer(GL_ARRAY_BUFFER, lightvbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
+
 void Renderer::BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmount) {
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * indicesAmmount, indices, GL_STATIC_DRAW);
 }
+
+void Renderer::BindMeshEBO(unsigned int& ebo, int indicesAmount, const void* data) {
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesAmount, data, GL_STATIC_DRAW);
+}
+
 void Engine::Renderer::UpdateBuffers(unsigned int& vbo, float* vertices, int verticesAmmount)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * verticesAmmount, vertices, GL_STATIC_DRAW);
 }
+
+void Renderer::UpdateMeshBuffers(unsigned int& vbo, int verticesAmount, const void* data) {
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, verticesAmount, data, GL_STATIC_DRAW);
+}
+
 void Renderer::UnbindBuffers() {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glUseProgram(0);
 }
+
 void Renderer::DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo, unsigned int& lightvao) {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteVertexArrays(1, &lightvao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 }
+
 void Renderer::DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo) {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
@@ -103,6 +128,20 @@ void Renderer::SetShader(Shader& shader) {
 
 Shader& Renderer::GetShader() {
 	return _shader;
+}
+
+void Renderer::SetMeshAttribPointers(Shader& shader, unsigned int dataAmount, unsigned int vertexSize, unsigned int posOffset, unsigned int normalOffset, unsigned int textureOffset) {
+	unsigned int posAttribute = glGetAttribLocation(shader.GetID(), "position");
+	glVertexAttribPointer(posAttribute, dataAmount, GL_FLOAT, GL_FALSE, vertexSize, (void*)posOffset);
+	glEnableVertexAttribArray(posAttribute);
+
+	unsigned int normalAttribue = glGetAttribLocation(shader.GetID(), "aNormal");
+	glVertexAttribPointer(normalAttribue, dataAmount, GL_FLOAT, GL_FALSE, vertexSize, (void*)normalOffset);
+	glEnableVertexAttribArray(normalAttribue);
+
+	unsigned int textureAttribute = glGetAttribLocation(shader.GetID(), "uv");
+	glVertexAttribPointer(textureAttribute, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)textureOffset);
+	glEnableVertexAttribArray(textureAttribute);
 }
 
 //void Renderer::SetTexAttribPointer(unsigned int shaderID) {
@@ -273,4 +312,18 @@ void Renderer::DrawCamera(Shader& shader, glm::mat4 model, glm::mat4 view, glm::
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+}
+
+void Renderer::DrawMesh(Shader& shader, unsigned int& vao, unsigned int& vbo, int verticesAmount, const void* dataVertices, int indicesAmmount, unsigned int vertexSize, unsigned int offsetOfVertex, unsigned int offsetOfNormal, unsigned int offsetOfTexture, glm::mat4 model) {
+	BindVAO(vao);
+	UpdateMeshBuffers(vbo, verticesAmount, dataVertices);
+	shader.Use(model);
+	shader.SetTypeOfshape("type", 2);
+	shader.SetMeshAttribPointers("position", 3, vertexSize, offsetOfVertex);
+	shader.SetMeshAttribPointers("aNormal", 3, vertexSize, offsetOfNormal);
+	shader.SetMeshAttribPointers("uv", 2, vertexSize, offsetOfTexture);
+	//attrib pointers si hace falta
+	//BindVAO(vao);
+	glDrawElements(GL_TRIANGLES, indicesAmmount, GL_UNSIGNED_INT, 0);
+	UnbindBuffers();
 }

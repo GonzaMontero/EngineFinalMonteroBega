@@ -114,6 +114,8 @@ uniform MaterialPro materialPro;
 
 uniform sampler2D texture_diffuse1;
 
+uniform sampler2D texture_specular1;
+
 uniform sampler2D mainTexture;
 
 void main()
@@ -146,12 +148,12 @@ void main()
             result += CalculatePointLightPro(pointLight[i], norm, FragPos, viewDir);
         }
 
-        result += CalculateSpotLight(spotLight, norm, FragPos, viewDir);
+        result += CalculateSpotLightPro(spotLight, norm, FragPos, viewDir);
 
         FragColor = vec4(result, 1.0);
     } else if(type == 2){
 
-         vec3 norm = normalize(Normal);
+        vec3 norm = normalize(Normal);
         vec3 viewDir = normalize(viewPos - FragPos);
 
         vec3 result = vec3(0.0);

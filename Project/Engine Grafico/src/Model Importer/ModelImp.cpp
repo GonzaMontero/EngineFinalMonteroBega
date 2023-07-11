@@ -9,18 +9,17 @@ ModelImp::ModelImp() {
     _directory = "";
 }
 
-ModelImp::ModelImp(string path, const char* modelTexture, Shader shader) : Entity2D() {
+ModelImp::ModelImp(string path, const char* modelTexture, Shader& shader, Renderer* renderer) : Entity2D() {
     _modelTexture = modelTexture;
     LoadModel(path);
     //_directory = directory;
     //_shader.SetTypeOfshape("type", 2);
-    //_texImporter = new TextureImporter(directory);
     _shader = shader;
     //_texImporter = new TextureImporter(modelTexture);
     //LoadTexture();
 }
 
-ModelImp::ModelImp(string path, Shader shader) {
+ModelImp::ModelImp(string path, Shader& shader, Renderer* renderer) {
     LoadModel(path);
     _shader = shader;
     _texImporter = new TextureImporter();
@@ -35,7 +34,7 @@ ModelImp::~ModelImp() {
 
 void ModelImp::LoadModel(string path) {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -111,17 +110,6 @@ Mesh ModelImp::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    //Procesar material de la mesh
-    //if (mesh->mMaterialIndex >= 0) {
-    //    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    //    vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    //
-    //    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    //    vector<Texture> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    //
-    //    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    //}
-
     vector<Texture> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "diffuseM");
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
@@ -136,7 +124,7 @@ Mesh ModelImp::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
     std::cout << "Entro en ProcessMesh!!!" << std::endl;
 
-    return Mesh(vertices, indices, textures, _shader);
+    return Mesh(vertices, indices, textures, _shader, _renderer);
 }
 
 vector<Texture> ModelImp::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName) {
@@ -154,9 +142,11 @@ vector<Texture> ModelImp::LoadMaterialTextures(aiMaterial* mat, aiTextureType ty
         }
         if (!skip) {
             Texture texture;
+            //texture.id = TextureFromFile(str.C_Str(), this->_directory, false);
             texture.id = _texImporter->TextureFromFile(str.C_Str(), this->_directory);
             texture.type = typeName;
             texture.path = str.C_Str();
+            //texture.path = _modelTexture;
             textures.push_back(texture);
             _textures_loaded.push_back(texture);
         }
@@ -166,14 +156,6 @@ vector<Texture> ModelImp::LoadMaterialTextures(aiMaterial* mat, aiTextureType ty
 
     return textures;
 }
-
-//void ModelImp::SetModelPath(string path) {
-//    _path = path;
-//}
-//
-//void ModelImp::SetTexturePath(const char* texturePath) {
-//    _directory = texturePath;
-//}
 
 void ModelImp::Draw(Shader& shader) {
     for (unsigned int i = 0; i < _meshes.size(); i++)
@@ -222,8 +204,6 @@ unsigned int ModelImp::TextureFromFile(const char* path, string const &directory
 void ModelImp::MoveModel(glm::vec3 direction) {
     for (int i = 0; i < _meshes.size(); i++) {
         _meshes[i].Translate(direction.x, direction.y, direction.z);
-        //_meshes[i].transform.position = _meshes[i].transform.position + (direction * speed * timer.GetDeltaTime());
-        //_meshes[i].Translate(_meshes[i].transform.position.x, _meshes[i].transform.position.y, _meshes[i].transform.position.z);
     }
 }
 
@@ -232,6 +212,7 @@ void ModelImp::ScaleModel(float x, float y, float z) {
         if (x < 0 || y < 0 || z < 0) {
             x = 0; y = 0; z = 0;
         }
+        _meshes[i].Scale(x, y, z);
     }
 }
 
