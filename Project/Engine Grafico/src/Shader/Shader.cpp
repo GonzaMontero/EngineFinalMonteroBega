@@ -62,6 +62,7 @@ void Shader::Create(const char* vertexPath, const char* fragmentPath) {
 	glDeleteShader(vertexID);
 	glDeleteShader(fragmentID);
 }
+
 unsigned int Shader::Compile(unsigned int type, std::string& source) {
 	unsigned int shaderID = glCreateShader(type);
 	const char* src = source.c_str();
@@ -83,46 +84,63 @@ unsigned int Shader::Compile(unsigned int type, std::string& source) {
 	}
 	return shaderID;
 }
+
 void Shader::CreateAttribPointer(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition) {
 	glVertexAttribPointer(shaderAttribIndex, dataAmmount, GL_FLOAT, GL_FALSE, sizeof(float) * dataSize, (void*)(sizeof(float) * dataPosition));
 	glEnableVertexAttribArray(shaderAttribIndex);
 }
+
 void Shader::Use() {
 	glUseProgram(_id);
 }
+
 void Shader::Use(glm::mat4 model) {
 	unsigned int matrixLoc = glGetUniformLocation(_id, "model");
 	glUseProgram(_id);
 	glUniformMatrix4fv(matrixLoc, 1, GL_FALSE, glm::value_ptr(model));
 }
+
 void Shader::SetVertexAttributes(const char* name, int vertexSize) {
 	unsigned int attribute = glGetAttribLocation(_id, name);
 	CreateAttribPointer(attribute, 3, vertexSize, 0);
 }
+
 void Shader::SetColorAttributes(const char* name, int vertexSize) {
 	unsigned int attribute = glGetAttribLocation(_id, name);
 	CreateAttribPointer(attribute, 3, vertexSize, 3);
 }
+
 void Shader::SetTextureAttributes(const char* name, int vertexSize) {
 	unsigned int attribute = glGetAttribLocation(_id, name);
 	CreateAttribPointer(attribute, 2, vertexSize, 9);
 }
+
 void Shader::SetNormalAttributes(const char* name, int vertexSize) {
 	unsigned int attribute = glGetAttribLocation(_id, name);
 	CreateAttribPointer(attribute, 3, vertexSize, 6);
 }
+
 void Shader::SetTypeOfshape(const char* name, int type) {
 	unsigned int attribute = glGetUniformLocation(_id, name);
 	glUniform1i(attribute, type);
 }
+
 void Shader::SetSamplerTexture(const char* name, int id) {
 	unsigned int attribute = glGetUniformLocation(_id, name);
 	glUniform1i(attribute, id);
 }
+
 unsigned int Shader::GetMatrixAttributes(const char* name) {
 	unsigned int matrixLoc = glGetUniformLocation(_id, name);
 	return matrixLoc;
 }
+
 unsigned int Shader::GetID() {
 	return _id;
+}
+
+void Shader::SetMeshAttribPointers(const char* name, unsigned int dataAmount, unsigned int vertexSize, unsigned int vertexOffset) {
+	unsigned int attribute = glGetAttribLocation(_id, name);
+	glVertexAttribPointer(attribute, dataAmount, GL_FLOAT, GL_FALSE, vertexSize, (void*)vertexOffset);
+	glEnableVertexAttribArray(attribute);
 }
