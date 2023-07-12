@@ -1,6 +1,7 @@
 #include"glew.h"
 #include"glfw3.h"
-#include"Sprite.h"
+
+#include"../Sprite/Sprite.h"
 #include "../Sprite/Animation.h"
 #include "../Utils/TimeManager.h"
 
@@ -16,7 +17,6 @@ Sprite::Sprite() {
 	uv[2].u = 0; uv[2].v = 0;
 	uv[3].u = 0; uv[3].v = 1;
 }
-
 Sprite::Sprite(bool transparency, Renderer* renderer, Shader shader) : Entity2D() {
 	_transparency = transparency;
 	_renderer = renderer;
@@ -35,7 +35,6 @@ Sprite::Sprite(bool transparency, const char* path, Renderer* renderer, Shader s
 	_texImporter = new TextureImporter();
 	this->shader = shader;
 	_texImporter->SetPath(path);
-
 }
 
 Sprite::Sprite(bool transparency, const char* path, const char* specPath, Renderer* renderer, Shader shader, MaterialType materialType) : Entity2D() {
@@ -54,12 +53,10 @@ Sprite::~Sprite() {
 		delete _texImporter;
 		_texImporter = NULL;
 	}
-
 	if (_texImporter2 != NULL) {
 		delete _texImporter2;
 		_texImporter2 = NULL;
 	}
-
 	if (_material != NULL) {
 		delete _material;
 		_material = NULL;

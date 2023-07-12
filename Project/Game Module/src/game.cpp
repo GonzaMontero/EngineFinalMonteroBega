@@ -72,7 +72,7 @@ void Game::InitGame() {
 	_model = new ModelImp("res/models/backpack2/source/backpack.fbx", basicShader, GetRenderer());
 	_model->Scale(2.0f, 2.0f, 2.0f);
 	_model->Translate(0.0f, 0.0f, 0.0f);
-	_model->transform.position = glm::vec3(0.0f, 0.0f, -5.0f);
+	_model->transform.position = glm::vec3(-5.0f, 0.0f, -5.0f);
 	_model->transform.scale = glm::vec3(10.0f);
 
 	_shape->Init();
@@ -83,11 +83,11 @@ void Game::InitGame() {
 
 	_shape2->Init();
 	_shape2->Color(0.0f, 0.0f, 1.0f);
-	_shape2->transform.position = glm::vec3(-12.0f, 0.0f, -10.0f);
+	_shape2->transform.position = glm::vec3(-12.0f, 0.0f, 0.0f);
 	_shape2->transform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
 
 	_sprite->Init();
-	_sprite->transform.position = glm::vec3(15.0f, 0.0f, -10.0f);
+	_sprite->transform.position = glm::vec3(15.0f, 0.0f, 0.0f);
 	_sprite->transform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
 
 	_dirLight->Init();
@@ -213,16 +213,16 @@ void Game::UpdateGame() {
 	_camera->SetLookAt(_camera->GetCameraFront());
 	_camera->Draw(basicShader);
 
+	_dirLight->DrawDirectionalLight();
+	_spotLight->DrawSpotLight();
+	for (int i = 0; i < 4; i++)
+		_light[i]->DrawPointLight(i);
+
 	_shape->Draw();
 	_shape2->Draw();
 
 	_model->Draw(basicShader);
 	_sprite->DrawSprite();
-
-	_dirLight->DrawDirectionalLight();
-	_spotLight->DrawSpotLight();
-	for (int i = 0; i < 4; i++)
-		_light[i]->DrawPointLight(i);
 }
 
 void Game::UnloadGame() {

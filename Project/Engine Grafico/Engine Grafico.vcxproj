@@ -140,15 +140,16 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)lib\glfw\include\GLFW;$(ProjectDir)lib\glew\include\GL;$(ProjectDir)lib\glm;$(ProjectDir)lib\glm\gtc;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\glfw\include\GLFW;$(ProjectDir)lib\glew\include\GL;$(ProjectDir)lib\glm;$(ProjectDir)lib\glm\gtc;$(ProjectDir)lib\assimp\1.4.3\assimp\include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib-vc2019</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\glew\lib\Release\x64;$(SolutionDir)lib\glfw\lib-vc2019;$(ProjectDir)lib\glew-2.1.0\lib\RLibs\x64;$(ProjectDir)lib\assimp\1.4.3\assimp\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;opengl32.lib;glfw3.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y  "$(ProjectDir)lib\glew\lib\Rlibs\Win32" "$(TargetDir)" /e /h /y /s
+      <Command>copy /Y  "$(ProjectDir)lib\glew\lib\RLibs\x64\glew32.dl" "$(TargetDir)" /e /h /y /s
 copy /Y  "$(ProjectDir)include" "$(TargetDir)" /e /h /y /s
 copy /Y  "$(ProjectDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(SolutionDir)Game Module\bin\Debug\Win32"</Command>
     </PostBuildEvent>

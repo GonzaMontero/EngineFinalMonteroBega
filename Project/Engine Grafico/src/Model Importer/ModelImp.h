@@ -10,6 +10,8 @@
 
 #include "../Shader/Shader.h"
 #include "Mesh.h"
+#include "../Entity/Entity2D.h"
+#include "../Utils/TimeManager.h"
 
 #include <string>
 #include <fstream>
@@ -19,30 +21,29 @@
 #include <vector>
 
 #include "../Utils/TextureImporter.h"
-#include "../Entity/Entity2D.h"
-#include "../Utils/TimeManager.h"
 
 using namespace std;
-
 namespace Engine {
 	class ENGINE_API ModelImp : public Entity2D {
 	private:
 		int _width = 0;
 		int _height = 0;
 		bool _transparency;
+
 		vector<Texture> _textures_loaded;
 		vector<Mesh> _meshes;
 		string _path;
+
 		const char* _modelTexture;
-		//const string* _modelTexture;
 		string _directory;
+		//const string* _modelTexture;
+
 		void LoadModel(string path);
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 
 		TextureImporter* _texImporter = NULL;
-
 		Shader _shader;
 		Renderer* _renderer;
 
@@ -64,5 +65,4 @@ namespace Engine {
 		void Draw(Shader& shader);
 	};
 }
-
 #endif
