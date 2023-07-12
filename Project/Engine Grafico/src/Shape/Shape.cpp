@@ -7,7 +7,7 @@ using namespace Engine;
 Shape::Shape() : Entity2D() {
 	_type = Type::triangle;
 	_renderer = NULL;
-	_material = new Material(MaterialType::yellow_rubber); //Probando el material esmerald, hacer que el usuario eliga el material
+	_material = new Material(MaterialType::yellow_rubber);
 }
 
 Shape::Shape(Type type, Renderer* renderer, Shader shader) : Entity2D() {

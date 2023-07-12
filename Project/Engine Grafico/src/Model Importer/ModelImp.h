@@ -36,7 +36,6 @@ namespace Engine {
 
 		const char* _modelTexture;
 		string _directory;
-		//const string* _modelTexture;
 
 		void LoadModel(string path);
 		void ProcessNode(aiNode* node, const aiScene* scene);

@@ -94,7 +94,6 @@ void Sprite::Init() {
 
 void Sprite::Init(unsigned int texture) {
 	_texture = texture;
-	//_renderer->SetTexAttribPointer(shader.GetID());
 	BindBuffers();
 }
 
@@ -202,14 +201,14 @@ void Sprite::DrawSprite() {
 	if (_transparency) {
 		BlendSprite();
 		BindTexture();
-		//BindSecondTexture();
+
 		_renderer->DrawSprite(shader, _vao, _vbo, _cubeVertices2, 396, _cubeIndices2, 36, GetModel(), _material);
 		UnBlendSprite();
 		glDisable(GL_TEXTURE_2D);
 	}
 	else {
 		BindTexture();
-		//BindSecondTexture();
+
 		_renderer->DrawSprite(shader, _vao, _vbo, _cubeVertices2, 396, _cubeIndices2, 36, GetModel(), _material);
 		glDisable(GL_TEXTURE_2D);
 	}

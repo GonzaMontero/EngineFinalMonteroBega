@@ -57,22 +57,21 @@ Game::~Game() {
 }
 
 void Game::InitGame() {
-
-	_sprite = new Sprite(true, "res/textures/container2.png", "res/textures/container2_specular.png", GetRenderer(), basicShader, MaterialType::lambertPro);
 	_shape = new Shape(Type::cube, GetRenderer(), basicShader, MaterialType::gold);
 	_shape2 = new Shape(Type::cube, GetRenderer(), basicShader, MaterialType::esmerald);
 	_dirLight = new Light(GetRenderer(), basicShader, LightType::directional);
 	_spotLight = new Light(GetRenderer(), basicShader, LightType::spot);
+
 	for (int i = 0; i < 4; i++) {
 		_light[i] = new Light(GetRenderer(), basicShader, LightType::point);
 		_light[i]->Init();
 		_light[i]->SetPosition(pointLightPositions[i]);
 	}
 
-	_model = new ModelImp("res/models/backpack2/source/backpack.fbx", basicShader, GetRenderer());
+	_model = new ModelImp("res/models/bp/backpack.obj", basicShader, GetRenderer());
 	_model->Scale(2.0f, 2.0f, 2.0f);
 	_model->Translate(0.0f, 0.0f, 0.0f);
-	_model->transform.position = glm::vec3(-5.0f, 0.0f, -5.0f);
+	_model->transform.position = glm::vec3(-0.0f, 0.0f, -5.0f);
 	_model->transform.scale = glm::vec3(10.0f);
 
 	_shape->Init();
@@ -85,10 +84,6 @@ void Game::InitGame() {
 	_shape2->Color(0.0f, 0.0f, 1.0f);
 	_shape2->transform.position = glm::vec3(-12.0f, 0.0f, 0.0f);
 	_shape2->transform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
-
-	_sprite->Init();
-	_sprite->transform.position = glm::vec3(15.0f, 0.0f, 0.0f);
-	_sprite->transform.scale = glm::vec3(5.0f, 5.0f, 5.0f);
 
 	_dirLight->Init();
 	_dirLight->SetColor(1.0f, 1.0f, 0.0f);
@@ -105,8 +100,6 @@ void Game::PlayerInputs() {
 }
 
 void Game::HandleModelModifications() {
-	if (_inputConsumed)
-		return;
 
 	if (input.GetKey(KeyCode::J)) {
 		direction.x -= speed * time.GetDeltaTime();
@@ -210,7 +203,7 @@ void Game::UpdateGame() {
 	PlayerInputs();
 
 	_camera->UpdateRotation();
-	_camera->SetLookAt(_camera->GetCameraFront());
+	_camera->SetLookAt(_model->transform.position);
 	_camera->Draw(basicShader);
 
 	_dirLight->DrawDirectionalLight();
@@ -222,7 +215,6 @@ void Game::UpdateGame() {
 	_shape2->Draw();
 
 	_model->Draw(basicShader);
-	_sprite->DrawSprite();
 }
 
 void Game::UnloadGame() {

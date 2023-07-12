@@ -26,20 +26,17 @@ ModelImp::ModelImp(string path, Shader& shader, Renderer* renderer) {
     _renderer = renderer;
     _texImporter = new TextureImporter();
 }
-
 ModelImp::~ModelImp() {
     if (_texImporter != NULL) {
         delete _texImporter;
         _texImporter = NULL;
     }
 }
-
 void ModelImp::MoveModel(glm::vec3 direction) {
     for (int i = 0; i < _meshes.size(); i++) {
         _meshes[i].Translate(direction.x, direction.y, direction.z);
     }
 }
-
 void ModelImp::ScaleModel(float x, float y, float z) {
     for (int i = 0; i < _meshes.size(); i++) {
         if (x < 0 || y < 0 || z < 0) {
@@ -48,38 +45,33 @@ void ModelImp::ScaleModel(float x, float y, float z) {
         _meshes[i].Scale(x, y, z);
     }
 }
-
 void ModelImp::RotateModelX(float x) {
     for (int i = 0; i < _meshes.size(); i++) {
         _meshes[i].RotateX(x);
     }
 }
-
 void ModelImp::RotateModelY(float y) {
     for (int i = 0; i < _meshes.size(); i++) {
         _meshes[i].RotateY(y);
     }
 }
-
 void ModelImp::RotateModelZ(float z) {
     for (int i = 0; i < _meshes.size(); i++) {
         _meshes[i].RotateZ(z);
     }
 }
-
 void ModelImp::LoadModel(string path) {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         cout << "ERROR::ASSIMP::" << importer.GetErrorString() << endl;
         return;
     }
     _directory = path.substr(0, path.find_last_of('/'));
-    //if (scene)
-   ProcessNode(scene->mRootNode, scene);
+    if (scene)
+        ProcessNode(scene->mRootNode, scene);
 }
-
 void ModelImp::ProcessNode(aiNode* node, const aiScene* scene) {
     std::cout << "Entro en ProcessNode!!!" << std::endl;
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
@@ -90,7 +82,6 @@ void ModelImp::ProcessNode(aiNode* node, const aiScene* scene) {
         ProcessNode(node->mChildren[i], scene);
     }
 }
-
 Mesh ModelImp::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
     vector<Vertex> vertices;
     vector<unsigned int> indices;
@@ -188,7 +179,6 @@ vector<Texture> ModelImp::LoadMaterialTextures(aiMaterial* mat, aiTextureType ty
     std::cout << "Entro en LoadMaterialTextures!!!" << std::endl;
     return textures;
 }
-
 //void ModelImp::SetModelPath(string path) {
 //    _path = path;
 //}
@@ -196,12 +186,10 @@ vector<Texture> ModelImp::LoadMaterialTextures(aiMaterial* mat, aiTextureType ty
 //void ModelImp::SetTexturePath(const char* texturePath) {
 //    _directory = texturePath;
 //}
-
 void ModelImp::Draw(Shader& shader) {
     for (unsigned int i = 0; i < _meshes.size(); i++)
         _meshes[i].Draw(shader);
 }
-
 unsigned int ModelImp::TextureFromFile(const char* path, string const& directory, bool gamma) {
     string filename = string(path);
     filename = directory + '/' + path;
@@ -234,7 +222,6 @@ unsigned int ModelImp::TextureFromFile(const char* path, string const& directory
     }
     return textureID;
 }
-
 void ModelImp::LoadTexture() {
     if (_texImporter) {
         _texImporter->LoadImage(_width, _height, _transparency);
@@ -245,7 +232,6 @@ void ModelImp::LoadTexture() {
         glDisable(GL_TEXTURE_2D);
     }
 }
-
 unsigned int ModelImp::TextureModel(const char* texture) {
     unsigned int textureID;
     glGenTextures(1, &textureID);
