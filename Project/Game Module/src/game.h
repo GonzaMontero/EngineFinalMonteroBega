@@ -14,8 +14,6 @@ class Vector2 {
 class Game : public BaseGame {
 private:
 	float _time = 0;
-	
-	bool _inputConsumed;
 
 	Vector2 shapePos;
 	Shape* _shape = NULL;
@@ -27,13 +25,20 @@ private:
 
 	Sprite* _sprite = NULL;
 	ModelImp* _model = NULL;
+
 public:
+
 	Game();
 	~Game();
+
 	void PlayerInputs();
-	void HandleModelModifications();
+
+	void HandleThirdPersonModelMovement();
+	void HandleThirdPersonCameraMovement();
+	void HandleFirstPersonCameraMovement();
 	void HandleLightState();
-	void HandleCameraMovements();
+	void HandleCamModeSwap();
+
 	void InitGame() override;
 	void UpdateGame() override;
 	void UnloadGame() override;

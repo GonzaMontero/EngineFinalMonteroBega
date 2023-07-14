@@ -38,13 +38,18 @@ Sprite::Sprite(bool transparency, const char* path, Renderer* renderer, Shader s
 }
 
 Sprite::Sprite(bool transparency, const char* path, const char* specPath, Renderer* renderer, Shader shader, MaterialType materialType) : Entity2D() {
+	
 	_transparency = transparency;
 	_renderer = renderer;
+
 	_texImporter = new TextureImporter(path);
 	_texImporter2 = new TextureImporter(specPath);
+
 	this->shader = shader;
+
 	_diffPath = path;
 	_specPath = specPath;
+
 	_material = new Material(materialType);
 }
 
@@ -81,13 +86,17 @@ void Sprite::BindEBO() {
 
 void Sprite::Init() {
 	LoadSprite();
+
 	shader.SetVertexAttributes("position", 11);
 	shader.SetColorAttributes("color", 11);
 	shader.SetNormalAttributes("aNormal", 11);
 	shader.SetTextureAttributes("uv", 11);
+
 	//_renderer->SetTexAttribPointer(shader.GetID());
 	//shader.SetSamplerTexture("mainTexture", 0);
+
 	shader.SetTypeOfshape("type", 1);
+
 	//necesario para pasar los datos a la veriable uniforme de textura
 	BindBuffers();
 }

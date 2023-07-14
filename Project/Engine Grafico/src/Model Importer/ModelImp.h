@@ -25,11 +25,14 @@
 using namespace std;
 namespace Engine {
 	class ENGINE_API ModelImp : public Entity2D {
+
 	private:
+
 		int _width = 0;
 		int _height = 0;
 		bool _transparency;
 
+		//Model Data (textures, meshes and file path)
 		vector<Texture> _textures_loaded;
 		vector<Mesh> _meshes;
 		string _path;
@@ -38,6 +41,8 @@ namespace Engine {
 		string _directory;
 
 		void LoadModel(string path);
+
+		//Each of the following private functions processes a part of the Assimp Import Routine
 		void ProcessNode(aiNode* node, const aiScene* scene);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
@@ -50,17 +55,19 @@ namespace Engine {
 		void LoadTexture();
 		unsigned int TextureModel(const char* texture);
 	public:
+
 		ModelImp();
 		ModelImp(string path, const char* modelTexture, Shader& shader, Renderer* renderer);
 		ModelImp(string path, Shader& shader, Renderer* renderer);
 		~ModelImp();
+
 		void MoveModel(glm::vec3 direction);
+
 		void ScaleModel(float x, float y, float z);
 		void RotateModelX(float x);
 		void RotateModelY(float y);
 		void RotateModelZ(float z);
-		//void SetModelPath(string path);
-		//void SetTexturePath(const char* texturePath);
+
 		void Draw(Shader& shader);
 	};
 }

@@ -6,6 +6,7 @@
 using namespace Engine;
 
 void Engine::Entity2D::UpdateMatrices() {
+
 	model.translate = glm::translate(glm::mat4(1.0f), transform.position);
 	model.scale = glm::scale(glm::mat4(1.0f), transform.scale);
 
@@ -13,10 +14,13 @@ void Engine::Entity2D::UpdateMatrices() {
 }
 
 void Entity2D::UpdateModel() {
+
 	model.trs = model.translate * model.rotation.x * model.rotation.y * model.rotation.z * model.scale;
+
 }
 
 Entity2D::Entity2D() {
+
 	model.translate = glm::mat4(1.0);
 	model.rotation.x = glm::mat4(1.0);
 	model.rotation.y = glm::mat4(1.0);

@@ -1,9 +1,25 @@
 #ifndef LIGHT_H
 #define LIGHT_H
+
 #include "../Utils/Export.h"
 #include "../Entity/Entity2D.h"
 #include "../Shader/Shader.h"
 #include "../Renderer/renderer.h"
+
+/*
+Different Lighting Types -
+
+Ambient lighting: even when it is dark there is usually still some light somewhere in the world (the moon, a distant light) so
+objects are almost never completely dark. To simulate this we use an ambient lighting constant that always gives the 
+object some color.
+
+Diffuse lighting: simulates the directional impact a light object has on an object. This is the most visually significant 
+component of the lighting model. The more a part of an object faces the light source, the brighter it becomes.
+
+Specular lighting: simulates the bright spot of a light that appears on shiny objects. Specular highlights are
+more inclined to the color of the light than the color of the object.
+*/
+
 
 namespace Engine {
 	enum class ENGINE_API LightType {

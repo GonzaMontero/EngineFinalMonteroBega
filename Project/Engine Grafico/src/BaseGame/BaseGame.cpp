@@ -8,7 +8,7 @@ using namespace Engine;
 BaseGame::BaseGame() {
 	_renderer = new Renderer();
 	_window = new Window(1280, 720);
-	_camera = new Camera(_renderer, ProjectionType::perspective, CamMode::firstPerson);
+	_camera = new Camera(_renderer, ProjectionType::perspective, CamMode::thirdPerson);
 	_collisionManager = new CollisionManager();
 }
 
@@ -59,11 +59,6 @@ int BaseGame::Init() {
 
 	_camera->SetProjection(ProjectionType::perspective);
 	_camera->Init(basicShader, _window->GetWindow());
-
-	_camera->Init(basicShader, _window->GetWindow());
-
-	//_camera->SetCameraPos(glm::vec3(0.0f, 0.0f, 5.0f));
-	_camera->transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
 
 	_camera->SetCameraUp(glm::vec3(0.0, 1.0, 0.0));
 

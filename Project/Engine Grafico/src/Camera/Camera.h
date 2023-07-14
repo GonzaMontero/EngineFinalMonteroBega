@@ -77,6 +77,7 @@ namespace Engine {
 		void UpdateRotation();
 
 		ProjectionType GetProjectionType();
+		CamMode GetCameraMode();
 		void Draw(Shader& shader);
 	};
 }

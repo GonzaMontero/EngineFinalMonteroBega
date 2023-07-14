@@ -110,6 +110,7 @@ void Camera::SetCameraMode(CamMode mode) {
 void Camera::SetLookAt(glm::vec3 forward) {
 	if (_mode == CamMode::firstPerson)
 		_view = glm::lookAt(transform.position, transform.position + _cameraFront, _cameraUp);
+
 	else if (_mode == CamMode::thirdPerson) {
 		_view = glm::lookAt(transform.position, forward, _cameraUp);
 	}
@@ -117,25 +118,34 @@ void Camera::SetLookAt(glm::vec3 forward) {
 
 void Camera::FollowTarget(glm::vec3 positionTarget) {
 	if (_mode == CamMode::thirdPerson) {
-		//En todos los frames estamos seteando la posicion de la camara
+		
 		transform.position.x = positionTarget.x;
 		transform.position.y = positionTarget.y + 10.0f;
 		transform.position.z = positionTarget.z + 20.0f;
-		//SetCameraFront(positionTarget);
+
 		RotatePitch(-10.0f);
+
 		float radius = 30.0f;
+
 		if (inputCam.GetKey(KeyCode::R)) {
 			transform.position.x = positionTarget.x + sin(_rotationAngle * glfwGetTime()) * radius;
 			transform.position.z = positionTarget.z + cos(_rotationAngle * glfwGetTime()) * radius;
 		}
+		if (inputCam.GetKey(KeyCode::Q)) {
+			transform.position.x = positionTarget.x - sin(_rotationAngle * glfwGetTime()) * radius;
+			transform.position.z = positionTarget.z - cos(_rotationAngle * glfwGetTime()) * radius;
+		}
+
 		SetLookAt(positionTarget);
 	}
 }
 
 void Camera::RotateAroundTarget(float x, float z) {
 	float radius = 5.0f;
+
 	float newX = sin(x) * radius;
 	float newZ = cos(z) * radius;
+
 	transform.position.x = newX;
 	transform.position.z = newZ;
 }
@@ -163,50 +173,26 @@ ProjectionType Camera::GetProjectionType() {
 	return _type;
 }
 
+CamMode Camera::GetCameraMode() {
+	return _mode;
+}
+
 void Camera::Draw(Shader& shader) {
 	_renderer->DrawCamera(shader, transform.position, GetModel(), GetView(), GetProjection());
 }
 
 void Camera::UpdateRotation() {
-	//Esto es para movimiento del mouse
-	//float xpos = static_cast<float>(posX);
-	//float ypos = static_cast<float>(posY);
-	//
-	//if (_firstMouse) {
-	//	SetLastX(xpos);
-	//	SetLastY(ypos);
-	//	_firstMouse = false;
-	//}
-	//
-	//float xoffset = xpos - GetLastX();
-	//float yoffset = GetLastY() - ypos;
-	//
-	//SetLastX(xpos);
-	//SetLastY(ypos);
-	//
-	//float sensitivity = 0.1f;
-	//xoffset *= sensitivity;
-	//yoffset *= sensitivity;
-	//
-	//_yaw += xoffset;
-	//_pitch += yoffset;
-
-	//glm::vec3 front;
 	_cameraFront.x = glm::cos(glm::radians(transform.rotation.y)) * glm::cos(glm::radians(transform.rotation.x));
 	_cameraFront.y = glm::sin(glm::radians(transform.rotation.x));
 	_cameraFront.z = glm::sin(glm::radians(transform.rotation.y)) * glm::cos(glm::radians(transform.rotation.x));
+
 	SetCameraFront(glm::normalize(_cameraFront));
-	/*glm::vec3 _right = glm::normalize(glm::cross(_cameraFront, _cameraUp));
-	_cameraUp = glm::normalize(glm::cross(_right, _cameraFront));*/
-	//limitamos que el pitch se pase de rotacion
+	
 	if (_pitch > 89.0f)
 		_pitch = 89.0f;
+
 	if (_pitch < -89.0f)
 		_pitch = -89.0f;
-	//const float radius = 10.0f;
-	//float camX = sin(glfwGetTime()) * radius;
-	//float camZ = cos(glfwGetTime()) * radius;
-	//_view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 }
 
 void Camera::RotateYaw(float yaw) {
