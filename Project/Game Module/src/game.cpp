@@ -46,7 +46,7 @@ void Game::InitGame() {
 	_sprite->Scale(50.0f, 50.0f, 1.0f);
 
 	_sprite->Color(1.0f, 1.0f, 1.0f);
-	_sprite->transform.position = glm::vec3(0, 0, -100);
+	_sprite->transform.position = glm::vec3(300, 300, 1);
 }
 
 void Game::PlayerInputs() {
