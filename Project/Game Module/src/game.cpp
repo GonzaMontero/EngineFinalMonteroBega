@@ -29,8 +29,8 @@ void Game::InitGame() {
 	_player = new Animation();
 
 	_map = new Tilemap(glm::ivec2(16,16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
-	_map->SetTilesInfo("res/tilemap/Tiles.tsx");
-	_map->LoadMap("res/tilemap/Map1.tmx");
+	_map->SetTilesInfo("res/tilemap/UgiWugi.tsx");
+	_map->LoadMap("res/tilemap/UgiWugi.tmx");
 
 	_sprite->Init();
 
