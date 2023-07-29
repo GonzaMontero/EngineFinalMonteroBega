@@ -28,9 +28,9 @@ void Game::InitGame() {
 	_sprite = new Engine::Sprite(true, "res/textures/samurai.png", GetRenderer(), textureShader);
 	_player = new Animation();
 
-	_map = new Tilemap(glm::ivec2(16,16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
-	_map->SetTilesInfo("res/tilemap/UgiWugi.tsx");
-	_map->LoadMap("res/tilemap/UgiWugi.tmx");
+	_map = new Tilemap(glm::ivec2(32,24), "res/textures/FD_Dungeon_Free.png", textureShader, GetRenderer());
+	_map->SetTilesInfo("res/tilemap/Test_Dungeon_Free.tsx");
+	_map->LoadMap("res/tilemap/TestDungeon.tmx");
 
 	_sprite->Init();
 
@@ -46,7 +46,7 @@ void Game::InitGame() {
 	_sprite->Scale(50.0f, 50.0f, 1.0f);
 
 	_sprite->Color(1.0f, 1.0f, 1.0f);
-	_sprite->transform.position = glm::vec3(300, 300, 1);
+	_sprite->transform.position = glm::vec3(0, 0, -100);
 }
 
 void Game::PlayerInputs() {
