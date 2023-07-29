@@ -9,22 +9,13 @@ namespace Engine {
 		_transparency = true;
 		_renderer = NULL;
 		_texImporter = new TextureImporter();
-
-		uv[0].u = 1; uv[0].v = 1;
-		uv[1].u = 1; uv[1].v = 0;
-		uv[2].u = 0; uv[2].v = 0;
-		uv[3].u = 0; uv[3].v = 1;
 	}
 	Sprite::Sprite(bool transparency, Renderer* renderer, Shader shader) : Entity2D() {
 		_transparency = transparency;
 		_renderer = renderer;
 		this->shader = shader;
 		_texImporter = new TextureImporter();
-
-		uv[0].u = 1; uv[0].v = 1;
-		uv[1].u = 1; uv[1].v = 0;
-		uv[2].u = 0; uv[2].v = 0;
-		uv[3].u = 0; uv[3].v = 1;
+		//Crea un sprite, seteando si usa transparencia, que renderer, que shader y el texture importer. este sprite hereda de Entity2D
 	}
 
 	Sprite::Sprite(bool transparency, const char* path, Renderer* renderer, Shader shader) : Entity2D() {
@@ -33,11 +24,7 @@ namespace Engine {
 		_texImporter = new TextureImporter();
 		this->shader = shader;
 		_texImporter->SetPath(path);
-
-		uv[0].u = 1; uv[0].v = 1;
-		uv[1].u = 1; uv[1].v = 0;
-		uv[2].u = 0; uv[2].v = 0;
-		uv[3].u = 0; uv[3].v = 1;
+		//Crea un sprite, seteando si usa transparencia, que renderer, que shader y el texture importer. este sprite hereda de Entity2D, a su vez indica el path que tiene que seguir el texture importer para cargar el sprite
 	}
 
 	Sprite::~Sprite() {
@@ -45,23 +32,25 @@ namespace Engine {
 			delete _texImporter;
 			_texImporter = NULL;
 		}
+		//Limpiar memoria eliminando el sprite
 	}
 
 	void Sprite::GenerateVAO() {
-		_renderer->GenerateVAO(_vao);
+		_renderer->GenerateVAO(_vao); //genera y bindea los vertex array object names a vao
 	}
-
+	//VAO = Vertex array object
 	void Sprite::BindVAO() {
-		_renderer->BindVAO(_vao);
+		_renderer->BindVAO(_vao); //bindea los vertex array object names a vao
 	}
-
+	//VAO = Vertex array object
 	void Sprite::BindVBO() {
-		_renderer->BindVBO(_vbo, _vertices, 32);
+		_renderer->BindVBO(_vbo, _vertices, 32);//genera y bindea
 	}
-
+	//VBO = Vertex buffer object
 	void Sprite::BindEBO() {
-		_renderer->BindEBO(_ebo, _quadIndices, 6);
+		_renderer->BindEBO(_ebo, _quadIndices, 6);//genera y bindea
 	}
+	//EBO = Index buffer object
 
 	void Sprite::Init() {
 		LoadSprite();
@@ -82,7 +71,7 @@ namespace Engine {
 		}
 		else
 			std::cout << "Couldn't find image" << std::endl;
-	}
+	} //esta funcion carga el sprite, pero unicamente cuando ya cargaste la textura anteriormente, por eso es que no usa parametros 
 
 
 	void Sprite::LoadSprite(const char* path) {
@@ -92,19 +81,19 @@ namespace Engine {
 		}
 		else
 			std::cout << "Couldn't find image" << std::endl;
-	}
+	}//esta funcion carga el sprite que se especifica segun el path que se envia por parametros
 
 	void Sprite::BindBuffers() {
 		GenerateVAO();
 		BindVAO();
 		BindVBO();
 		BindEBO();
-	}
+	}//llama a todas las funciones de bindeo de Index buffer object, Vertex buffer object y Vertex array object
 
 	void Sprite::BindTexture() {
 		glBindTexture(GL_TEXTURE_2D, _texImporter->GetTexture());
 		glActiveTexture(GL_TEXTURE0);
-	}
+	}//Bindea la textura a lo especificado, en este caso a GL_TEXTURE_2D
 
 	void Sprite::BlendSprite() {
 		glEnable(GL_BLEND);
