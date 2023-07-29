@@ -28,9 +28,9 @@ void Game::InitGame() {
 	_sprite = new Engine::Sprite(true, "res/textures/samurai.png", GetRenderer(), textureShader);
 	_player = new Animation();
 
-	_map = new Tilemap(glm::ivec2(32,24), "res/textures/FD_Dungeon_Free.png", textureShader, GetRenderer());
-	_map->SetTilesInfo("res/tilemap/Test_Dungeon_Free.tsx");
-	_map->LoadMap("res/tilemap/TestDungeon.tmx");
+	_map = new Tilemap(glm::ivec2(16,16), "res/textures/FD_Free_Tiles.png", textureShader, GetRenderer());
+	_map->SetTilesInfo("res/tilemap/Tiles.tsx");
+	_map->LoadMap("res/tilemap/Map1.tmx");
 
 	_sprite->Init();
 
