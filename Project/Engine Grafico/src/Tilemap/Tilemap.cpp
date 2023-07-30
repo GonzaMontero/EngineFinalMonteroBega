@@ -57,12 +57,12 @@ void Tilemap::SetImagePath(const char* path) {
 }
 
 void Tilemap::LoadMap(const char* path) {
-	//Aca hacemos las carga del mapa a travez de tinyxml
+	//Se carga el mapa a travez de tinyxml usando el path
 	tinyxml2::XMLDocument doc;
 
 	doc.LoadFile(path);
 
-	//Creamos los punteros para obtener los elementos del archivo xml
+	//Se crean los punteros y así se obtienen los elementos del archivo xml que se cargó con path
 	tinyxml2::XMLElement* p_root_element = doc.FirstChildElement("map");
 
 	if (p_root_element == NULL) {
@@ -70,7 +70,7 @@ void Tilemap::LoadMap(const char* path) {
 		return;
 	}
 
-	//Almacenamos el ancho y alto del mapa como el ancho y alto de cada tile
+	//Se almacena width y height a su vez se setea el width y height de cada tile
 	int width = p_root_element->IntAttribute("width");
 	int height = p_root_element->IntAttribute("height");
 	_tileWidth = p_root_element->IntAttribute("tilewidth");
@@ -79,7 +79,7 @@ void Tilemap::LoadMap(const char* path) {
 	_layerDims.x = width;
 	_layerDims.y = height;
 
-	//buscamos los layers del mapa
+	//Se buscan los layers del mapa
 	int layerCount = 0;
 	std::vector<tinyxml2::XMLElement*> layerElement;
 	for (tinyxml2::XMLElement* childElement = p_root_element->FirstChildElement(); childElement != NULL; childElement = childElement->NextSiblingElement()) {
@@ -92,7 +92,7 @@ void Tilemap::LoadMap(const char* path) {
 
 	}
 	std::cout << "cantidad de layers cargados desde archivo: " << layerCount << std::endl;
-	_grid.resize(layerCount); //resize del vector a numero de layers encontrados
+	_grid.resize(layerCount); //Se actualiza el tamaño del vector al numero de layers encontrados
 	for (int l = 0; l < _grid.size(); l++) {
 		tinyxml2::XMLText* dataElement = layerElement[l]->FirstChildElement("data")->FirstChild()->ToText();
 		if (dataElement == NULL) {
@@ -100,11 +100,11 @@ void Tilemap::LoadMap(const char* path) {
 			return;
 		}
 
-		//en el segundo vector que representa a Y lo llenamos con los datos encontrados dentro del hijo data, 
-		//lo mismo para el vector que representa X.
+		//El segundo vector que representa a Y se llena con datos encontrados dentro de data (hijo)
+		//Lo mismo ocurre con el vector que representa X.
 		std::string mapGrid;
 		mapGrid = dataElement->Value();
-		std::stringstream ss(mapGrid); //creamos un string stream en donde se almaceneran los ids de cada layer
+		std::stringstream ss(mapGrid); //Se crea un string stream en donde se almacenan los ids de cada layer
 		_grid[l].resize(height);
 		for (int y = 0; y < height; y++) {
 			_grid[l][y].resize(width);
@@ -115,7 +115,7 @@ void Tilemap::LoadMap(const char* path) {
 					break;
 
 				int val;
-				if (std::stringstream(value) >> val) //string stream usa string buffer para operar con secuencias de caracteres
+				if (std::stringstream(value) >> val) //String stream usa string buffer para operar con secuencias de caracteres
 					_grid[l][y][x] = val;
 
 				_tilesAmount++;
@@ -132,16 +132,16 @@ void Tilemap::SetTilesInfo(const char* path) {
 }
 
 void Tilemap::LoadMapFromGrid() {
-	_textureImporter->SetPath(_imagePath);
-	_textureImporter->LoadImage(_mapWidth, _mapHeight, true);
+	_textureImporter->SetPath(_imagePath); //Se settea el path de _textureImporter a _imagePath
+	_textureImporter->LoadImage(_mapWidth, _mapHeight, true); //se carga la imagen con esos parametros de alto, ancho y transparencia
 	int xPos = _tileWidth;
 	std::cout << "tile width: " << _tileWidth << std::endl;
 	int yPos = 700;
 	float z = 0;
 	int actualID = 0;
-	_tiles.resize(_grid.size());
+	_tiles.resize(_grid.size()); //se hace que el tamaño de los tiles sea igual al del grid
 
-	for (int l = 0; l < _grid.size(); l++) {
+	for (int l = 0; l < _grid.size(); l++) {  //este for carga las tiles 1 a 1, se la cream setea el render, shader, path, etc y se pasa a la siguiente
 		xPos = _tileWidth;
 		yPos = 700;
 		_tiles[l].resize(_grid[l].size());
@@ -182,7 +182,7 @@ void Tilemap::LoadMapFromGrid() {
 	std::cout << "Cantidad de layers: " << _tiles.size() << endl;
 }
 
-glm::vec4 Tilemap::GetTileFromID(unsigned int id) {
+glm::vec4 Tilemap::GetTileFromID(unsigned int id) { //devuelve el UV de un tile especifico usando como parametro su ID
 	int xTile = id % _mapDims.x;
 	int yTile = id / _mapDims.x;
 	yTile = _mapHeight - yTile - 1;
@@ -199,7 +199,7 @@ glm::vec4 Tilemap::GetTileFromID(unsigned int id) {
 	return uv;
 }
 
-void Tilemap::Draw() {
+void Tilemap::Draw() {  //Dibuja cada tile usando la funcion heredada de DrawSprite
 	if (!_tiles.empty()) {
 		for (int i = 0; i < _tiles.size(); i++) {
 			for (int j = 0; j < _tiles[i].size(); j++) {
@@ -213,7 +213,8 @@ void Tilemap::Draw() {
 	}
 }
 
-void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed) {
+void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed) { 
+	//setea todos los valores a tener en cuenta para una colision en el tilemap
 	float distanceWithTilemapX = glm::distance(glm::vec2(entityPosition.x, 0), glm::vec2(0, 0));
 	float distanceWithTilemapWidth = glm::distance(glm::vec2(entityPosition.x + entity->transform.scale.x * 0.5f, 0), glm::vec2(0, 0));
 	float distanceWithTilemapY = glm::distance(glm::vec2(0, entityPosition.y), glm::vec2(0, 700));
@@ -229,11 +230,13 @@ void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPositi
 	int topTile = static_cast<int>(indexInY) - 1;
 	int bottomTile = static_cast<int>(indexInHeight) + 1;
 
+	//Se marca en consola cuales son los tiles que rodean a entity, en este caso el player.
 	std::cout << "rightTile: " << rightTile << std::endl;
 	std::cout << "leftTile: " << leftTile << std::endl;
 	std::cout << "topTile: " << topTile << std::endl;
 	std::cout << "bottomTile: " << bottomTile << std::endl;
 
+	//Se revisan si las tiles cercanas son walkable
 	for (int i = leftTile; i <= rightTile; i++) {
 		for (int j = topTile; j <= bottomTile; j++) {
 			for (int l = 0; l < _grid.size(); l++) {

@@ -52,7 +52,7 @@ void Tile::SetHeight(int height) {
 	_height = height;
 }
 
-//Metodo para lo ultimo, ver que parametros le pasamos para setear la variable
+
 void Tile::SetIsWalkable(const char* path) {
 	tinyxml2::XMLDocument doc;
 
@@ -72,6 +72,7 @@ void Tile::SetIsWalkable(const char* path) {
 		}
 	}
 	doc.Clear();
+	//lee el file, va viendo que la data no sea null, revisa hasta llegar a properties y ahi agarra el bool y setea _isWalkable
 }
 
 void Tile::SetPosX(int posX) {

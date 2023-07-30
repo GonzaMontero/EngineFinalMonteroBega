@@ -34,8 +34,8 @@ void Renderer::EndFrame(GLFWwindow* window) {
 	glfwPollEvents();
 }
 void Renderer::GenerateVAO(unsigned int& vao) {
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	glGenVertexArrays(1, &vao); //devuelve N (en este caso 1) nombres de arrays objects, dentro del array &vao  
+	glBindVertexArray(vao); //bindea el array devuelto por glGenVertexArrays a vao
 }
 void Renderer::BindVAO(unsigned int& vao) {
 	glBindVertexArray(vao);

@@ -59,19 +59,15 @@ namespace Engine {
 			break;
 		case topCollision:
 			entity1->transform.position = glm::vec3(entity1->transform.position.x, entity1->transform.position.y + speedEntity1, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x, entity1->transform.position.y + speedEntity1, entity1->transform.position.z);
 			break;
 		case rightCollision:
 			entity1->transform.position = glm::vec3(entity1->transform.position.x + speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x + speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
 			break;
 		case bottomCollision:
 			entity1->transform.position = glm::vec3(entity1->transform.position.x, entity1->transform.position.y - speedEntity1, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x, entity1->transform.position.y - speedEntity1, entity1->transform.position.z);
 			break;
 		case leftCollision:
 			entity1->transform.position = glm::vec3(entity1->transform.position.x - speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x - speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
 			break;
 		default:
 			break;
