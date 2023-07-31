@@ -33,16 +33,17 @@ glm::vec4 Engine::Animation::GetUVs(int index) {
 }
 
 void Engine::Animation::UpdateIndex(Time& time) {
+	//Aumenta el current time de la animacion, 
 	float length = 1.0f * 1000;
 	_currentTime += time.GetDeltaTime() * animationSpeed;
 
 	while (_currentTime > length) {
 		_currentTime -= length;
 	}
-
+	//Determina cual es el frame actual de la animacion usando el actual y el index
 	int framesAmmount = (animation[_currentAnimation]._endIndex - animation[_currentAnimation]._beginIndex);
 
-
+	
 	if (!animation[_currentAnimation].hasEnded) { // pregunto si la animacion no termino
 		_actualCurrentIndex = animation[_currentAnimation]._beginIndex;
 
@@ -71,6 +72,7 @@ int Engine::Animation::GetCurrentIndex() {
 }
 
 void Engine::Animation::AddAnimation(int beginIndex, int endIndex, bool isLoopable, float animationSpeed) {
+	//Agrega una animacion determinando los parametros de index, loopable y speed
 	AnimationData newAnim;
 	newAnim._beginIndex = beginIndex;
 	newAnim._endIndex = endIndex;
@@ -84,15 +86,16 @@ Engine::AnimationData Engine::Animation::GetCurrentAnimation() {
 }
 
 void Engine::Animation::SetAnimation(int index) {
+	//Setea el inicio, final y velocidad de la animacion
 	_currentAnimation = index;
 	_firstIndex = animation[_currentAnimation]._beginIndex;
 	_lastIndex = animation[_currentAnimation]._endIndex;
 	if (animationSpeed != animation[_currentAnimation].animationSpeed)
 		animationSpeed = animation[_currentAnimation].animationSpeed;
-
+	//Revisa que el indice no se haya ido fuera de los limites que deberia
 	if (_currentIndex < _firstIndex || _currentIndex > _lastIndex)
 		_actualCurrentIndex = _firstIndex;
-
+	//Si la animacion se terminó se settea en false para que pueda volver a ejecutarse
 	if (animation[_currentAnimation].hasEnded || (_actualCurrentIndex >= _lastIndex || _actualCurrentIndex < _firstIndex)) {
 		animation[_currentAnimation].hasEnded = false;
 		_currentTime = 0;
