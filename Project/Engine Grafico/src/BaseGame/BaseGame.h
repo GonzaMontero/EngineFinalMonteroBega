@@ -41,7 +41,7 @@ namespace Engine {
 	public:
 		BaseGame();
 		~BaseGame();
-
+		
 		void Execute();
 
 		virtual void InitGame() = 0;

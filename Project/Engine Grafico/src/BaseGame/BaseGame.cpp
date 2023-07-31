@@ -35,13 +35,14 @@ BaseGame::~BaseGame() {
 	}
 }
 
-void BaseGame::Execute() {
+void BaseGame::Execute() { //Inicia todo desde main
 	Init();
 	Update();
 	Unload();
 }
 
 int BaseGame::Init() {
+	// Inicia las cosas necesarias para correr el motor, ventana, glew, shaders, camera, view, resetea el timer, inicia el game, etc...
 	_window->CreateWindow("Engine Final Montero-Bega");
 
 	if (!_renderer->InitializeGlew()) 
@@ -71,6 +72,7 @@ int BaseGame::Init() {
 }
 
 void BaseGame::Update() {
+	//Updatea el timer, revisa si no hay que cerrar la vantana del motor, actualiza game, dibuja lo que ve la camara con los shaders
 	float speed = 0.01f;
 
 	while (!glfwWindowShouldClose(_window->GetWindow())) 
@@ -90,6 +92,7 @@ void BaseGame::Update() {
 }
 
 void BaseGame::Unload() {
+	//Destruye las cosas para liberar el espacio en memoria
 	UnloadGame();
 	glfwTerminate();
 }
