@@ -24,19 +24,19 @@ void Shape::SetShader(Shader shader) {
 
 void Shape::GenerateVAO() {
 	_renderer->GenerateVAO(_vao);
-}
+}	//VAO = Vertex array object
 
 void Shape::BindVAO() {
 	_renderer->BindVAO(_vao);
-}
+}	//VAO = Vertex array object
 
 void Shape::BindVBO(float* vertices, int verticesAmmount) {
 	_renderer->BindVBO(_vbo, vertices, verticesAmmount);
-}
+}//VBO = Vertex buffer object
 
 void Shape::BindEBO(unsigned int* indices, int indicesAmmount) {
 	_renderer->BindEBO(_ebo, indices, indicesAmmount);
-}
+}//EBO = Index buffer object
 
 void Shape::Init() {
 	GenerateVAO();
