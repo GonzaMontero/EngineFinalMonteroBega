@@ -11,6 +11,7 @@
 using namespace Engine;
 
 Camera::Camera(Renderer* renderer, ProjectionType type) {
+	//Crea la camara y establece su renderer y tipo de proyeccion
 	_renderer = renderer;
 	_type = type;
 
@@ -23,10 +24,13 @@ Camera::~Camera() {
 }
 
 void Camera::SetView(glm::vec3 direction, glm::vec3 up) {
+	//Setea a donde ve la camara seteando el frende y el up
 	_view = glm::translate(_view, transform.position);
 }
 
 void Camera::SetProjection(ProjectionType type) {
+	//Determina el tipo de proyeccion de la camara, usamos orthographic,
+	// la diferencia es que perspective es afectada por la percepccion de distancia, mientras orthographic no toma eso en concideracion
 	_type = type;
 
 	switch (_type)
@@ -43,6 +47,7 @@ void Camera::SetProjection(ProjectionType type) {
 }
 
 void Camera::Init(Shader& shader) {
+	//Se setean las matrices MVP  de la camara
 	unsigned int transformLoc = glGetUniformLocation(shader.GetID(), "model");
 	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
 	unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");

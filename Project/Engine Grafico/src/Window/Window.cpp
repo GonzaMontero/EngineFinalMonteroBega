@@ -27,6 +27,7 @@ Window::~Window() {
 }
 
 int Window::CreateWindow(const char* name) {
+	//Crea la ventana iniciando glfw y usnado sus funciones
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
