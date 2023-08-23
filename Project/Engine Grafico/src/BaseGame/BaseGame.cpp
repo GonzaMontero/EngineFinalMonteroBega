@@ -75,7 +75,7 @@ void BaseGame::Update() {
 
 	while (!glfwWindowShouldClose(_window->GetWindow())) 
 	{
-		_renderer->BeginFrame(0.0f, 0.0f, 0.0f);
+		_renderer->BeginFrame(1.0f, 1.0f, 1.0f);
 
 		UpdateGame();
 		

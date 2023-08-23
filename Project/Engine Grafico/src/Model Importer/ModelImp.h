@@ -34,17 +34,20 @@ namespace Engine {
 
 		//Model Data (textures, meshes and file path)
 		vector<Texture> _textures_loaded;
-		vector<Mesh> _meshes;
+		vector<Mesh*> _meshes;
 		string _path;
 
 		const char* _modelTexture;
 		string _directory;
 
+		std::vector<Entity2D*> _rootNodeChildren;
+		Entity2D* _rootNode;
+
 		void LoadModel(string path);
 
 		//Each of the following private functions processes a part of the Assimp Import Routine
-		void ProcessNode(aiNode* node, const aiScene* scene);
-		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		void ProcessNode(aiNode* node, const aiScene* scene, Entity2D* parent);
+		Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 
 		TextureImporter* _texImporter = NULL;

@@ -18,6 +18,7 @@
 #include "../xml_lib/tinyxml2.h"
 #include "../Light/Light.h"
 #include "../Model Importer/ModelImp.h"
+#include "../Entity/Entity.h"
 
 namespace Engine {
 	class ENGINE_API BaseGame {

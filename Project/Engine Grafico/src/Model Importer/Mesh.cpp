@@ -35,7 +35,10 @@ void Mesh::SetUpMesh() {
 
 void Mesh::Draw(Shader& shader) {
 
-	UpdateMatrices(); //Update the mesh matrixes as precaution for new changes
+	//UpdateMatrices();
+	UpdateSelfAndChild();
+	UpdateVectors();
+	//UpdateModel();
 	
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;

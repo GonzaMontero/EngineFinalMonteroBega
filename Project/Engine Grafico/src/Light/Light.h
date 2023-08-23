@@ -21,6 +21,10 @@ more inclined to the color of the light than the color of the object.
 */
 
 
+/*
+Light will remain as a base class, and all light types should use Light as a base
+*/
+
 namespace Engine {
 	enum class ENGINE_API LightType {
 		directional, point, spot

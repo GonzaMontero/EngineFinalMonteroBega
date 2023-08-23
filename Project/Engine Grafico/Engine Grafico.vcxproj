@@ -181,6 +181,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\BaseGame\BaseGame.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\Collision\Collision Manager.cpp" />
+    <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Entity\Entity2D.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Libraries\tinyxml2.cpp" />
@@ -204,6 +205,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClInclude Include="src\BaseGame\BaseGame.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Collision\Collision Manager.h" />
+    <ClInclude Include="src\Entity\Entity.h" />
     <ClInclude Include="src\Entity\Entity2D.h" />
     <ClInclude Include="src\Frame.h" />
     <ClInclude Include="src\Global.h" />
