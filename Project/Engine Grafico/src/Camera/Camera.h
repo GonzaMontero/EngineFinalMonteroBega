@@ -44,6 +44,7 @@ namespace Engine {
 		glm::vec3 _cameraFront;
 		glm::vec3 _cameraUp;
 		glm::vec3 _cameraRight;
+		Frustrum _frustum;
 
 		float _roll;
 		float _yaw;
@@ -90,6 +91,12 @@ namespace Engine {
 		ProjectionType GetProjectionType();
 		Frustrum CreateFrustumFromCamera(float aspect, float fovY, float zNear, float zFar);
 		CamMode GetCameraMode();
+
+		Plane GetNear();
+		Plane GetLeft();
+		Plane GetRight();
+		Plane GetFar();
+
 		void Draw(Shader& shader);
 	};
 }

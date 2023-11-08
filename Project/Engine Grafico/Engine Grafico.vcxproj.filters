@@ -156,6 +156,12 @@
     <ClCompile Include="src\Collisions\Volume.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="src\Collisions\BSPAlgorithm.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Node.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Global.h">
@@ -244,6 +250,12 @@
     </ClInclude>
     <ClInclude Include="src\Collisions\AABB.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Collisions\BSPAlgorithm.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Node.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

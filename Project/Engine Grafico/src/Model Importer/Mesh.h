@@ -39,10 +39,6 @@ namespace Engine {
 	*/
 	class ENGINE_API Mesh : public Entity2D {
 	private:
-		unsigned int _vao; //Render Data
-		unsigned int _vbo; //Render Data
-		unsigned int _ebo; //Render Data
-
 		unsigned int _positionAttrib; 
 		unsigned int _normalAttrib;
 		unsigned int _textureAttrib;
@@ -52,11 +48,12 @@ namespace Engine {
 
 		void SetUpMesh();
 
-		AABB _boundingVolume;
-		AABB GenerateAABB();
+		//AABB* _boundingVolume;
+		bool _canDraw;
 	public:
-		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, 
-			vector<Mesh*> meshes, Shader& shader, Renderer* renderer); //Constructor
+		Mesh();
+		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, 
+			vector<Texture> textures, Shader& shader, Renderer* renderer);
 		~Mesh(); //Destructor
 
 		vector<Vertex> vertices; //Mesh Data
@@ -64,6 +61,16 @@ namespace Engine {
 		vector<Texture> textures; //Mesh Data
 
 		vector<Mesh*> _meshes;
+		unsigned int _vao;
+		unsigned int _vbo;
+		unsigned int _ebo;
+		//AABB* GenerateAABB();
+		//AABB* GetMeshAABB();
+		Mesh* _parentMesh;
+		std::vector<Mesh*> _meshesChildren;
+		void AddChildMesh(Mesh* children);
+		void SetCanDraw(bool value);
+		bool GetCanDraw();
 		void Draw(Shader& shader, Frustrum frustum); //We pass shader as a variable so we can set uniforms before drawing
 	};
 }

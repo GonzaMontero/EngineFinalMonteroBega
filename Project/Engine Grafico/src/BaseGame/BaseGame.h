@@ -19,6 +19,9 @@
 #include "../Light/Light.h"
 #include "../Model Importer/ModelImp.h"
 #include "../Entity/Entity.h"
+#include "../Plane/Plane.h"
+#include "../Collisions/BSPAlgorithm.h"
+#include "../Entity/Node.h"
 
 namespace Engine {
 	class ENGINE_API BaseGame {

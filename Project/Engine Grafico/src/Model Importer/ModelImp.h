@@ -13,6 +13,7 @@
 #include "../Entity/Entity2D.h"
 #include "../Utils/TimeManager.h"
 #include "../Camera/Camera.h"
+#include "../Entity/Node.h"
 
 #include <string>
 #include <fstream>
@@ -20,35 +21,34 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include "mat4x4.hpp"
 
 #include "../Utils/TextureImporter.h"
 
 using namespace std;
 namespace Engine {
-	class ENGINE_API ModelImp : public Entity2D {
-
+	class ENGINE_API ModelImp {
 	private:
 
 		int _width = 0;
 		int _height = 0;
 		bool _transparency;
 
-		//Model Data (textures, meshes and file path)
 		vector<Texture> _textures_loaded;
-		vector<Mesh*> _meshes;
+		//vector<Mesh*> _meshes;
 		string _path;
 
 		const char* _modelTexture;
 		string _directory;
 
-		std::vector<Entity2D*> _rootNodeChildren;
-		Entity2D* _rootNode;
+		//std::vector<Entity2D*> _rootNodeChildren;
+		//Entity2D* _rootNode; //Atributo para setear el nodo actual.
 
 		void LoadModel(string path);
 
 		//Each of the following private functions processes a part of the Assimp Import Routine
-		void ProcessNode(aiNode* node, const aiScene* scene, Entity2D* parent);
-		Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		void ProcessNode(aiNode* node, const aiScene* scene, Node* parent, glm::mat4 identMatrix);
+		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 		vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 
 		TextureImporter* _texImporter = NULL;
@@ -61,6 +61,10 @@ namespace Engine {
 		unsigned int TextureFromFile(const char* path, const string& directory, bool gamma);
 		void LoadTexture();
 		unsigned int TextureModel(const char* texture);
+
+		std::vector<Mesh> _meshes;
+
+		Node* sceneNode;
 	public:
 
 		ModelImp();
@@ -74,6 +78,8 @@ namespace Engine {
 		void RotateModelX(float x);
 		void RotateModelY(float y);
 		void RotateModelZ(float z);
+		Mesh* _rootNodeMesh;
+		Node* GetSceneNode();
 
 		void Draw(Shader& shader, Frustrum frustum);
 	};
