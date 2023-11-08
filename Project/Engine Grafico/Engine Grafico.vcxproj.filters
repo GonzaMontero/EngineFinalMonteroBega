@@ -70,6 +70,12 @@
     <Filter Include="Model Importer">
       <UniqueIdentifier>{7301f316-2b92-4ebb-893d-a566c2a25409}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plane">
+      <UniqueIdentifier>{1db244cb-a20b-4fea-adca-ff0528e203d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collisions">
+      <UniqueIdentifier>{c7d64a75-422f-4df5-b73a-f56cc9ab40a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Libraries\tinyxml2.cpp">
@@ -137,6 +143,18 @@
     </ClCompile>
     <ClCompile Include="src\Entity\Entity.cpp">
       <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Plane\Plane.cpp">
+      <Filter>Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collisions\AABB.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collisions\BoundingVolume.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collisions\Volume.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +232,18 @@
     </ClInclude>
     <ClInclude Include="src\Entity\Entity.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Plane\Plane.h">
+      <Filter>Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Collisions\BoundingVolume.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Collisions\Volume.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Collisions\AABB.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

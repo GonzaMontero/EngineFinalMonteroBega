@@ -35,7 +35,6 @@ namespace Engine {
 	private:
 		bool _hasParent;
 	protected:
-		Model model;
 		void UpdateMatrices();
 		void UpdateModel();
 		void UpdateForward();
@@ -52,6 +51,10 @@ namespace Engine {
 		void AddChild(Entity2D* entity);
 		glm::mat4 GetLocalModelMatrix();
 		void UpdateSelfAndChild();
+		//AABB _boundingVolume;
+		Model model;
+		//AABB GenerateAABB(std::vector<Mesh*> meshes, std::vector<Vertex> vertices);
+		//Crear un metodo que devuelva un AABB global
 
 		void ComputeModelMatrix();
 		void ComputeModelMatrix(const glm::mat4& parentGlobalModelMatrix);

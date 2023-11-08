@@ -25,6 +25,8 @@ Camera::Camera(Renderer* renderer, ProjectionType type, CamMode mode) {
 	_mode = mode;
 
 	_rotationAngle = 5.0f;
+
+	_worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 Camera::~Camera() {
@@ -186,7 +188,9 @@ void Camera::UpdateRotation() {
 	_cameraFront.y = glm::sin(glm::radians(transform.rotation.x));
 	_cameraFront.z = glm::sin(glm::radians(transform.rotation.y)) * glm::cos(glm::radians(transform.rotation.x));
 
-	SetCameraFront(glm::normalize(_cameraFront));
+	SetCameraFront(glm::normalize(_cameraFront));					//este vector es el world up
+	_cameraRight = glm::normalize(glm::cross(_cameraFront, _worldUp));
+	_cameraUp = glm::normalize(glm::cross(_cameraRight, _cameraFront));
 	
 	if (_pitch > 89.0f)
 		_pitch = 89.0f;
@@ -201,4 +205,24 @@ void Camera::RotateYaw(float yaw) {
 
 void Camera::RotatePitch(float pitch) {
 	transform.rotation.x += pitch;
+}
+
+Frustrum Camera::CreateFrustumFromCamera(float aspect, float fovY, float zNear, float zFar) {
+	Frustrum frustum;
+	const float halfVSide = zFar * tanf(fovY * 0.5f);
+	const float halfHSide = halfVSide * aspect;
+	const glm::vec3 frontMultFar = zFar * _cameraFront;
+
+	frustum.nearFace = { transform.position + zNear * _cameraFront, _cameraFront };
+	frustum.farFace = { transform.position + frontMultFar , -_cameraFront };
+	frustum.rightFace = { transform.position, glm::cross(_cameraUp, frontMultFar + _cameraRight * halfHSide) };
+	frustum.leftFace = { transform.position, glm::cross(frontMultFar - _cameraRight * halfHSide, _cameraUp) };
+	frustum.topFace = { transform.position, glm::cross(_cameraRight, frontMultFar - _cameraUp * halfVSide) };
+	frustum.bottomFace = { transform.position, glm::cross(frontMultFar + _cameraUp * halfVSide, _cameraRight) };
+
+	std::cout << "_camera right x: " << _cameraRight.x << std::endl;
+	std::cout << "_camera right y: " << _cameraRight.y << std::endl;
+	std::cout << "_camera right z: " << _cameraRight.z << std::endl;
+
+	return frustum;
 }

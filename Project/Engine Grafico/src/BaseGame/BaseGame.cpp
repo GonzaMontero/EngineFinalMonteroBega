@@ -77,6 +77,8 @@ void BaseGame::Update() {
 	{
 		_renderer->BeginFrame(1.0f, 1.0f, 1.0f);
 
+		camFrustum = _camera->CreateFrustumFromCamera(1280.0f / 720.0f, glm::radians(45.0f), 0.1f, 100.0f);
+
 		UpdateGame();
 		
 		time.CalculateFPS();

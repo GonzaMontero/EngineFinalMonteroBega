@@ -7,6 +7,7 @@
 #include "../Entity/Entity2D.h"
 #include "../Input/Input.h"
 #include "../Utils/TimeManager.h"
+#include "../Plane/Plane.h"
 
 using namespace std;
 
@@ -18,6 +19,15 @@ namespace Engine {
 
 	enum class ENGINE_API CamMode {
 		firstPerson, thirdPerson
+	};
+
+	struct Frustrum {
+		Plane topFace;
+		Plane bottomFace;
+		Plane rightFace;
+		Plane leftFace;
+		Plane farFace;
+		Plane nearFace;
 	};
 
 	class ENGINE_API Camera:public Entity2D {
@@ -33,13 +43,14 @@ namespace Engine {
 		glm::vec3 _cameraPos;
 		glm::vec3 _cameraFront;
 		glm::vec3 _cameraUp;
+		glm::vec3 _cameraRight;
 
 		float _roll;
 		float _yaw;
 		float _pitch;
 		bool _firstMouse;
 		float _rotationAngle;
-
+		glm::vec3 _worldUp;
 	public:
 		Camera(Renderer* renderer, ProjectionType type, CamMode mode);
 		~Camera();
@@ -77,6 +88,7 @@ namespace Engine {
 		void UpdateRotation();
 
 		ProjectionType GetProjectionType();
+		Frustrum CreateFrustumFromCamera(float aspect, float fovY, float zNear, float zFar);
 		CamMode GetCameraMode();
 		void Draw(Shader& shader);
 	};

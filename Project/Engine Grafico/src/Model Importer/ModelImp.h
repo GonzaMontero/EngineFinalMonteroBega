@@ -12,6 +12,7 @@
 #include "Mesh.h"
 #include "../Entity/Entity2D.h"
 #include "../Utils/TimeManager.h"
+#include "../Camera/Camera.h"
 
 #include <string>
 #include <fstream>
@@ -54,6 +55,9 @@ namespace Engine {
 		Shader _shader;
 		Renderer* _renderer;
 
+		AABB* _boundingVolume;
+		AABB* GenerateGlobalAABB();
+
 		unsigned int TextureFromFile(const char* path, const string& directory, bool gamma);
 		void LoadTexture();
 		unsigned int TextureModel(const char* texture);
@@ -71,7 +75,7 @@ namespace Engine {
 		void RotateModelY(float y);
 		void RotateModelZ(float z);
 
-		void Draw(Shader& shader);
+		void Draw(Shader& shader, Frustrum frustum);
 	};
 }
 #endif

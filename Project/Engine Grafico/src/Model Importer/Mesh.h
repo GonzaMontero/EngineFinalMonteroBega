@@ -6,6 +6,7 @@
 #include "../Shader/Shader.h"
 #include "../Entity/Entity2D.h"
 #include "../Renderer/renderer.h"
+#include "../Collisions/AABB.h"
 
 #include <vector>
 #include <string>
@@ -50,16 +51,20 @@ namespace Engine {
 		Renderer* _renderer;
 
 		void SetUpMesh();
+
+		AABB _boundingVolume;
+		AABB GenerateAABB();
 	public:
 		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, 
-			Shader &shader, Renderer* renderer); //Constructor
+			vector<Mesh*> meshes, Shader& shader, Renderer* renderer); //Constructor
 		~Mesh(); //Destructor
 
 		vector<Vertex> vertices; //Mesh Data
 		vector<unsigned int> indices; //Mesh Data
 		vector<Texture> textures; //Mesh Data
 
-		void Draw(Shader& shader); //We pass shader as a variable so we can set uniforms before drawing
+		vector<Mesh*> _meshes;
+		void Draw(Shader& shader, Frustrum frustum); //We pass shader as a variable so we can set uniforms before drawing
 	};
 }
 

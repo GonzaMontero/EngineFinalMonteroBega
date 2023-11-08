@@ -180,7 +180,7 @@ void Game::UpdateGame() {
 
 	_shape->Draw();
 	_shape2->Draw();
-	_model->Draw(basicShader);
+	_model->Draw(basicShader, camFrustum);
 	
 	_dirLight->DrawDirectionalLight();
 	_spotLight->DrawSpotLight();
