@@ -9,7 +9,7 @@ Mesh::Mesh() {
 }
 
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, 
-	Shader& shader, Renderer* renderer) : Entity2D() {
+	Shader& shader, Renderer* renderer) : Entity() {
 	
 	this->vertices = vertices; //Set the public variables as the recieved arguments
 	this->indices = indices; //Set the public variables as the recieved arguments
@@ -84,10 +84,10 @@ bool Mesh::GetCanDraw() {
 }
 
 void Mesh::Draw(Shader& shader, Frustrum frustrum) {
-	UpdateMatrices();
+	//UpdateMatrices();
 	//UpdateSelfAndChild();
 	//UpdateVectors();
-	UpdateModel();
+	//UpdateModel();
 
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
@@ -115,6 +115,6 @@ void Mesh::Draw(Shader& shader, Frustrum frustrum) {
 
 	//std::cout << "parent->children size: " << _parent->children.size() << std::endl;
 	//if (/*_boundingVolume->IsOnFrustum(frustum, _parent) ||*/ _canDraw) //Para hacer el chequeo con el frsutum y que funcione por jerarquia, chequear por parent y no por this (malla actual)
-	_renderer->DrawMesh(shader, _vao, _vbo, vertices.size() * sizeof(Vertex), &vertices[0], indices.size(), sizeof(Vertex), 
-		0, offsetof(Vertex, Normal), offsetof(Vertex, TexCoords), model.trs);
+	//_renderer->DrawMesh(shader, _vao, _vbo, vertices.size() * sizeof(Vertex), &vertices[0], indices.size(), sizeof(Vertex), 
+		//0, offsetof(Vertex, Normal), offsetof(Vertex, TexCoords), model.trs);
 }

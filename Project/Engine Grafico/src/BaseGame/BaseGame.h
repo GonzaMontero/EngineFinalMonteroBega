@@ -22,6 +22,7 @@
 #include "../Plane/Plane.h"
 #include "../Collisions/BSPAlgorithm.h"
 #include "../Entity/Node.h"
+#include "../Model Importer/ModelInstance.h"
 
 namespace Engine {
 	class ENGINE_API BaseGame {
@@ -39,7 +40,7 @@ namespace Engine {
 		Renderer* GetRenderer();
 		Window* GetWindow();
 		CollisionManager* _collisionManager;
-		Frustrum camFrustum;
+		Node* _modelMobile = NULL;
 
 		Time time;
 		Input input;

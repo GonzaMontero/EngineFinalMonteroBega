@@ -25,13 +25,14 @@ private:
 	Light* _spotLight = NULL;
 
 	Sprite* _sprite = NULL;
-	ModelImp* _model = NULL;
+	ModelInstance* _model = NULL;
 	Node* _modelLeft = NULL;
 	Node* _modelRight = NULL;
 	Node* _modelForward = NULL;
-	Node* _modelMobile = NULL;
+	//Node* _modelMobile = NULL;
 	Node* _bspPlanes[3] = { NULL, NULL, NULL };
-	//BSPAlgorithm* _bsp = NULL;
+	BSPAlgorithm* _bsp = NULL;
+	Frustrum camFrustum;
 	//Plane _planes[3];
 
 public:

@@ -32,6 +32,7 @@ namespace Engine {
 		void SetMeshAttribPointers(const char* name, unsigned int dataAmount, unsigned int vertexSize, unsigned int vertexOffset);
 		unsigned int GetMatrixAttributes(const char* name);
 		unsigned int GetID();
+		void SetUniformModelColor(const char* name, glm::vec3 color);
 	};
 
 }

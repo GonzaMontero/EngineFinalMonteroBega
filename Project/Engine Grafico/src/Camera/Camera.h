@@ -9,6 +9,9 @@
 #include "../Utils/TimeManager.h"
 #include "../Plane/Plane.h"
 
+#include <iostream>
+#include <algorithm>
+
 using namespace std;
 
 
@@ -30,6 +33,10 @@ namespace Engine {
 		Plane nearFace;
 	};
 
+	//Vector de string para almacenar los nombres de los nodos y asi comprobar por nombre si fueron agregados o no
+	static std::vector<std::string> _nodesInFrustum;
+	static int counterNodes = 0;
+
 	class ENGINE_API Camera:public Entity2D {
 	private:
 		Renderer* _renderer;
@@ -45,6 +52,7 @@ namespace Engine {
 		glm::vec3 _cameraUp;
 		glm::vec3 _cameraRight;
 		Frustrum _frustum;
+		//static std::vector<Node*> _nodesInCamera;
 
 		float _roll;
 		float _yaw;
@@ -98,6 +106,10 @@ namespace Engine {
 		Plane GetFar();
 
 		void Draw(Shader& shader);
+		static void CountNodesInFrustum(string nameNode);
+		//static void AddNodesToCounter(Node* node);
+		static void RemoveNodesInCounter(string nameNode);
+		//static void RemoveNodesToCounter(Node* node);
 	};
 }
 #endif // !CAMERA_H

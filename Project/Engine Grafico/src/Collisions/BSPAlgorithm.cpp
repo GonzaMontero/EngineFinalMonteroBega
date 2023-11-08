@@ -27,54 +27,99 @@ BSPAlgorithm::~BSPAlgorithm() {
 		_nodes.clear();
 	}
 
+	if (!_planeModel.empty()) {
+		for (auto* planeM : _planeModel) {
+			if (planeM != NULL) {
+				delete planeM;
+				planeM = NULL;
+			}
+		}
+		_planeModel.clear();
+	}
+
 	if (_aabb != NULL) {
 		delete _aabb;
 		_aabb = NULL;
 	}
 }
 
-void BSPAlgorithm::BSP(Camera* camera) {
+void BSPAlgorithm::BSP() {
 	for (int i = 0; i < _nodes.size(); i++) {
-		//_aabb = _models[i]->GetMeshes()[i]->GetMeshAABB();
-		//CheckBSP(camera, _models[i]->GetMeshes()[0]);
-		//std::cout << "vector models get meshes: " << _models[i]->GetMeshes().size() << std::endl;
+		CheckBSP(_nodes[i]);
 	}
 }
 
-void BSPAlgorithm::CheckBSP(Camera* camera, Mesh* mesh) {
-	//_aabb = mesh->GetMeshAABB(); //Aca un getter del aabb de nuestra malla.
+void BSPAlgorithm::CheckBSP(Node* node) {
+	node->SetCanDraw(true);
 
-	//if (_aabb->IsOnBSP(_planes, mesh)) {
-	//	std::cout << "La malla esta del mismo lado del los tres planos del BSP!" << std::endl;
-	//	mesh->SetCanDraw(true);
-	//}
-	//else {
-	//	std::cout << "La malla NO esta del mismo lado del BSP" << std::endl;
-	//	mesh->SetCanDraw(false);
-	//}
+	if (node->GetVolume() == NULL && !node->GetChildrens().empty()) {
+		for (int i = 0; i < node->GetChildrens().size(); i++) {
+			node->UpdateAABBchildren(node->GetChildrens()[i]); //Actualizamos el AABB de los hijos del nodo.
+		}
+	}
 
 	for (int i = 0; i < _planes.size(); i++) {
-		//if (mesh->GetMeshAABB().IsOnOrForwardPlan(camera->GetNear())) {
-		//	std::cout << "La malla esta del mismo lado del plano near de la camara!" << std::endl;
-		//}
-		//if (_aabb->IsOnOrForwardPlan(_planes[i])) {
-		//	std::cout << "La malla esta del mismo lado del los tres planos del BSP!" << std::endl;
-		//	mesh->SetCanDraw(true);
-		//}
-		//else {
-		//	mesh->SetCanDraw(false);
-		//}
-
-
-		if  (_planes[0]->SameSide(_aabb->GetCenter(), camera->transform.position)/* &&
-			_planes[1]->SameSide(_aabb->GetCenter(), camera->transform.position) &&
-			_planes[2]->SameSide(_aabb->GetCenter(), camera->transform.position)*/) {
-			std::cout << "La malla esta del mismo lado del plano!" << std::endl;
-			mesh->SetCanDraw(true);
+		//Si el AABB del nodo no esta del mismo lado que el plano con respecto a la posiciona de la camara, dejo de dibujarlo.
+		if (node->GetVolume()->GetGlobalAABBWithMatrix(node->GetModel()).IsOnOrForwardPlan(_planes[i]) != 
+			_planes[i]->GetSide(_camera->transform.position)) {
+			node->SetCanDraw(false);
+			break;
 		}
-		else {
-			mesh->SetCanDraw(false);
-		}
+	}
+
+	//bool checkPassed = true;
+//
+//if (!node->GetChildrens().empty()) {
+//
+//	for (int i = 0; i < _planes.size(); i++) {
+//
+//		//if (node->GetVolume() != NULL) {
+//		//	if (node->GetVolume()->IsOnOrForwardPlan(_planes[i]) != _planes[i]->GetSide(_camera->transform.position)) {
+//		//		//std::cout << "Esta del mismo lado del plano y de la camara!" << std::endl;
+//		//		//node->SetCanDraw(false);
+//		//		checkPassed = false;
+//		//		break;
+//		//	}
+//		//}
+//
+//		if (node->GetVolume() != NULL) {
+//			if (node->GetVolume()->GetGlobalAABBWithMatrix(node->getModel()).IsOnOrForwardPlan(_planes[i]) != _planes[i]->GetSide(_camera->transform.position)) {
+//				//std::cout << "Esta del mismo lado del plano y de la camara!" << std::endl;
+//				//node->SetCanDraw(false);
+//				checkPassed = false;
+//				break;
+//			}
+//		}
+//	}
+//
+//	if (!checkPassed) {
+//		node->SetCanDraw(false);
+//		node->StopDrawNodeAndChildrens(node);
+//		//llamar al chequeo que si tiene hijos, tambien pare el dibujado de los mismos
+//		return;
+//	}
+//}
+//
+//for (int i = 0; i < _planes.size(); i++) {
+//	if (node->GetVolume() != NULL) {
+//		if (node->GetVolume()->GetGlobalAABBWithMatrix(node->getModel()).IsOnOrForwardPlan(_planes[i]) != _planes[i]->GetSide(_camera->transform.position)) {
+//			//std::cout << "Esta del mismo lado del plano y de la camara!" << std::endl;
+//			//node->SetCanDraw(false);
+//			checkPassed = false;
+//			break;
+//		}
+//	}
+//}
+//
+//if (!checkPassed) {
+//	node->SetCanDraw(false);
+//}
+//else {
+//	node->SetCanDraw(true);
+//}
+
+	for (int j = 0; j < node->GetChildrens().size(); j++) {
+		CheckBSP(node->GetChildrens()[j]);
 	}
 
 	//for (int i = 0; i < _planes.size(); i++) {
@@ -102,16 +147,50 @@ void BSPAlgorithm::CheckBSP(Camera* camera, Mesh* mesh) {
 	//}
 }
 
-void BSPAlgorithm::AddPlane(Plane* plane) {
-	glm::vec3 planeNormal = glm::normalize(plane->getForwardConst());
-	Plane* bspPlane = new Plane(planeNormal, plane->getPos());
-	_planes.push_back(bspPlane);
+void BSPAlgorithm::CheckCameraWithPlanes() {
+	for (int i = 0; i < _planes.size(); i++) {
+		if (!_planes[i]->GetSide(_camera->transform.position))
+			_planes[i]->Flip();
+	}
 }
 
-void SetUpPlane(Plane* plane) {
-	glm::vec3 planeNormal = glm::normalize(plane->getForwardConst());
+void BSPAlgorithm::AddPlane(std::vector<Node*> planes) {
+	_planeModel = planes;
+	for (int i = 0; i < planes.size(); i++) {
+		glm::vec3 planeNormal = glm::normalize(_planeModel[i]->GetForwardConst());
+		Plane* bspPlane = new Plane(_planeModel[i]->GetPos(), planeNormal);
+		_planes.push_back(bspPlane);
+	}
 }
 
-void BSPAlgorithm::AddNode(Node* node) {
-	_nodes.push_back(node);
+void BSPAlgorithm::InitPlanes(Renderer* renderer) {
+	for (int i = 0; i < _planeModel.size(); i++) {
+		_planeModel[i]->Init(renderer);
+	}
 }
+
+	void BSPAlgorithm::AddNode(Node * node) {
+		_nodes.push_back(node);
+		if (!node->GetChildrens().empty()) {
+			for (int i = 0; i < node->GetChildrens().size(); i++) {
+				_nodes.push_back(node->GetChildrens()[i]);
+			}
+			//_nodes.push_back(node->GetParent());
+			//std::vector<Node*> childrens;
+		}
+		//for (int i = 0; i < node->GetChildrens().size(); i++) {
+		//	_nodes.push_back(node->GetChildrens()[i]);
+		//}
+		//_nodes.push_back(node);
+		//Desde el game llamar a AddNode y que el nodo padre se agregue a la lista junto con sus hijos para hacer el chequeo del BSP.
+	}
+
+	void BSPAlgorithm::AddCamera(Camera* camera) {
+		_camera = camera;
+	}
+
+	void BSPAlgorithm::DrawPlanes(Shader& shader) {
+		for (int i = 0; i < _planeModel.size(); i++) {
+			_planeModel[i]->DrawPlane(shader);
+		}
+	}

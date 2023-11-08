@@ -48,39 +48,6 @@ Node* ModelImp::GetSceneNode() {
     return sceneNode;
 }
 
-void ModelImp::MoveModel(glm::vec3 direction) {
-    for (int i = 0; i < _meshes.size(); i++) {
-        _meshes[i].Translate(direction.x, direction.y, direction.z);
-    }
-}
-
-void ModelImp::ScaleModel(float x, float y, float z) {
-    for (int i = 0; i < _meshes.size(); i++) {
-        if (x < 0 || y < 0 || z < 0) {
-            x = 0; y = 0; z = 0;
-        }
-        _meshes[i].Scale(x, y, z);
-    }
-}
-
-void ModelImp::RotateModelX(float x) {
-    for (int i = 0; i < 1; i++) {
-        _meshes[i].RotateX(x);
-    }
-}
-
-void ModelImp::RotateModelY(float y) {
-    for (int i = 0; i < _meshes.size(); i++) {
-        _meshes[i].RotateY(y);
-    }
-}
-
-void ModelImp::RotateModelZ(float z) {
-    for (int i = 0; i < _meshes.size(); i++) {
-        _meshes[i].RotateZ(z);
-    }
-}
-
 void ModelImp::LoadModel(string path) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
@@ -108,52 +75,29 @@ void ModelImp::ProcessNode(aiNode* node, const aiScene* scene, Node* parent, glm
     string nameNode = node->mName.C_Str();
 
     if (nameNode.find("$AssimpFbx$") == -1 && node->mNumMeshes == 0 && identMatrix == glm::mat4(1.f)) {
-        if (nameNode.find("RotationPivot") != -1 && nameNode.find("Inverse") == -1) {
-            aiMatrix4x4 newMatrix = node->mTransformation;
+        glm::mat4 m;
+        aiMatrix4x4 newMatrix = node->mTransformation;
 
-            identMatrix[0][0] = (float)newMatrix.a1;
-            identMatrix[0][1] = (float)newMatrix.b1;
-            identMatrix[0][2] = (float)newMatrix.c1;
-            identMatrix[0][3] = (float)newMatrix.d1;
-            identMatrix[1][0] = (float)newMatrix.a2;
-            identMatrix[1][1] = (float)newMatrix.b2;
-            identMatrix[1][2] = (float)newMatrix.c2;
-            identMatrix[1][3] = (float)newMatrix.d2;
-            identMatrix[2][0] = (float)newMatrix.a3;
-            identMatrix[2][1] = (float)newMatrix.b3;
-            identMatrix[2][2] = (float)newMatrix.c3;
-            identMatrix[2][3] = (float)newMatrix.d3;
-            identMatrix[3][0] = (float)newMatrix.a4;
-            identMatrix[3][1] = (float)newMatrix.b4;
-            identMatrix[3][2] = (float)newMatrix.c4;
-            identMatrix[3][3] = (float)newMatrix.d4;
+        m[0][0] = (float)newMatrix.a1;
+        m[0][1] = (float)newMatrix.b1;
+        m[0][2] = (float)newMatrix.c1;
+        m[0][3] = (float)newMatrix.d1;
+        m[1][0] = (float)newMatrix.a2;
+        m[1][1] = (float)newMatrix.b2;
+        m[1][2] = (float)newMatrix.c2;
+        m[1][3] = (float)newMatrix.d2;
+        m[2][0] = (float)newMatrix.a3;
+        m[2][1] = (float)newMatrix.b3;
+        m[2][2] = (float)newMatrix.c3;
+        m[2][3] = (float)newMatrix.d3;
+        m[3][0] = (float)newMatrix.a4;
+        m[3][1] = (float)newMatrix.b4;
+        m[3][2] = (float)newMatrix.c4;
+        m[3][3] = (float)newMatrix.d4;
 
-        }
-        if (nameNode.find("Pivot") == std::string::npos) {
-            glm::mat4 m;
-            aiMatrix4x4 newMatrix = node->mTransformation;
+        identMatrix *= m;
 
-            m[0][0] = (float)newMatrix.a1;
-            m[0][1] = (float)newMatrix.b1;
-            m[0][2] = (float)newMatrix.c1;
-            m[0][3] = (float)newMatrix.d1;
-            m[1][0] = (float)newMatrix.a2;
-            m[1][1] = (float)newMatrix.b2;
-            m[1][2] = (float)newMatrix.c2;
-            m[1][3] = (float)newMatrix.d2;
-            m[2][0] = (float)newMatrix.a3;
-            m[2][1] = (float)newMatrix.b3;
-            m[2][2] = (float)newMatrix.c3;
-            m[2][3] = (float)newMatrix.d3;
-            m[3][0] = (float)newMatrix.a4;
-            m[3][1] = (float)newMatrix.b4;
-            m[3][2] = (float)newMatrix.c4;
-            m[3][3] = (float)newMatrix.d4;
-
-            identMatrix *= m;
-        }
-
-        actualNode->setMatrix(identMatrix); //modificar esto para hacer el correcto seteo de la matriz
+        actualNode->SetMatrix(identMatrix);
     }
     else {
 
@@ -178,9 +122,10 @@ void ModelImp::ProcessNode(aiNode* node, const aiScene* scene, Node* parent, glm
         }
     }
 
-    //if (nameNode.find("bspPlane") != -1) {
-    //    //Crear un vector de node* para setear los planos;
-    //}
+    if (nameNode.find("bsp") != std::string::npos || nameNode.find("BSP") != std::string::npos || 
+        nameNode.find("plane") != std::string::npos) {
+        _bspPlanes.push_back(actualNode);
+    }
 
     std::vector<Node*> childrens;
 
@@ -191,67 +136,6 @@ void ModelImp::ProcessNode(aiNode* node, const aiScene* scene, Node* parent, glm
     parent->SetChildren(actualNode);
     actualNode->SetName(nameNode);
     actualNode->SetParent(parent);
-
-
-    //Entity2D* actualNode = nullptr;
-    //Mesh* actualMesh = nullptr;
-    //
-    //if (parent == nullptr) { //Si no hay padre procesamos el nodo actual y agregamos como child una entity normalizada
-    //    _rootNode = new Entity2D();
-    //    actualNode = _rootNode;
-    //
-    //    //_rootNodeMesh = new Mesh();
-    //    //actualMesh = actualNode;
-    //
-    //    std::cout << "No hay padre, agregando nodo raiz" << std::endl;
-    //    //SetParent(_rootNode);
-    //    AddChild(_rootNode);
-    //    //actualMesh->AddChildMesh(_rootNodeMesh);
-    //}
-    //if(parent) { //Si hay padre hacemos el nodo actual hijo del padre.
-    //    actualNode = new Entity2D();
-    //    //actualMesh = new Mesh();
-    //
-    //    parent->AddChild(actualNode);
-    //    //parentMesh->AddChildMesh(actualMesh);
-    //    std::cout << "Hay padre, nodo actual hijo del padre" << std::endl;
-    //    _rootNodeChildren.push_back(actualNode);
-    //    //_rootNodeChildrenMesh.push_back(actualMesh);
-    //}
-    //
-    //if (node->mNumMeshes > 0) {
-    //    for (int i = 0; i < node->mNumMeshes; i++) {
-    //        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-    //        if (parent == nullptr) {
-    //            Mesh* nMesh = ProcessMesh(mesh, scene, _rootNode, actualNode);
-    //            actualNode->AddChild(nMesh);
-    //            //actualMesh->AddChild(nMesh);
-    //            _rootNodeChildrenMesh.push_back(nMesh);
-    //            _meshes.push_back(nMesh);
-    //        }
-    //        else {
-    //            Mesh* nMesh = ProcessMesh(mesh, scene, parent, actualNode);
-    //            actualNode->AddChild(nMesh);
-    //            //actualMesh->AddChild(nMesh);
-    //            //actualMesh->AddChild(nMesh);
-    //            _rootNodeChildrenMesh.push_back(actualMesh);
-    //            _meshes.push_back(nMesh);
-    //        }
-    //    }
-    //}
-    //
-    //
-    //std::cout << "Entro en ProcessNode!!!" << std::endl;
-    ////for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-    ////    aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-    ////    _meshes.push_back(ProcessMesh(mesh, scene)); //pusehar la ultima mesh encontrada
-    ////}
-    ////
-    //////procesar nodos para que se agrupen por jerarquia
-    ////
-    //for (unsigned int i = 0; i < node->mNumChildren; i++) {
-    //    ProcessNode(node->mChildren[i], scene, actualNode, actualMesh);
-    //}
 }
 
 Mesh ModelImp::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
@@ -372,7 +256,7 @@ vector<Texture> ModelImp::LoadMaterialTextures(aiMaterial* mat, aiTextureType ty
 }
 
 void ModelImp::Draw(Shader& shader, Frustrum frustum) {
-    sceneNode->Draw(shader, frustum);
+    //sceneNode->Draw(shader);
     //UpdateSelfAndChild();
     //UpdateModel();
     //UpdateVectors();
@@ -477,4 +361,8 @@ unsigned int ModelImp::TextureModel(const char* texture) {
     }
 
     return textureID;
+}
+
+std::vector<Node*> ModelImp::GetPlanesLoaded() {
+    return _bspPlanes;
 }

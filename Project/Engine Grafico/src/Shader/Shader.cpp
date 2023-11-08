@@ -144,3 +144,8 @@ void Shader::SetMeshAttribPointers(const char* name, unsigned int dataAmount, un
 	glVertexAttribPointer(attribute, dataAmount, GL_FLOAT, GL_FALSE, vertexSize, (void*)vertexOffset);
 	glEnableVertexAttribArray(attribute);
 }
+
+void Shader::SetUniformModelColor(const char* name, glm::vec3 color) {
+	unsigned int attribute = glGetUniformLocation(_id, name);
+	glUniform3fv(attribute, 1, glm::value_ptr(color));
+}

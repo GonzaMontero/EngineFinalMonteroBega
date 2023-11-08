@@ -162,6 +162,9 @@
     <ClCompile Include="src\Entity\Node.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\Model Importer\ModelInstance.cpp">
+      <Filter>Model Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Global.h">
@@ -256,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="src\Entity\Node.h">
       <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model Importer\ModelInstance.h">
+      <Filter>Model Importer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

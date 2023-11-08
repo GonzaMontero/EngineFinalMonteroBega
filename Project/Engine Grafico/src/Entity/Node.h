@@ -7,7 +7,7 @@
 #include "../Collisions/AABB.h"
 #include "../Renderer/renderer.h"
 #include "../Shader/Shader.h"
-#include "../Camera/Camera.h"
+#include "../Material/Material.h"
 
 #include "glm.hpp"
 #include <string>
@@ -34,7 +34,18 @@ namespace Engine {
 		AABB* _volume;
 
 		Renderer* _renderer;
+		Shader _shader;
 
+		bool _canDraw;
+
+		Material* _material;
+
+		int _totalNodes;
+		int _displayNodes;
+		int flag;
+		bool yaConto;
+
+		std::vector<Node*> _nodesInCamera;
 	public:
 		Node();
 		~Node();
@@ -45,18 +56,29 @@ namespace Engine {
 		void SetLocalBoundingVolume(AABB* localBoundingVolume);
 		void SetVolume(AABB* volume);
 		void SetName(string name);
-		void SetTransformMatrix();
+		void UpdateNode();
+		void UpdateNode(Frustrum& frustum);
+		void UpdateNodeChildren();
 		std::vector<Node*> GetChildrens();
 		Node* GetParent();
 		string GetName();
 		AABB* GetLocalBoundingVolume();
 		AABB* GetVolume();
-		void SetRenderer(Renderer* renderer);
+		void Init(Renderer* renderer);
+		void Init(Renderer* renderer, Shader& shader);
+		void SetMaterial();
 		Node* GetChildrenWithName(string name);
 		void GenerateAABB();
 		void UpdateAABBchildren(Node* child);
-		void Draw(Shader& shader, Frustrum& frustum);
+		void Draw(Shader& shader);
+		void DrawPlane(Shader& shader);
+		void SetCanDraw(bool value);
+		bool GetCanDraw();
+		void StopDrawNodeAndChildrens(Node* node);
+		void BSP(vector<Plane*> planes, Camera* camera);
+		void SetMeshPos(float x, float y, float z, int meshIndex);
+		void SetMeshScale(float x, float y, float z, int meshIndex);
+		void IsOnFrustum(Frustrum& frustum);
 	};
 }
-
 #endif

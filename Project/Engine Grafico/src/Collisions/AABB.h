@@ -21,9 +21,11 @@ namespace Engine {
 		AABB(glm::vec3& inCenter, float iI, float iJ, float iK);
 		~AABB();
 		bool IsOnFrustum(Frustrum& camFrustum, Entity2D* mesh);
+		bool IsOnFrustum(Frustrum& camFrustum, glm::mat4 worldModel);
 		bool IsOnBSP(std::vector<Plane*> planes, Entity2D* mesh);
 		void GenerateGlobalAABB(Entity2D* mesh);
 		AABB* GetGlobalAABB();
+		AABB GetGlobalAABBWithMatrix(glm::mat4 matrix);
 		bool IsOnOrForwardPlan(Plane& plane);
 		bool IsOnOrForwardPlan(Plane* plane);
 		bool IsOnOrForwardPlan(Plane plane);

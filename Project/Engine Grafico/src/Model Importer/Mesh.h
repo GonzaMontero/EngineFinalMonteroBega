@@ -5,6 +5,7 @@
 
 #include "../Shader/Shader.h"
 #include "../Entity/Entity2D.h"
+#include "../Entity/Entity.h"
 #include "../Renderer/renderer.h"
 #include "../Collisions/AABB.h"
 
@@ -37,7 +38,7 @@ namespace Engine {
 	(Example: Gundam Model Parts, they are built separately and joined together later, similar to a model which is composed
 	of several different meshes - these could be: head, arms, limbs, etc)
 	*/
-	class ENGINE_API Mesh : public Entity2D {
+	class ENGINE_API Mesh : public Entity {
 	private:
 		unsigned int _positionAttrib; 
 		unsigned int _normalAttrib;

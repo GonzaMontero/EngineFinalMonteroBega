@@ -27,6 +27,8 @@ Camera::Camera(Renderer* renderer, ProjectionType type, CamMode mode) {
 	_rotationAngle = 5.0f;
 
 	_worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	counterNodes = 0;
 }
 
 Camera::~Camera() {
@@ -220,10 +222,6 @@ Frustrum Camera::CreateFrustumFromCamera(float aspect, float fovY, float zNear, 
 	_frustum.topFace = { transform.position, glm::cross(_cameraRight, frontMultFar - _cameraUp * halfVSide) };
 	_frustum.bottomFace = { transform.position, glm::cross(frontMultFar + _cameraUp * halfVSide, _cameraRight) };
 
-	std::cout << "_camera right x: " << _cameraRight.x << std::endl;
-	std::cout << "_camera right y: " << _cameraRight.y << std::endl;
-	std::cout << "_camera right z: " << _cameraRight.z << std::endl;
-
 	return _frustum;
 }
 
@@ -241,4 +239,24 @@ Plane Camera::GetRight() {
 
 Plane Camera::GetFar() {
 	return _frustum.farFace;
+}
+
+void Camera::CountNodesInFrustum(string nameNode) {
+
+	//pushear el nombdre de los nodos al vector de string, con una condicion que chequee que no exista dentro del vector.
+	if (std::find(_nodesInFrustum.begin(), _nodesInFrustum.end(), nameNode) == _nodesInFrustum.end())
+		_nodesInFrustum.push_back(nameNode);
+
+	std::cout << "nodes in frustum: " << _nodesInFrustum.size() << std::endl;
+}
+
+void Camera::RemoveNodesInCounter(string nameNode) {
+	//_nodesInFrustum.erase(std::remove(_nodesInFrustum.begin(), _nodesInFrustum.end(), node), _nodesInFrustum.end());
+
+	//_nodesInFrustum.pop_back();
+
+	if (std::find(_nodesInFrustum.begin(), _nodesInFrustum.end(), nameNode) != _nodesInFrustum.end())
+		_nodesInFrustum.erase(std::remove(_nodesInFrustum.begin(), _nodesInFrustum.end(), nameNode), _nodesInFrustum.end());
+
+	std::cout << "nodes in frustum: " << _nodesInFrustum.size() << std::endl;
 }

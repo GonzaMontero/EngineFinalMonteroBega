@@ -1,4 +1,4 @@
-#include "bounding_volume.h"
+#include "BoundingVolume.h"
 
 using namespace Engine;
 
@@ -10,7 +10,7 @@ BoundingVolume::~BoundingVolume() {
 
 }
 
-bool BoundingVolume::IsOnFrustum(Frustum& camFrustum) {
+bool BoundingVolume::IsOnFrustum(Frustrum& camFrustum) {
 	return (IsOnOrForwardPlan(camFrustum.leftFace) &&
 		IsOnOrForwardPlan(camFrustum.rightFace) &&
 		IsOnOrForwardPlan(camFrustum.topFace) &&
