@@ -70,7 +70,7 @@ namespace Engine {
 		Node* GetChildrenWithName(string name);
 		void GenerateAABB();
 		void UpdateAABBchildren(Node* child);
-		void Draw(Shader& shader);
+		void Draw(Shader& shader, Frustrum frustum);
 		void DrawPlane(Shader& shader);
 		void SetCanDraw(bool value);
 		bool GetCanDraw();

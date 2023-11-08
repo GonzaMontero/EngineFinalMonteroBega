@@ -186,112 +186,154 @@ void Game::PlayerInputs() {
 	else if (input.GetKey(KeyCode::G)) {
 		direction.x += speed * time.GetDeltaTime();
 		_modelMobile->SetPos(direction.x, direction.y, direction.z);
+		//_bspPlanes[0]->setPos(_bspPlanes[0]->getPos(_bspPlanes[0]->getModel() + direction.x));
+		//_model->MoveModel(direction);
+		//_modelA->Translate(direction.x, direction.y, direction.z);
+		//std::cout << "_modelA X " << _modelA->transform.position.x << std::endl;
+		//std::cout << "_bspPlanes 0 X " << _bspPlanes[0]->transform.position.x << std::endl;
+		//_shape->transform.position.x += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::F)) {
 		direction.x -= speed * time.GetDeltaTime();
+		//_bspPlanes[1]->setPos(direction.x, direction.y, direction.z);
 		_modelMobile->SetPos(direction.x, direction.y, direction.z);
+		//_modelLeft->setPos(direction);
+		//_bspPlanes[1]->setPos(_bspPlanes[1]->getPos(_bspPlanes[1]->getModel() + direction.x));
+		//_model->MoveModel(direction);
+		//_shape->transform.position.x -= speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::T)) {
 		direction.y += movementSpeed * time.GetDeltaTime();
 		_modelMobile->SetPos(direction.x, direction.y, direction.z);
+		//_bspPlanes[2]->Translate(direction.x, direction.y, direction.z);
+		//_model->MoveModel(direction);
+		//_shape->transform.position.x += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::C)) {
 		direction.y -= movementSpeed * time.GetDeltaTime();
 		_modelMobile->SetPos(direction.x, direction.y, direction.z);
+		//_model->MoveModel(direction);
+		//_shape->transform.position.x += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::K)) {
 		direction.z -= movementSpeed * time.GetDeltaTime();
 		_modelMobile->SetPos(direction.x, direction.y, direction.z);
+		//_model->MoveModel(direction);
+		//_shape->transform.position.x += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::R)) {
 		direction.z += movementSpeed * time.GetDeltaTime();
 		_modelMobile->SetPos(direction.x, direction.y, direction.z);
+		//_model->MoveModel(direction);
+		//_shape->transform.position.x += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::H)) {
 		scale.x += speed * time.GetDeltaTime();
 		scale.y += speed * time.GetDeltaTime();
 		scale.z += speed * time.GetDeltaTime();
-		_modelMobile->SetScale(scale.x, scale.y, scale.z);
+		//_shape->Scale(scale.x, scale.y, scale.z);
+		//_model->ScaleModel(scale.x, scale.y, scale.z);
 	}
 	else if (input.GetKey(KeyCode::J)) {
 		scale.x -= speed * time.GetDeltaTime();
 		scale.y -= speed * time.GetDeltaTime();
 		scale.z -= speed * time.GetDeltaTime();
-		_modelMobile->SetScale(scale.x, scale.y, scale.z);
+		//_shape->Scale(scale.x, scale.y, scale.z);
+		//_model->ScaleModel(scale.x, scale.y, scale.z);
 	}
+
 	else if (input.GetKey(KeyCode::N)) {
 		scale.x += speed * time.GetDeltaTime();
 		scale.y += speed * time.GetDeltaTime();
 		scale.z += speed * time.GetDeltaTime();
 		_shape->Scale(scale.x, scale.y, scale.z);
+		//_model->ScaleModel(scale.x, scale.y, scale.z);
 	}
 	else if (input.GetKey(KeyCode::M)) {
 		scale.x -= speed * time.GetDeltaTime();
 		scale.y -= speed * time.GetDeltaTime();
 		scale.z -= speed * time.GetDeltaTime();
 		_shape->Scale(scale.x, scale.y, scale.z);
+		//_model->ScaleModel(scale.x, scale.y, scale.z);
 	}
 	else if (input.GetKey(KeyCode::X)) {
+		//_planes[0].SetNormal(glm::vec3(-0.100f, 0.23f, 0.96f));
+		//_planes[0].SetNormal(glm::vec3(0.0f, 0.0f, -1.0f));
 		rot.x += rotSpeed * time.GetDeltaTime();
+		//_modelA->RotateModelX(rot.x);
 		_modelMobile->SetRot(rot.x, rot.y, rot.z);
 	}
 	else if (input.GetKey(KeyCode::Y)) {
 		rot.y += rotSpeed * time.GetDeltaTime();
+		//_modelA->RotateModelY(rot.y);
+		//_model->RotateModelY(rot.y);
 		_modelMobile->SetRot(rot.x, rot.y, rot.z);
 	}
 	else if (input.GetKey(KeyCode::Z)) {
+		//_planes[0].SetNormal(glm::vec3(0.57f, 0.0f, 0.81f));
+		//_planes[0].SetNormal(glm::vec3(0.0f, 0.0f, 1.0f));
 		rot.z += rotSpeed * time.GetDeltaTime();
+		//_modelA->RotateModelZ(rot.z);
+		//_model->RotateModelZ(rot.z);
 		_modelMobile->SetRot(rot.x, rot.y, rot.z);
 	}
 	else if (input.GetKey(KeyCode::A)) {
-	_camera->transform.position.x -= speed * time.GetDeltaTime();
+		_camera->transform.position.x -= speed * time.GetDeltaTime();
+		//_shape->transform.position.x -= speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::LEFT)) {
-	_light[0]->transform.position.x -= speed * time.GetDeltaTime();
+		_light[0]->transform.position.x -= speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::RIGHT)) {
-	_light[0]->transform.position.x += speed * time.GetDeltaTime();
+		_light[0]->transform.position.x += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::UP)) {
-	_light[0]->transform.position.z -= speed * time.GetDeltaTime();
+		_light[0]->transform.position.z -= speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::DOWN)) {
-	_light[0]->transform.position.z += speed * time.GetDeltaTime();
+		_light[0]->transform.position.z += speed * time.GetDeltaTime();
 	}
 	else if (input.GetKey(KeyCode::T)) {
 		float value = 10.0f;
 		value += 20.0f * time.GetDeltaTime();
 		_shape2->RotateZ(value);
 	}
+
 	if (input.GetKey(KeyCode::W)) {
 		_camera->transform.position += speed * time.GetDeltaTime() * _camera->GetCameraFront();
 	}
+
 	else if (input.GetKey(KeyCode::S)) {
 		_camera->transform.position -= speed * time.GetDeltaTime() * _camera->GetCameraFront();
 	}
+
 	else if (input.GetKey(KeyCode::A)) {
 		_camera->transform.position -= glm::normalize(glm::cross(_camera->GetCameraFront(), _camera->GetCameraUp())) * speed * time.GetDeltaTime();
 	}
+
 	else if (input.GetKey(KeyCode::D)) {
 		_camera->transform.position += glm::normalize(glm::cross(_camera->GetCameraFront(), _camera->GetCameraUp())) * speed * time.GetDeltaTime();
 	}
+
 	if (input.GetKey(KeyCode::DOWN)) {
 		//_camera->_rotationSpeed = rotationSpeed * time.GetDeltaTime();
 		_camera->RotatePitch(-rotationSpeed * time.GetDeltaTime());
 	}
+
 	if (input.GetKey(KeyCode::UP)) {
 		//_camera->_rotationSpeed = rotationSpeed * time.GetDeltaTime();
 		_camera->RotatePitch(rotationSpeed * time.GetDeltaTime());
 	}
+
 	if (input.GetKey(KeyCode::LEFT)) {
 		//_camera->_rotationSpeed = rotationSpeed * time.GetDeltaTime();
 		_camera->RotateYaw(-rotationSpeed * time.GetDeltaTime());
 	}
+
 	if (input.GetKey(KeyCode::RIGHT)) {
 		//_camera->_rotationSpeed = rotationSpeed * time.GetDeltaTime();
 		_camera->RotateYaw(rotationSpeed * time.GetDeltaTime());
 	}
-
 }
 
 void Game::UpdateGame() {
@@ -322,15 +364,6 @@ void Game::UpdateGame() {
 		_light[i]->DrawPointLight(i);
 
 	_sprite->DrawSprite();
-
-	for (int i = 0; i < 3; i++) {
-		_bspPlanes[i]->DrawPlane(basicShader);
-	}
-
-	/*_modelLeft->Draw(basicShader, camFrustum);
-	_modelRight->Draw(basicShader, camFrustum);
-	_modelForward->Draw(basicShader, camFrustum);
-	_modelMobile->Draw(basicShader, camFrustum);*/
 
 	_bsp->DrawPlanes(basicShader);
 }

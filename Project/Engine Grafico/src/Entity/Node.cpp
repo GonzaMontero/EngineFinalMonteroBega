@@ -93,7 +93,7 @@ void Node::UpdateNode(Frustrum& frustum) {
 				_children[i]->UpdateNode(frustum);
 				if (_children[i]->_canDraw && flag != 0) {
 					_canDraw = true;
-					Draw(_shader);
+					Draw(_shader, frustum);
 					flag = 0;
 				}
 				else {
@@ -109,7 +109,7 @@ void Node::UpdateNode(Frustrum& frustum) {
 
 	if (_meshes.size() > 0 && _volume->IsOnFrustum(frustum, worldModel) && flag != 0) {
 		_canDraw = true;
-		Draw(_shader);
+		Draw(_shader, frustum);
 		flag = 0;
 	}
 	else {
@@ -261,8 +261,8 @@ void Node::UpdateAABBchildren(Node* child) {
 	}
 }
 
-void Node::Draw(Shader& shader) {
-	if (_canDraw) {
+void Node::Draw(Shader& shader, Frustrum frustum) {
+	if (_meshes.size() > 0 && _volume->IsOnFrustum(frustum, worldModel)) {
 		if (_meshes.size() > 0) {
 			shader.Use(worldModel);
 			for (int i = 0; i < _meshes.size(); i++) {
@@ -271,10 +271,10 @@ void Node::Draw(Shader& shader) {
 			}
 		}
 
-		//for (int i = 0; i < _children.size(); i++) {
-		//	_children[i]->UpdateWorldModelMatrix(worldModel);
-		//	_children[i]->Draw(shader);
-		//}
+		for (int i = 0; i < _children.size(); i++) {
+			_children[i]->UpdateWorldModelMatrix(worldModel);
+			_children[i]->Draw(shader, frustum);
+		}
 	}
 }
 
