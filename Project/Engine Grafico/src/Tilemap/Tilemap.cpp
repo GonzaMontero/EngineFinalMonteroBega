@@ -213,11 +213,11 @@ void Tilemap::Draw() {
 	}
 }
 
-void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed) {
-	float distanceWithTilemapX = glm::distance(glm::vec2(entityPosition.x, 0), glm::vec2(0, 0));
-	float distanceWithTilemapWidth = glm::distance(glm::vec2(entityPosition.x + entity->transform.scale.x * 0.5f, 0), glm::vec2(0, 0));
-	float distanceWithTilemapY = glm::distance(glm::vec2(0, entityPosition.y), glm::vec2(0, 700));
-	float distanceeWithTilemapHeight = glm::distance(glm::vec2(0, entityPosition.y - entity->transform.scale.y * 0.5f), glm::vec2(0, 700));
+void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, float speed) {
+	float distanceWithTilemapX = glm::distance(glm::vec2(entity->transform.position.x, 0), glm::vec2(0, 0));
+	float distanceWithTilemapWidth = glm::distance(glm::vec2(entity->transform.position.x + entity->transform.scale.x * 0.5f, 0), glm::vec2(0, 0));
+	float distanceWithTilemapY = glm::distance(glm::vec2(0, entity->transform.position.y), glm::vec2(0, 700));
+	float distanceeWithTilemapHeight = glm::distance(glm::vec2(0, entity->transform.position.y - entity->transform.scale.y * 0.5f), glm::vec2(0, 700));
 
 	float indexInX = distanceWithTilemapX / _tileWidth * 0.5f;
 	float indexInY = distanceWithTilemapY / _tileHeight * 0.5f;

@@ -10,7 +10,7 @@ namespace Engine {
 	}
 
 	collisionPos CollisionManager::PartialCollision(Entity2D* entity, Entity2D* otherEntity) {
-		glm::vec2 entityScale(entity->transform.scale.x - 20, entity->transform.scale.y);
+		glm::vec2 entityScale(entity->transform.scale.x + entity->GetBoundingSize().x, entity->transform.scale.y + entity->GetBoundingSize().y);
 		glm::vec2 obstacleScale(otherEntity->transform.scale.x, otherEntity->transform.scale.y);
 		glm::vec2 entityPos(entity->transform.position.x, entity->transform.position.y - 10);
 		glm::vec2 obstaclePos(otherEntity->transform.position.x, otherEntity->transform.position.y);

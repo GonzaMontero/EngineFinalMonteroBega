@@ -44,6 +44,7 @@ void Game::InitGame() {
 
 
 	_sprite->Scale(50.0f, 50.0f, 1.0f);
+	_sprite->SetBoundingSize(-10.0f, 20.0f);
 
 	_sprite->Color(1.0f, 1.0f, 1.0f);
 	_sprite->transform.position = glm::vec3(300, 300, 1);
@@ -92,7 +93,7 @@ void Game::UpdateGame() {
 
 	_map->Draw();
 
-	_map->CheckCollisionWithTileMap(_sprite, _sprite->transform.position, speed * time.GetDeltaTime());
+	_map->CheckCollisionWithTileMap(_sprite, speed * time.GetDeltaTime());
 
 	_player->UpdateIndex(time);
 

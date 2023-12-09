@@ -96,6 +96,15 @@ void Entity2D::Scale(float x, float y, float z) {
 	UpdateModel();
 }
 
+void Engine::Entity2D::SetBoundingSize(float x, float y) {
+	boundingSize.x = x;
+	boundingSize.y = y;
+}
+
+glm::vec2 Engine::Entity2D::GetBoundingSize() {
+	return boundingSize;
+}
+
 glm::mat4 Entity2D::GetModel() {
 	return model.trs;
 }

@@ -42,7 +42,8 @@ namespace Engine {
 		void LoadMapFromGrid();
 		glm::vec4 GetTileFromID(unsigned int id);
 		void Draw();
-		void CheckCollisionWithTileMap(Entity2D* entity, glm::vec3 entityPosition, float speed);
+		
+		void CheckCollisionWithTileMap(Entity2D* entity, float speed);
 	};
 }
 

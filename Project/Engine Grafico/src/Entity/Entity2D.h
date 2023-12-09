@@ -30,6 +30,7 @@ namespace Engine {
 		Model model;
 		void UpdateMatrices();
 		void UpdateModel();
+		glm::vec2 boundingSize;
 	public:
 		Transform transform;
 		Entity2D();
@@ -41,6 +42,8 @@ namespace Engine {
 		glm::vec2 Lerp(glm::vec2 a, glm::vec2 b, float t);
 		void Scale(float x, float y, float z);
 		glm::mat4 GetModel();
+		void SetBoundingSize(float x, float y);
+		glm::vec2 GetBoundingSize();
 	};
 }
 
