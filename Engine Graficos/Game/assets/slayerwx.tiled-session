@@ -1,0 +1,67 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "slayerwxgrid.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "myEngine.tmx": {
+            "scale": 1.1419791666666668,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 240.3721609048618,
+                "y": 160.24810726990785
+            }
+        },
+        "myEngine.tmx#patronRPG": {
+            "scaleInDock": 1
+        },
+        "slayerwxgrid.tmx": {
+            "scale": 4,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 411.875,
+                "y": 296.625
+            }
+        },
+        "slayerwxgrid.tmx#slayerwxtilemap": {
+            "scaleInDock": 1.5
+        },
+        "slayerwxtilemap.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        }
+    },
+    "last.exportedFilePath": "C:/Users/maxi_/OneDrive/Desktop/repos/SlayerWxEngine/Game/assets",
+    "last.externalTilesetPath": "C:/Users/maxi_/OneDrive/Desktop/repos/SlayerWxEngine/Game/assets",
+    "last.imagePath": "C:/Users/maxi_/OneDrive/Desktop/repos/SlayerWxEngine/Game/assets",
+    "map.lastUsedExportFilter": "All Files (*)",
+    "map.lastUsedFormat": "tmx",
+    "map.renderOrder": null,
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+        "slayerwxgrid.tmx",
+        "slayerwxtilemap.tsx"
+    ],
+    "project": "slayerwx.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "slayerwxtilemap.tsx",
+        "slayerwxgrid.tmx",
+        "myEngine.tmx"
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.spacing": 1,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
