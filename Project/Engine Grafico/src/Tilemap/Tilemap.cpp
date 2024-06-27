@@ -155,6 +155,7 @@ void Tilemap::LoadMapFromGrid() {
 				newTile->Init();
 				newTile->Translate(xPos, yPos, z);
 				newTile->Scale(_tileWidth, _tileHeight, 1);
+
 				newTile->SetUVs(GetTileFromID(newTile->GetID()));
 
 				if (newTile->GetID() <= 0 && l > 0) {
