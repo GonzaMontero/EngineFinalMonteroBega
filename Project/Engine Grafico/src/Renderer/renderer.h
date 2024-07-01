@@ -3,6 +3,7 @@
 
 #include "../Utils/Export.h"
 #include "../Shader/Shader.h"
+#include "../Window/Window.h"
 #include <mat4x4.hpp>
 
 struct GLFWwindow;
@@ -10,24 +11,39 @@ struct GLFWwindow;
 namespace Engine {
 	class ENGINE_API Renderer {
 	public:
+		//Constructor and Destructor
 		Renderer();
+		Renderer(Window* window);
 		~Renderer();
 
-		bool InitializeGlew();
-		void BeginFrame(float r, float g, float b);
-		void EndFrame(GLFWwindow* window);
-		void GenerateVAO(unsigned int& vao);
-		void BindVAO(unsigned int& vao);
-		void BindVBO(unsigned int& vbo, float* vertices, int verticesAmmount);
-		void BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmount);
-		void UpdateBuffers(unsigned int& vbo, float* vertices, int verticesAmmount);
-		void UnbindBuffers();
-		void DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo);
-		void CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition);
-		void SetTexAttribPointer(unsigned int shaderID);
-		void Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount);
-		void DrawSprite(Shader &shader, unsigned int &vao, unsigned int &vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, glm::mat4 model);
-		void DrawCamera(Shader& shader, glm::mat4 model, glm::mat4 view);
+		void SetWindow(Window* window);
+		Window* GetWindow();
+
+		//These functions allow us to create the first and additional buffers, while also binding them and deleting them
+		//A buffer in OpenGL is, at its core, an object that manages a certain piece of GPU memory and nothing more
+		void CreateBufferInitial(unsigned int& VAO, unsigned int& VBO, unsigned int& EBO);
+		void CreateBufferAdditional(unsigned int& buffer, int size);
+		void BindBufferInitial(unsigned int VAO, unsigned int VBO, unsigned int EBO, float* vertices, unsigned int sizeOfVertices,
+			unsigned int* indices, unsigned int sizeOfIndices);
+		void BindBufferAdditional(unsigned int buffer, float* data, unsigned int sizeOfData, unsigned int bufferType);
+		void DeleteBufferInitial(unsigned int& VAO, unsigned int& VBO, unsigned int& EBO);
+		void DeleteBufferAdditional(unsigned int& buffer, int size);
+
+		//Draw Functions which will allow us to draw specific objects and bunch the draw calls in an "event"
+		void Draw(glm::mat4 modelMatrix, unsigned int VAO, unsigned int vertices, unsigned int shaderID);
+		void StartDraw();
+		void EndDraw();
+
+		//Base Setters for the Engine, with color for the window, and view/projection matrixes
+		void SetColor(glm::vec4 color);
+		void SetViewMatrix(glm::mat4 viewMatrix);
+		void SetProjectionMatrix(glm::mat4 projectionMatrix);
+	private:
+		float lastTime = 0;
+		Window* currentWindow;
+		glm::vec4 currentColor;
+		glm::mat4 viewMatrix;
+		glm::mat4 projectionMatrix;
 	};
 }
 #endif // !RENDERER_H

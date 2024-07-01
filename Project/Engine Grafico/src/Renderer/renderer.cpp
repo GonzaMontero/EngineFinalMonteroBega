@@ -8,106 +8,120 @@
 
 using namespace Engine;
 
-Renderer::Renderer() {
+Renderer::Renderer() 
+{
+	currentWindow = NULL;
+	viewMatrix = glm::mat4();
+	projectionMatrix = glm::mat4();
+	currentColor = glm::vec4(0, 0, 0, 1);
 }
 
-Renderer::~Renderer() {
+Engine::Renderer::Renderer(Window* window)
+{
+	currentColor = glm::vec4(0, 0, 0, 1);
+
+	currentWindow = window;
+
+	viewMatrix = glm::mat4(1.0f);
+	projectionMatrix = glm::mat4(1.0f);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-bool Renderer::InitializeGlew() {
-	glewExperimental = GL_TRUE;
-	glewInit();
-	if (glewInit() != GLEW_OK) {
-		std::cout << "Error in GLEW INIT" << std::endl;
-		std::cout << glewGetErrorString(glewInit()) << std::endl;
-		return false;
-	}
-	return true;
+Renderer::~Renderer() 
+{
+
 }
 
-void Renderer::BeginFrame(float r, float g, float b) {
-	glClearColor(r, g, b, 1.0f);
+void Engine::Renderer::SetWindow(Window* window)
+{
+	currentWindow = window;
+}
+
+Window* Engine::Renderer::GetWindow()
+{
+	return currentWindow;
+}
+
+void Engine::Renderer::CreateBufferInitial(unsigned int& VAO, unsigned int& VBO, unsigned int& EBO)
+{
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+}
+
+void Engine::Renderer::CreateBufferAdditional(unsigned int& buffer, int size)
+{
+	glGenBuffers(size, &buffer);
+}
+
+void Engine::Renderer::BindBufferInitial(unsigned int VAO, unsigned int VBO, unsigned int EBO, float* vertices, unsigned int sizeOfVertices, unsigned int* indices, unsigned int sizeOfIndices)
+{
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeOfVertices, vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeOfIndices, indices, GL_STATIC_DRAW);
+}
+
+void Engine::Renderer::BindBufferAdditional(unsigned int buffer, float* data, unsigned int sizeOfData, unsigned int bufferType)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeOfData, data, bufferType);
+}
+
+void Engine::Renderer::DeleteBufferInitial(unsigned int& VAO, unsigned int& VBO, unsigned int& EBO)
+{
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+}
+
+void Engine::Renderer::DeleteBufferAdditional(unsigned int& buffer, int size)
+{
+	glDeleteBuffers(size, &buffer);
+}
+
+void Engine::Renderer::Draw(glm::mat4 modelMatrix, unsigned int VAO, unsigned int vertices, unsigned int shaderID)
+{
+	unsigned int modelLoc = glGetUniformLocation(shaderID, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+	unsigned int viewLoc = glGetUniformLocation(shaderID, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+
+	unsigned int projectionLoc = glGetUniformLocation(shaderID, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, vertices, GL_UNSIGNED_INT, 0);
+}
+
+void Engine::Renderer::StartDraw()
+{
+	glClearColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void Renderer::EndFrame(GLFWwindow* window) {
-	glfwSwapBuffers(window);
-	glfwPollEvents();
-}
-void Renderer::GenerateVAO(unsigned int& vao) {
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-}
-void Renderer::BindVAO(unsigned int& vao) {
-	glBindVertexArray(vao);
-}
-void Renderer::BindVBO(unsigned int& vbo, float* vertices, int verticesAmmount) {
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * verticesAmmount, vertices, GL_STATIC_DRAW);
-}
-void Renderer::BindEBO(unsigned int& ebo, unsigned int* indices, int indicesAmmount) {
-	glGenBuffers(1, &ebo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * indicesAmmount, indices, GL_STATIC_DRAW);
-}
-void Engine::Renderer::UpdateBuffers(unsigned int& vbo, float* vertices, int verticesAmmount)
+
+void Engine::Renderer::EndDraw()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * verticesAmmount, vertices, GL_STATIC_DRAW);
-}
-void Renderer::UnbindBuffers() {
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glUseProgram(0);
-}
-void Renderer::DeleteBuffers(unsigned int& vao, unsigned int& vbo, unsigned int& ebo) {
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
+	glfwSwapBuffers(currentWindow->GetGLFWindow());
 }
 
-void Renderer::CreateAtribPointers(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition) {
-	glVertexAttribPointer(shaderAttribIndex, dataAmmount, GL_FLOAT, GL_FALSE, sizeof(float) * dataSize, (void*)(sizeof(float) * dataPosition));
-	glEnableVertexAttribArray(shaderAttribIndex);
+void Engine::Renderer::SetColor(glm::vec4 color)
+{
+	currentColor = color;
 }
 
-void Renderer::SetTexAttribPointer(unsigned int shaderID) {
-	GLuint posAttrib = glGetAttribLocation(shaderID, "aPos");
-	GLuint colorAttrib = glGetAttribLocation(shaderID, "aColor"); // no daba el valor correcto porque no usaba la variable en el main
-	GLuint texAttrib = glGetAttribLocation(shaderID, "aTexCoord");
-	glUniform1i((glGetUniformLocation(shaderID, "mainTexture")), 0);
-	CreateAtribPointers(posAttrib, 3, 8, 0);
-	CreateAtribPointers(colorAttrib, 3, 8, 3);
-	CreateAtribPointers(texAttrib, 2, 8, 6);
+void Engine::Renderer::SetViewMatrix(glm::mat4 viewMatrix)
+{
+	this->viewMatrix = viewMatrix;
 }
 
-void Renderer::Draw(Shader& shader, glm::mat4 model, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount) {
-	BindVAO(vao);
-	UpdateBuffers(vbo, vertices, verticesAmount);
-	shader.SetVertexAttributes("position", 6); //especificamos como leer los datos del vertice y se lo pasamos al shader
-	shader.SetColorAttributes("color", 6);
-	shader.Use(model);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	UnbindBuffers();
-}
-void Renderer::DrawSprite(Shader& shader, unsigned int& vao, unsigned int& vbo, float* vertices, int verticesAmount, unsigned int* indices, int indicesAmmount, glm::mat4 model) {
-	BindVAO(vao);
-	UpdateBuffers(vbo, vertices, verticesAmount);
-	SetTexAttribPointer(shader.GetID());
-	shader.Use(model);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	UnbindBuffers();
-}
-
-void Renderer::DrawCamera(Shader& shader, glm::mat4 model, glm::mat4 view) {
-	//unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
-	shader.Use();
-
-	unsigned int transformLoc = glGetUniformLocation(shader.GetID(), "model");
-	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
-
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
+void Engine::Renderer::SetProjectionMatrix(glm::mat4 projectionMatrix)
+{
+	this->projectionMatrix = projectionMatrix;
 }
