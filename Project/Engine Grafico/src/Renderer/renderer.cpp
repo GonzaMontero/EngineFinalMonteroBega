@@ -108,7 +108,7 @@ void Engine::Renderer::StartDraw()
 
 void Engine::Renderer::EndDraw()
 {
-	glfwSwapBuffers(currentWindow->GetGLFWindow());
+	glfwSwapBuffers(currentWindow->GetWindow());
 }
 
 void Engine::Renderer::SetColor(glm::vec4 color)

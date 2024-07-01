@@ -6,9 +6,7 @@
 
 using namespace Engine;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-}
+
 
 Window::Window() {
 	_window = NULL;
@@ -16,54 +14,34 @@ Window::Window() {
 	_height = 600;
 }
 
-Window::Window(int width, int height) {
-	_window = NULL;
-	_width = width;
+Engine::Window::Window(int width, int height, std::string name)
+{
 	_height = height;
+	_width = width;
+
+	_window = glfwCreateWindow(_width, _height, &name[0], NULL, NULL);
+	if (_window == NULL)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+	}
 }
 
 Window::~Window() {
 
 }
 
-int Window::CreateWindow(const char* name) {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	glewExperimental = true;
-	if (!glfwInit())
-	{
-		fprintf(stderr, "Failed to initialize GLFW\n");
-		return -1;
-	}
-
-	_window = glfwCreateWindow(_width, _height, name, NULL, NULL);
-	if (_window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
+void Engine::Window::InitWindow()
+{
 	glfwMakeContextCurrent(_window);
-	glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 }
 
 GLFWwindow* Window::GetWindow() {
 	return _window;
 }
 
-void Window::SetWidth(int width) {
-	_width = width;
-}
-
 int Window::GetWidth() {
 	return _width;
-}
-
-void Window::SetHeight(int height) {
-	_height = height;
 }
 
 int Window::GetHeight() {
