@@ -1,110 +1,95 @@
 #include "Entity2D.h"
-#include "ext/matrix_clip_space.hpp"
-#include "ext/matrix_transform.hpp"
-#include "ext/scalar_constants.hpp"
+#include "../Collision/Collision Manager.h"
+#include <math.h>
+#include <algorithm>
 
 using namespace Engine;
 
-void Engine::Entity2D::UpdateMatrices() {
-	model.translate = glm::translate(glm::mat4(1.0f), transform.position);
-	model.scale = glm::scale(glm::mat4(1.0f), transform.scale);
-
-	UpdateModel();
+Entity2D::Entity2D() 
+{
+	_collisionManager = nullptr;
 }
 
-void Entity2D::UpdateModel() {
-	model.trs = model.translate * model.rotation.x * model.rotation.y * model.rotation.z * model.scale;
+Entity2D::~Entity2D() 
+{
+	if (_collisionManager != NULL)
+		_collisionManager->RemoveFromCollisionList(this);
 }
 
-Entity2D::Entity2D() {
-	model.translate = glm::mat4(1.0);
-	model.rotation.x = glm::mat4(1.0);
-	model.rotation.y = glm::mat4(1.0);
-	model.rotation.z = glm::mat4(1.0);
-	model.scale = glm::mat4(1.0);
-
-	Translate(1.0f, 1.0f, 1.0f);
-	RotateX(0.0f);
-	RotateY(0.0f);
-	RotateZ(0.0f);
-	Scale(1.0f, 1.0f, 1.0f);
+void Engine::Entity2D::SetCollisionManager(CollisionManager* newCollisionManager)
+{
+	_collisionManager = newCollisionManager;
 }
 
-Entity2D::~Entity2D() {
+CollisionDirection Engine::Entity2D::CheckCollision(Entity2D& otherEntity, float& xOverlap, float& yOverlap)
+{
+	xOverlap = max(0.0f,
+		min(GetTransform().position.x + fabs(GetTransform().scale.x) / 2.0f,
+			otherEntity.GetTransform().position.x + fabs(otherEntity.GetTransform().scale.x) / 2.0f),
+		max(GetTransform().position.x + fabs(GetTransform().scale.x) / 2.0f,
+			otherEntity.GetTransform().position.x + fabs(otherEntity.GetTransform().scale.x) / 2.0f));
 
+	yOverlap = max(0.0f,
+		min(GetTransform().position.y + fabs(GetTransform().scale.y) / 2.0f,
+			otherEntity.GetTransform().position.y + fabs(otherEntity.GetTransform().scale.y) / 2.0f),
+		max(GetTransform().position.y + fabs(GetTransform().scale.y) / 2.0f,
+			otherEntity.GetTransform().position.y + fabs(otherEntity.GetTransform().scale.y) / 2.0f));
+
+
+	if (xOverlap != 0.0f && yOverlap != 0.0f)
+	{
+		if (xOverlap > yOverlap)
+		{
+			if (GetTransform().position.y < 0 && GetTransform().position.y < otherEntity.GetTransform().position.y ||
+				GetTransform().position.y > 0 && GetTransform().position.y < otherEntity.GetTransform().position.y)
+			{
+				return CollisionDirection::UP;
+			}
+			else if (GetTransform().position.y < 0 && GetTransform().position.y > otherEntity.GetTransform().position.y ||
+				GetTransform().position.y > 0 && GetTransform().position.y > otherEntity.GetTransform().position.y)
+			{
+				return CollisionDirection::DOWN;
+			}
+		}
+		else
+		{
+			if (GetTransform().position.x < 0 && GetTransform().position.x < otherEntity.GetTransform().position.x ||
+				GetTransform().position.x > 0 && GetTransform().position.x < otherEntity.GetTransform().position.x)
+			{
+				return CollisionDirection::RIGHT;
+			}
+			else if (GetTransform().position.x < 0 && GetTransform().position.x > otherEntity.GetTransform().position.x ||
+				GetTransform().position.x > 0 && GetTransform().position.x > otherEntity.GetTransform().position.x)
+			{
+				return CollisionDirection::LEFT;
+			}
+		}
+	}
+
+	return CollisionDirection::NONE;
 }
 
-void Engine::Entity2D::RotateX(float angle) {
-	transform.rotation.x = angle;
-	glm::vec3 axis = glm::vec3(1.0);
-	axis[0] = 1.0f;
-	axis[1] = 0.0f;
-	axis[2] = 0.0f;
-	model.rotation.x = glm::rotate(glm::mat4(1.0), angle, axis);
-	UpdateModel();
-}
+void Engine::Entity2D::ApplyCollisionRestriction(CollisionDirection direction, float& xOverlap, float& yOverlap, bool halfOverlap)
+{
+	float defYOverlap = halfOverlap ? yOverlap / 2 : yOverlap;
+	float defXOverlap = halfOverlap ? xOverlap / 2 : xOverlap;
 
-void Engine::Entity2D::RotateY(float angle) {
-	transform.rotation.x = angle;
-	glm::vec3 axis = glm::vec3(1.0);
-	axis[0] = 0.0f;
-	axis[1] = 1.0f;
-	axis[2] = 0.0f;
-	model.rotation.y = glm::rotate(glm::mat4(1.0), angle, axis);
-	UpdateModel();
-}
-
-void Engine::Entity2D::RotateZ(float angle) {
-	transform.rotation.x = angle;
-	glm::vec3 axis = glm::vec3(1.0);
-	axis[0] = 0.0f;
-	axis[1] = 0.0f;
-	axis[2] = 1.0f;
-	model.rotation.z = glm::rotate(glm::mat4(1.0), angle, axis);
-	UpdateModel();
-}
-
-
-
-void Entity2D::Translate(float x, float y, float z) {
-	transform.position.x = x;
-	transform.position.y = y;
-	transform.position.z = z;
-
-	model.translate = glm::translate(glm::mat4(1.0), transform.position);
-	UpdateModel();
-}
-
-glm::vec2 Entity2D::Lerp(glm::vec2 a, glm::vec2 b, float t) {
-	glm::vec2 auxVec = glm::vec2(1.0);
-
-	if (t < 1)
-		auxVec = glm::vec2((b - a) * t + a);
-	else
-		t = 1;
-	return auxVec;
-
-}
-
-
-void Entity2D::Scale(float x, float y, float z) {
-	transform.scale.x = x;
-	transform.scale.y = y;
-	transform.scale.z = z;
-
-	model.scale = glm::scale(glm::mat4(1.0), transform.scale);
-	UpdateModel();
-}
-
-void Engine::Entity2D::SetBoundingSize(float x, float y) {
-	boundingSize.x = x;
-	boundingSize.y = y;
-}
-
-glm::vec2 Engine::Entity2D::GetBoundingSize() {
-	return boundingSize;
-}
-
-glm::mat4 Entity2D::GetModel() {
-	return model.trs;
+	switch (direction)
+	{
+	case Engine::CollisionDirection::UP:
+		SetPos(GetTransform().position.x, GetTransform().position.y - defYOverlap, GetTransform().position.z);
+		break;
+	case Engine::CollisionDirection::DOWN:
+		SetPos(GetTransform().position.x, GetTransform().position.y + defYOverlap, GetTransform().position.z);
+		break;
+	case Engine::CollisionDirection::LEFT:
+		SetPos(GetTransform().position.x + defXOverlap, GetTransform().position.y, GetTransform().position.z);
+		break;
+	case Engine::CollisionDirection::RIGHT:
+		SetPos(GetTransform().position.x - defYOverlap, GetTransform().position.y, GetTransform().position.z);
+		break;
+	case Engine::CollisionDirection::NONE:
+	default:
+		break;
+	}
 }

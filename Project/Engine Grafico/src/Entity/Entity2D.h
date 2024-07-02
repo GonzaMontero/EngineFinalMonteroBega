@@ -2,48 +2,27 @@
 #define ENTITY2D_H
 
 #include "../Utils/Export.h"
-#include "mat4x4.hpp"
-#include "vec3.hpp"
+#include "Entity.h"
 
 namespace Engine {
-	struct ENGINE_API Rotation {
-		glm::mat4 x;
-		glm::mat4 y;
-		glm::mat4 z;
-	};
 
-	struct ENGINE_API Transform {
-		glm::vec3 position;
-		glm::vec3 rotation;
-		glm::vec3 scale;
-	};
+	class CollisionManager;
+	enum class CollisionDirection {UP, DOWN, LEFT, RIGHT, NONE};
 
-	struct ENGINE_API Model {
-		glm::mat4 translate;
-		Rotation rotation;
-		glm::mat4 scale;
-		glm::mat4 trs;
-	};
-
-	class ENGINE_API Entity2D {
-	protected:
-		Model model;
-		void UpdateMatrices();
-		void UpdateModel();
-		glm::vec2 boundingSize;
+	class ENGINE_API Entity2D : Entity
+	{
 	public:
-		Transform transform;
 		Entity2D();
 		~Entity2D();
-		void RotateX(float angle);
-		void RotateY(float angle);
-		void RotateZ(float angle);
-		void Translate(float x, float y, float z);
-		glm::vec2 Lerp(glm::vec2 a, glm::vec2 b, float t);
-		void Scale(float x, float y, float z);
-		glm::mat4 GetModel();
-		void SetBoundingSize(float x, float y);
-		glm::vec2 GetBoundingSize();
+		
+		//Sets manager which will control the reactions to collisions and the directions in which they are moving
+		void SetCollisionManager(CollisionManager* newCollisionManager);
+
+		//Check if objects are colliding + move and check collision direction
+		CollisionDirection CheckCollision(Entity2D& otherEntity, float& xOverlap, float& yOverlap);
+		void ApplyCollisionRestriction(CollisionDirection direction, float& xOverlap, float& yOverlap, bool halfOverlap);
+	private:
+		CollisionManager* _collisionManager;
 	};
 }
 
