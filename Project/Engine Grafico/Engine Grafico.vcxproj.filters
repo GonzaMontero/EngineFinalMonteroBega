@@ -87,9 +87,6 @@
     <ClCompile Include="src\Shape\Shape.cpp">
       <Filter>Shape</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sprite\Animacion.cpp">
-      <Filter>Sprite</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sprite\Sprite.cpp">
       <Filter>Sprite</Filter>
     </ClCompile>
@@ -113,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="src\Entity\Entity.cpp">
       <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite\Animation.cpp">
+      <Filter>Sprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -187,7 +187,7 @@ copy /Y  "$(SolutionDir)\Engine Grafico\bin\Debug\Win32\Engine Grafico.dll" "$(S
     <ClCompile Include="src\Renderer\renderer.cpp" />
     <ClCompile Include="src\Shader\Shader.cpp" />
     <ClCompile Include="src\Shape\Shape.cpp" />
-    <ClCompile Include="src\Sprite\Animacion.cpp" />
+    <ClCompile Include="src\Sprite\Animation.cpp" />
     <ClCompile Include="src\Sprite\Sprite.cpp" />
     <ClCompile Include="src\Tilemap\Tile.cpp" />
     <ClCompile Include="src\Tilemap\Tilemap.cpp" />

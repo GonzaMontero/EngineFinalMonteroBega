@@ -12,66 +12,58 @@
 
 using namespace Engine;
 
-TextureImporter::TextureImporter() {
-	_texture = 0;
-	_path = NULL;
-}
+TextureData Engine::TextureImporter::LoadTexture(const char* filePath, bool invertVertical)
+{
+	unsigned int newTextureID;
+	int textureWidth;
+	int textureHeight;
+	int numberOfChannels;
 
-TextureImporter::TextureImporter(const char* path) {
-	_texture = 0;
-	_path = path;
-}
-
-TextureImporter::TextureImporter(int width, int height, const char* path, bool transparency) {
-	_texture = 0;
-	_path = path;
-	LoadImage(width, height, transparency);
-}
-
-TextureImporter::~TextureImporter() {
-}
-
-void TextureImporter::LoadImage(int& width, int& height, bool transparency) {
-	glGenTextures(1, &_texture);
-	glBindTexture(GL_TEXTURE_2D, _texture);
+	glGenTextures(1, &newTextureID);
+	glBindTexture(GL_TEXTURE_2D, newTextureID); //glgen generates the texture, while bind texture sets it as the texture to be used
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
+	//glTexParameteri sets what should happen when the texture size gets smaller
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	stbi_set_flip_vertically_on_load(true);
+	stbi_set_flip_vertically_on_load(invertVertical); //OpenGL awaits inverted textures
 
-	if (transparency)
-		_data = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb_alpha);
-	else
-		_data = stbi_load(_path, &width, &height, &nrChannels, STBI_rgb);
+	unsigned char* data = stbi_load(filePath, &textureWidth, &textureHeight, &numberOfChannels, 0);
 
-	if (_data) {
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		if (!transparency)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, _data);
-		else
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data);
-
+	if (data)
+	{
+		int channelType = GL_RGB;
+		switch (numberOfChannels)
+		{
+		case 1:
+			channelType = GL_R;
+			break;
+		case 2:
+			channelType = GL_RG;
+			break;
+		case 3:
+			channelType = GL_RGB;
+			break;
+		case 4:
+			channelType = GL_RGBA;
+			break;
+		default:
+			break;
+		}
+		glTexImage2D(GL_TEXTURE_2D, 0, channelType, textureWidth, textureHeight, 0, channelType, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(data);
 	}
-	else {
-		std::cout << "Failed to load texture" << " - " << stbi_failure_reason() << std::endl;
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
 	}
-	stbi_image_free(_data);
-}
 
-void TextureImporter::SetPath(const char* path) {
-	_path = path;
-}
+	TextureData tex = { newTextureID, textureWidth, textureHeight };
 
-const char* TextureImporter::GetPath() {
-	return _path;
-}
+	return tex;
 
-unsigned int TextureImporter::GetTexture() {
-	return _texture;
+	return TextureData();
 }

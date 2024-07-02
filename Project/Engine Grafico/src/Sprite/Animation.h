@@ -6,50 +6,85 @@
 #include <vector>
 
 namespace Engine {
-	class Time;
-	enum class ENGINE_API AnimationState {
-		idle, moving, jumping, attacking, interacting, damage, dead // enumerador que indica estado de animación, pensar forma de utilizar
+	
+	struct TextureData;
+
+	//Stores configuration of the atlas used for a specific sprite and its details
+	class AtlasConfigurations
+	{
+	public:
+		void CutByCount(int columns, int rows, int offsetX, int offsetY, int framesAmount)
+		{
+			_columns = columns;
+			_rows = rows;
+
+			_offsetX = offsetX;
+			_offsetY = offsetY;
+			_framesAmount = framesAmount;
+
+			_useSize = false;
+		}
+
+		void CutBySize(int spriteWidth, int spriteHeight, int offsetX, int offsetY, int framesAmount)
+		{
+			_spriteWidth = spriteWidth;
+			_spriteHeight = spriteHeight;
+
+			_offsetX = offsetX;
+			_offsetY = offsetY;
+			_framesAmount = framesAmount;
+
+			_useSize = true;
+		}
+
+	private:
+		int _columns = 1;
+		int _rows = 1;
+
+		int _offsetX = 0;
+		int _offsetY = 0;
+		int _framesAmount = 1;
+
+		bool _useSize = false;
+
+		int _spriteWidth = 0;
+		int _spriteHeight = 0;
+
+		friend class Animation;
+		friend class Sprite;
 	};
 
-	struct ENGINE_API AnimationData { // estructura con información sobre la animacion
-		int _beginIndex = 0;
-		int _endIndex = 0;
-		float animationSpeed;
-		bool hasEnded = false;
-		bool loop = true;
-	};
-
-	class Sprite;
-	class ENGINE_API Animation {
-		Sprite* sprite;
-		AnimationState state;
-		glm::ivec2 dimensions;
-		int _firstIndex = 0;
-		int _lastIndex = 0;
-		int _currentIndex = 0;
-		int _actualCurrentIndex = 0;
-
-		int _currentAnimation = 0;
-
-		float _currentTime = 0;
-		float _time = 0;
-		float _lenght = 0;
-
-		float animationSpeed = 0;
-
-
-		std::vector<AnimationData> animation;
+	class ENGINE_API Animation
+	{
 	public:
 		Animation();
 		~Animation();
-		void Init(Sprite* texture, const glm::ivec2& tileDims);
-		glm::vec4 GetUVs(int index);
-		void UpdateIndex(Time& time);
+
+		//Standard animation functions
+		void Play();
+		void Stop();
+		bool Update();
+		bool IsPlaying();
+
+		//Other animation functions
+		void RepeatAnimation(bool active);
 		void SetAnimationSpeed(float speed);
-		int GetCurrentIndex();
-		void AddAnimation(int beginIndex, int endIndex, bool isLoopable, float animationSpeed);
-		AnimationData GetCurrentAnimation();
-		void SetAnimation(int index);
+		void SetAnimationTimeBetweenFrames(float time);
+		void SetAnimationFullTime(float time);
+		void SetAnimation(TextureData* animationAtlasData, int columns, int rows);
+		void SetAnimation(TextureData* animationAtlasData, AtlasConfigurations config);
+		void AddFrameToAnimation(int posX, int posY, int width, int height);
+		glm::vec2* GetCurrentFrameCoordinates();
+
+	private:
+		std::vector<glm::vec2*> _frameCoordinates;
+		TextureData* _texture;
+		int _currentFrame = 0;
+		float _currentTime = 0;
+		float _timeBetweenFrames = 1.f;
+		float _animationSpeed = 1.f;
+		bool _repeat = false;
+		bool _playing = false;
 	};
 }
 
