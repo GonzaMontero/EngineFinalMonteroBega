@@ -111,6 +111,9 @@
     <ClCompile Include="src\Shader\Shader.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Global.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="src\Shader\Shader.h">
       <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Entity.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
