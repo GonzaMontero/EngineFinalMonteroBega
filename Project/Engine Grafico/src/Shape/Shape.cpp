@@ -1,116 +1,95 @@
 #include "Shape.h"
 #include "../Renderer/renderer.h"
+#include "glew.h"
+#include "glfw3.h"
 
 using namespace Engine;
 
-Shape::Shape() : Entity2D() {
-	_type = Type::triangle;
-	_renderer = NULL;
-}
+Engine::Shape::Shape(Renderer* renderer, unsigned int vertices)
+{
+	VAO = 0;
+	VBO = 0;
+	EBO = 0;
 
-Shape::Shape(Type type, Renderer* renderer, Shader shader) : Entity2D() {
-	_type = type;
+	_vertices = 0;
 	_renderer = renderer;
-	_shader = shader;
-}
-Shape::~Shape() {
-	UnbindBuffers();
-	DeleteBuffer();
-}
 
-void Shape::SetShader(Shader shader) {
-	_shader = shader;
-}
+	float* vertex;
+	unsigned int* indices;
 
-void Shape::GenerateVAO() {
-	_renderer->GenerateVAO(_vao);
-}
-
-void Shape::BindVAO() {
-	_renderer->BindVAO(_vao);
-}
-
-void Shape::BindVBO(float* vertices, int verticesAmmount) {
-	_renderer->BindVBO(_vbo, vertices, verticesAmmount);
-}
-
-void Shape::BindEBO(unsigned int* indices, int indicesAmmount) {
-	_renderer->BindEBO(_ebo, indices, indicesAmmount);
-}
-
-void Shape::Init() {
-	GenerateVAO();
-	BindVAO();
-	switch (_type)
+	if (vertices == 3)
 	{
-	case Engine::Type::triangle:
-		BindVBO(_triVertices, 18);
-		BindEBO(_triIndices, 3);
-		break;
-	case Engine::Type::quad:
-		BindVBO(_quadVertices, 24);
-		BindEBO(_quadIndices, 6);
-		break;
-	}
-	_shader.SetVertexAttributes("position", 6);
-	_shader.SetColorAttributes("color", 6);
-}
+		vertex = new float[18]
+		{
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+			0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+			0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f
+		};
 
-void Shape::Color(float r, float g, float b) {
-	switch (_type)
+		indices = new unsigned int[3]
+		{
+			0,1,2
+		};
+
+		_renderer->CreateBufferInitial(VAO, VBO, EBO);
+		_renderer->BindBufferInitial(VAO, VBO, EBO, vertex, sizeof(vertex) * 18, indices, sizeof(indices) * 3);
+		_vertices = 3;
+
+		delete[] vertex;
+		delete[] indices;
+	}
+	else if (vertices == 4)
 	{
-	case Engine::Type::triangle:
-		_triVertices[3] = r;  _triVertices[4] = g;  _triVertices[5] = b;
-		_triVertices[9] = r; _triVertices[10] = g; _triVertices[11] = b;
-		_triVertices[15] = r; _triVertices[16] = g; _triVertices[17] = b;
-		break;
-	case Engine::Type::quad:
-		_quadVertices[3] = r;  _quadVertices[4] = g;  _quadVertices[5] = b;
-		_quadVertices[9] = r; _quadVertices[10] = g; _quadVertices[11] = b;
-		_quadVertices[15] = r; _quadVertices[16] = g; _quadVertices[17] = b;
-		_quadVertices[21] = r; _quadVertices[22] = g; _quadVertices[23] = b;
-		break;
+		vertex = new float[24]
+		{
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f
+		};
+		indices = new unsigned int[6]
+		{
+			0, 1, 3,
+			1, 2, 3
+		};
+		_renderer->CreateBufferInitial(VAO, VBO, EBO);
+		_renderer->BindBufferInitial(VAO, VBO, EBO, vertex, sizeof(vertex) * 24, indices, sizeof(indices) * 6);
+		_vertices = 6;
+
+		delete[] vertex;
+		delete[] indices;
 	}
-}
-
-void Shape::SetRenderer(Renderer* renderer) {
-	_renderer = renderer;
-}
-
-void Shape::Color(glm::vec3 color) {
-	switch (_type)
+	else
 	{
-	case Engine::Type::triangle:
-		_triVertices[3] = color.x;  _triVertices[4] = color.y;  _triVertices[5] = color.z;
-		_triVertices[9] = color.x; _triVertices[10] = color.y; _triVertices[11] = color.z;
-		_triVertices[15] = color.x; _triVertices[16] = color.y; _triVertices[17] = color.z;
-		break;
-	case Engine::Type::quad:
-		_quadVertices[3] = color.x;  _quadVertices[4] = color.y;  _quadVertices[5] = color.z;
-		_quadVertices[9] = color.x; _quadVertices[10] = color.y; _quadVertices[11] = color.z;
-		_quadVertices[15] = color.x; _quadVertices[16] = color.y; _quadVertices[17] = color.z;
-		_quadVertices[21] = color.x; _quadVertices[22] = color.y; _quadVertices[23] = color.z;
-		break;
+		std::cout << vertices << " Vertices amount not implemented." << std::endl;
+		return;
 	}
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 }
 
-void Shape::Draw() {
-	UpdateMatrices();
-	switch (_type)
-	{
-	case Engine::Type::triangle:
-		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _triVertices, 18, _triIndices, 3);
-		break;
-	case Engine::Type::quad:
-		_renderer->Draw(_shader, GetModel(), _vao, _vbo, _quadVertices, 24, _quadIndices, 6);
-		break;
-	}
+Engine::Shape::~Shape()
+{
+	_renderer->DeleteBufferInitial(VAO, VBO, EBO);
 }
 
-void Shape::UnbindBuffers() {
-	_renderer->UnbindBuffers();
+void Engine::Shape::Draw()
+{
+	_renderer->solidShader.Use();
+	SetShader();
+	_renderer->Draw(_model.trs, VAO, _vertices, _renderer->solidShader.GetID());
 }
 
-void Shape::DeleteBuffer() {
-	_renderer->DeleteBuffers(_vao, _vbo, _ebo);
+void Engine::Shape::SetShader()
+{
+	glm::vec3 newColor = glm::vec3(_color.r, _color.g, _color.b);
+	unsigned int colorLoc = glGetUniformLocation(_renderer->solidShader.GetID(), "color");
+	glUniform3fv(colorLoc, 1, glm::value_ptr(newColor));
+
+	unsigned int alphaLoc = glGetUniformLocation(_renderer->solidShader.GetID(), "a");
+	glUniform1fv(alphaLoc, 1, &(_color.a));
 }
