@@ -1,86 +1,67 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-
-#include "../Shape/Shape.h"
 #include "../Utils/Export.h"
+#include "../Entity/Entity2D.h"
+#include "../Entity/Entity.h"
 #include "../Utils/TextureImporter.h"
+#include "Animation.h"
 #include "../Renderer/renderer.h"
 
 namespace Engine {
+	
+	struct TextureData;
 	class Animation;
-	class Time;
 
-	struct ENGINE_API UVs {
-		float u;
-		float v;
+	struct ENGINE_API UVCoordinates
+	{
+		float x;
+		float y;
 	};
 
-	class ENGINE_API Sprite : public Entity2D {
-	private:
-		int _width = 0;
-		int _height = 0;
-		bool _transparency;
-		Renderer* _renderer;
-		TextureImporter* _texImporter;
-		UVs uv[4];
-		unsigned int _texture = 0;
-
-		unsigned int _vao = 0;
-		unsigned int _vbo = 0;
-		unsigned int _ebo = 0;
-
-		float _vertices[32] = {
-				1.0f,  1.0f, 0.0f,  1.0f,1.0f,1.0f,  1, 1,
-				1.0f, -1.0f, 0.0f,  1.0f,1.0f,1.0f,  1, 0,
-			   -1.0f, -1.0f, 0.0f,  1.0f,1.0f,1.0f,  0, 0,
-			   -1.0f,  1.0f, 0.0f,  1.0f,1.0f,1.0f,  0, 1
-		};
-
-		unsigned int _quadIndices[6] = {
-			0,1,3,
-			1,2,3
-		};
-		Shader shader;
-
-		void GenerateVAO();
-		void BindVAO();
-		void BindVBO();
-		void BindEBO();
-		void UnbindBuffers();
-		void DeleteBuffer();
-		void BindBuffers();
-		void BindTexture();
-		void BlendSprite();
-		void UnBlendSprite();
-		void LoadSprite();
-		void LoadSprite(const char* path);
-		void SetWidth(int width);
-		int GetWidth();
-		void SetHeight(int height);
-		int GetHeight();
-
+	class ENGINE_API Sprite : public Entity2D 
+	{
 	public:
 		Sprite();
-		Sprite(bool transparency, Renderer* renderer, Shader shader);
-		Sprite(bool transparency, const char* path, Renderer* renderer, Shader shader);
+		Sprite(Renderer* renderer, const char* imagePath, bool invertImage);
 		~Sprite();
-		void Init();
-		void Init(unsigned int texture);
-		void Color(float r, float g, float b);
-		void Color(glm::vec3 color);
-		void SetUVs(glm::vec4 uvRect);
-		void SetUVs(float sheetHeight, float sheetWidth, float spriteHeight, float spriteWidth, int x, int y);
-		void UpdateUVs();
-		void DrawSprite();
-		void DrawFromUVs(glm::vec4 uv);
-		void DrawAnimation(glm::vec4 uv);
-		void SetRenderer(Renderer* renderer);
-		void SetShader(Shader shader);
-		Renderer* GetRenderer();
-		void SetPath(const char* path);
-		const char* GetPath();
-		void SetTransparency(bool value);
+
+		void Draw() override;
+		void ModifyTextureCoords(AtlasConfigurations config);
+		TextureData* CreateAnimationData(const char* AtlasFilePath, bool invertImage);
+		void DeleteAnimationData(TextureData* atlasToDelete);
+
+		int CreateAnimation();
+		int CreateAnimation(AtlasConfigurations config);
+		int CreateAnimation(TextureData* animationData, int columns, int rows);
+		int CreateAnimation(TextureData* animationData, AtlasConfigurations config);
+
+		void AddFrameToExistingAnimation(int animationID, int positonX, int positionY, int width, int height);
+		void PlayAnimation(int ID);
+		void StopAnimation(int ID);
+		void StopAllAnimations();
+
+		void SetAnimationSpeed(int ID, float speed);
+		void SetAnimationTimeBetweenFrames(int ID, float time);
+		void SetAnimationFullTime(int ID, float time);
+		void SetTextureCoordinates(glm::vec2 coord1, glm::vec2 coord2, glm::vec2 coord3, glm::vec2 coord4);
+		void SetTexture(Renderer* renderer, const char* filePathImage, bool invertImage);
+
+		void Denitialize();
+
+	private:
+		void SetShader(unsigned int texture);
+		unsigned int GetCurrentTextureID();
+		unsigned int _bufferPosUV = 0;
+		int _lastCoordIndex = 0;
+
+		UVCoordinates uvCoords[4];
+
+		void BindUVCoords();
+		void BindUVCoords(int i);
+
+		TextureData* _baseTexture;
+		std::vector<Animation*> _allAnimations;
 	};
 }
 

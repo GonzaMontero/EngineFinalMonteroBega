@@ -2,264 +2,310 @@
 #include"glfw3.h"
 #include"Sprite.h"
 #include "../Sprite/Animation.h"
+#include "../Renderer/renderer.h"
+#include "../Utils/TextureImporter.h"
 #include "../Utils/TimeManager.h"
 
 namespace Engine {
-	Sprite::Sprite() {
-		_transparency = true;
-		_renderer = NULL;
-		_texImporter = new TextureImporter();
 
-		uv[0].u = 1; uv[0].v = 1;
-		uv[1].u = 1; uv[1].v = 0;
-		uv[2].u = 0; uv[2].v = 0;
-		uv[3].u = 0; uv[3].v = 1;
+	Sprite::Sprite() 
+	{
+		VAO = 0;
+		VBO = 0;
+		EBO = 0;
+		_vertices = 0;
+		_renderer = nullptr;
+
+		uvCoords[0] = { 1.0f, 1.0f };
+		uvCoords[1] = { 1.0f, 0.0f };
+		uvCoords[2] = { 0.0f, 0.0f };
+		uvCoords[3] = { 0.0f, 1.0f };
 	}
-	Sprite::Sprite(bool transparency, Renderer* renderer, Shader shader) : Entity2D() {
-		_transparency = transparency;
+
+	Sprite::Sprite(Renderer* renderer, const char* imagePath, bool invertImage)
+	{
+		VAO = 0;
+		VBO = 0;
+		EBO = 0;
+		_vertices = 0;
+		_renderer = 0;
+
+		uvCoords[0] = { 1.0f, 1.0f };
+		uvCoords[1] = { 1.0f, 0.0f };
+		uvCoords[2] = { 0.0f, 0.0f };
+		uvCoords[3] = { 0.0f, 1.0f };
+
+		SetTexture(renderer, imagePath, invertImage);
+	}
+
+	Sprite::~Sprite() 
+	{
+
+	}
+
+	void Sprite::Draw()
+	{
+		_renderer->textureShader.Use();
+		unsigned int texture = GetCurrentTextureID();
+		glBindTexture(GL_TEXTURE_2D, texture);
+		SetShader(texture);
+		_renderer->Draw(_model.trs, VAO, _vertices, _renderer->textureShader.GetID());
+	}
+
+	void Sprite::ModifyTextureCoords(AtlasConfigurations config)
+	{
+		int spriteWidth;
+		int spriteHeight;
+		
+		if (config._useSize)
+		{
+			spriteWidth = config._spriteWidth;
+			spriteHeight = config._spriteHeight;
+		}
+		else
+		{
+			spriteWidth = (int)(_baseTexture->width / config._columns);
+			spriteHeight = (int)(_baseTexture->height / config._rows);
+		}
+
+		uvCoords[0].x = (spriteWidth + (spriteWidth * config._offsetX)) / _baseTexture->width;		// top right
+		uvCoords[0].y = (spriteHeight * config._offsetY) / _baseTexture->height;						// top right
+		uvCoords[1].x = (spriteWidth + (spriteWidth * config._offsetX)) / _baseTexture->width; 		// bottom right
+		uvCoords[1].y = (spriteHeight + (spriteHeight * config._offsetY)) / _baseTexture->height;		// bottom right
+		uvCoords[2].x = (spriteWidth * config._offsetX) / _baseTexture->width;						// bottom left
+		uvCoords[2].y = (spriteHeight + (spriteHeight * config._offsetY)) / _baseTexture->height;		// bottom left
+		uvCoords[3].x = (spriteWidth * config._offsetX) / _baseTexture->width;						// top left 
+		uvCoords[3].y = (spriteHeight * config._offsetY) / _baseTexture->height;						// top left
+
+		float UVs[8]
+		{
+			uvCoords[0].x,uvCoords[0].y,
+			uvCoords[1].x,uvCoords[1].y,
+			uvCoords[2].x,uvCoords[2].y,
+			uvCoords[3].x,uvCoords[3].y
+		};
+
+		_renderer->BindBufferAdditional(_bufferPosUV, UVs, sizeof(UVs), GL_DYNAMIC_DRAW);
+	}
+
+	TextureData* Sprite::CreateAnimationData(const char* AtlasFilePath, bool invertImage)
+	{
+		return new TextureData(TextureImporter::LoadTexture(AtlasFilePath,invertImage));
+	}
+
+	void Sprite::DeleteAnimationData(TextureData* atlasToDelete)
+	{
+		delete atlasToDelete;
+	}
+
+	int Sprite::CreateAnimation()
+	{
+		Animation* anim = new Animation();
+		_allAnimations.push_back(anim);
+		return _allAnimations.size() - 1;
+	}
+
+	int Sprite::CreateAnimation(AtlasConfigurations config)
+	{
+		Animation* anim = new Animation();
+		anim->SetAnimation(_baseTexture, config);
+		_allAnimations.push_back(anim);
+		return _allAnimations.size() - 1;
+	}
+
+	int Sprite::CreateAnimation(TextureData* animationData, int columns, int rows)
+	{
+		Animation* anim = new Animation();
+		anim->SetAnimation(animationData, columns, rows);
+		_allAnimations.push_back(anim);
+		return _allAnimations.size() - 1;
+	}
+
+	int Sprite::CreateAnimation(TextureData* animationData, AtlasConfigurations config)
+	{
+		Animation* anim = new Animation();
+		anim->SetAnimation(animationData, config);
+		_allAnimations.push_back(anim);
+		return _allAnimations.size() - 1;
+	}
+
+	void Sprite::AddFrameToExistingAnimation(int animationID, int positonX, int positionY, int width, int height)
+	{
+		_allAnimations[animationID]->AddFrameToAnimation(positonX, positionY, width, height);
+	}
+
+	void Sprite::PlayAnimation(int ID)
+	{
+		if (!_allAnimations[ID]->IsPlaying())
+		{
+			for (unsigned int i = 0; i < _allAnimations.size(); i++)
+				_allAnimations[i]->Stop();
+
+			_allAnimations[ID]->Play();
+		}
+	}
+
+	void Sprite::StopAnimation(int ID)
+	{
+		_allAnimations[ID]->Stop();
+	}
+
+	void Sprite::StopAllAnimations()
+	{
+		for (unsigned int i = 0; i < _allAnimations.size(); i++)
+			_allAnimations[i]->Stop();
+	}
+
+	void Sprite::SetAnimationSpeed(int ID, float speed)
+	{
+		_allAnimations[ID]->SetAnimationSpeed(speed);
+	}
+
+	void Sprite::SetAnimationTimeBetweenFrames(int ID, float time)
+	{
+		_allAnimations[ID]->SetAnimationTimeBetweenFrames(time);
+	}
+
+	void Sprite::SetAnimationFullTime(int ID, float time)
+	{
+		_allAnimations[ID]->SetAnimationFullTime(time);
+	}
+
+	void Sprite::SetTextureCoordinates(glm::vec2 coord1, glm::vec2 coord2, glm::vec2 coord3, glm::vec2 coord4)
+	{
+		uvCoords[0].x = coord1.x;
+		uvCoords[0].y = coord1.y;
+
+		uvCoords[1].x = coord2.x;
+		uvCoords[1].y = coord2.y;
+
+		uvCoords[2].x = coord3.x;
+		uvCoords[2].y = coord3.y;
+
+		uvCoords[3].x = coord4.x;
+		uvCoords[3].y = coord4.y;
+	}
+
+	void Sprite::SetTexture(Renderer* renderer, const char* filePathImage, bool invertImage)
+	{
 		_renderer = renderer;
-		this->shader = shader;
-		_texImporter = new TextureImporter();
 
-		uv[0].u = 1; uv[0].v = 1;
-		uv[1].u = 1; uv[1].v = 0;
-		uv[2].u = 0; uv[2].v = 0;
-		uv[3].u = 0; uv[3].v = 1;
+		float vertex[24] =
+		{
+			 0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,
+			-0.5f, -0.5f, 0.0f,		1.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 1.0f
+		};
+
+		unsigned int indices[6] =
+		{
+			0, 1, 3,
+			1, 2, 3
+		};
+
+		_renderer->CreateBufferInitial(VAO, VBO, EBO);
+		_renderer->BindBufferInitial(VAO, VBO, EBO, vertex, sizeof(vertex), indices, sizeof(indices));
+		_vertices = 6;
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(0);
+		glEnableVertexAttribArray(1);
+
+		float UVs[8] =
+		{
+			uvCoords[0].x, uvCoords[0].y,
+			uvCoords[1].x, uvCoords[1].y,
+			uvCoords[2].x, uvCoords[2].y,
+			uvCoords[3].x, uvCoords[3].y
+		};
+
+		_renderer->CreateBufferAdditional(_bufferPosUV, 1);
+		_renderer->BindBufferAdditional(_bufferPosUV, UVs, sizeof(UVs), GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(2);
+
+		_baseTexture = new TextureData(TextureImporter::LoadTexture(filePathImage, invertImage));
 	}
 
-	Sprite::Sprite(bool transparency, const char* path, Renderer* renderer, Shader shader) : Entity2D() {
-		_transparency = transparency;
-		_renderer = renderer;
-		_texImporter = new TextureImporter();
-		this->shader = shader;
-		_texImporter->SetPath(path);
+	void Sprite::Denitialize()
+	{
+		_renderer->DeleteBufferInitial(VAO, VBO, EBO);
+		_renderer->DeleteBufferAdditional(_bufferPosUV, 1);
+		glDeleteTextures(1, &_baseTexture->ID);
 
-		uv[0].u = 1; uv[0].v = 1;
-		uv[1].u = 1; uv[1].v = 0;
-		uv[2].u = 0; uv[2].v = 0;
-		uv[3].u = 0; uv[3].v = 1;
-	}
+		delete _baseTexture;
 
-	Sprite::~Sprite() {
-		if (_texImporter != NULL) {
-			delete _texImporter;
-			_texImporter = NULL;
+		for (unsigned int i = 0; i < _allAnimations.size(); i++)
+		{
+			delete _allAnimations[i];
 		}
 	}
 
-	void Sprite::GenerateVAO() {
-		_renderer->GenerateVAO(_vao);
+	void Sprite::SetShader(unsigned int texture)
+	{
+		glm::vec3 newColor = glm::vec3(_color.r, _color.g, _color.b);
+
+		unsigned int colorLoc = glGetUniformLocation(_renderer->textureShader.GetID(), "color");
+		glUniform3fv(colorLoc, 1, glm::value_ptr(newColor));
+
+		unsigned int alphaLoc = glGetUniformLocation(_renderer->textureShader.GetID(), "a");
+		glUniform1fv(alphaLoc, 1, &(_color.a));
+
+		unsigned int textureLoc = glGetUniformLocation(_renderer->textureShader.GetID(), "ourTexture");
+		glUniform1f(textureLoc, (GLfloat)texture);
 	}
 
-	void Sprite::BindVAO() {
-		_renderer->BindVAO(_vao);
-	}
-
-	void Sprite::BindVBO() {
-		_renderer->BindVBO(_vbo, _vertices, 32);
-	}
-
-	void Sprite::BindEBO() {
-		_renderer->BindEBO(_ebo, _quadIndices, 6);
-	}
-
-	void Sprite::Init() {
-		LoadSprite();
-		_renderer->SetTexAttribPointer(shader.GetID());
-		BindBuffers();
-	}
-
-	void Sprite::Init(unsigned int texture) {
-		_texture = texture;
-		_renderer->SetTexAttribPointer(shader.GetID());
-		BindBuffers();
-	}
-
-	void Sprite::LoadSprite() {
-		if (_texImporter) {
-			_texImporter->LoadImage(_width, _height, _transparency);
-			_texture = _texImporter->GetTexture();
+	unsigned int Sprite::GetCurrentTextureID()
+	{
+		for (unsigned int i = 0; i < _allAnimations.size(); i++)
+		{
+			if (_allAnimations[i]->IsPlaying())
+			{
+				if (_allAnimations[i]->Update())
+				{
+					BindUVCoords(i);
+					_lastCoordIndex = i;
+				}
+				return _allAnimations[i]->GetTextureID();
+			}
 		}
+
+		if (_allAnimations.size() > 0)
+			BindUVCoords(_lastCoordIndex);
 		else
-			std::cout << "Couldn't find image" << std::endl;
+			BindUVCoords();
+
+		return _baseTexture->ID;
 	}
 
+	void Sprite::BindUVCoords()
+	{
+		float UVs[8] =
+		{
+			uvCoords[0].x, uvCoords[0].y,
+			uvCoords[1].x, uvCoords[1].y,
+			uvCoords[2].x, uvCoords[2].y,
+			uvCoords[3].x, uvCoords[3].y
+		};
 
-	void Sprite::LoadSprite(const char* path) {
-		if (_texImporter) {
-			_texImporter->SetPath(path);
-			_texImporter->LoadImage(_width, _height, _transparency);
-		}
-		else
-			std::cout << "Couldn't find image" << std::endl;
+		_renderer->BindBufferAdditional(_bufferPosUV, UVs, sizeof(UVs), GL_STATIC_DRAW);
 	}
 
-	void Sprite::BindBuffers() {
-		GenerateVAO();
-		BindVAO();
-		BindVBO();
-		BindEBO();
-	}
+	void Sprite::BindUVCoords(int i)
+	{
+		glm::vec2* uv = _allAnimations[i]->GetCurrentFrameCoordinates();
 
-	void Sprite::BindTexture() {
-		glBindTexture(GL_TEXTURE_2D, _texImporter->GetTexture());
-		glActiveTexture(GL_TEXTURE0);
-	}
+		float UVs[8] =
+		{
+			uv[0].x, uv[0].y,
+			uv[1].x, uv[1].y,
+			uv[2].x, uv[2].y,
+			uv[3].x, uv[3].y
+		};
 
-	void Sprite::BlendSprite() {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
-
-	void Sprite::UnBlendSprite() {
-		glDisable(GL_BLEND);
-	}
-
-	void Sprite::Color(float r, float g, float b) {
-		_vertices[3] = r;  _vertices[4] = g;  _vertices[5] = b;
-		_vertices[11] = r; _vertices[12] = g; _vertices[13] = b;
-		_vertices[19] = r; _vertices[20] = g; _vertices[21] = b;
-		_vertices[27] = r; _vertices[28] = g; _vertices[29] = b;
-	}
-
-	void Sprite::Color(glm::vec3 color) {
-		_vertices[3] = color.x;  _vertices[4] = color.y;  _vertices[5] = color.z;
-		_vertices[11] = color.x; _vertices[12] = color.y; _vertices[13] = color.z;
-		_vertices[19] = color.x; _vertices[20] = color.y; _vertices[21] = color.z;
-		_vertices[27] = color.x; _vertices[28] = color.y; _vertices[29] = color.z;
-	}
-
-	void Sprite::SetUVs(glm::vec4 uvRect) {
-		//				x + ancho                   y + alto
-		uv[0].u = uvRect.x + uvRect.z; uv[0].v = uvRect.y + uvRect.w;    // top right
-		//				 x + ancho                   y
-		uv[1].u = uvRect.x + uvRect.z; uv[1].v = uvRect.y;				 // bottom right
-		//				x                  y
-		uv[2].u = uvRect.x; uv[2].v = uvRect.y;							// bottom left
-		//				x					y + alto
-		uv[3].u = uvRect.x; uv[3].v = uvRect.y + uvRect.w;				// top left
-
-		UpdateUVs();
-	}
-
-	void Sprite::SetUVs(float sheetHeight, float sheetWidth, float spriteHeight, float spriteWidth, int x, int y) {
-		uv[0].u = ((x + 1) * spriteWidth) / sheetWidth; uv[0].v = ((y + 1) * spriteHeight) / sheetHeight;    // top right
-		uv[1].u = ((x + 1) * spriteWidth) / sheetWidth; uv[1].v = (y * spriteHeight) / sheetHeight;				 // bottom right
-		uv[2].u = (x * spriteWidth) / sheetWidth;      uv[2].v = (y * spriteHeight) / sheetHeight;							// bottom left
-		uv[3].u = (x * spriteWidth) / sheetWidth;      uv[3].v = ((y + 1) * spriteHeight) / sheetHeight;				// top left
-
-		UpdateUVs();
-	}
-
-
-	void Sprite::UpdateUVs() {
-		_vertices[6] = uv[0].u;  _vertices[7] = uv[0].v;   // top Right
-		_vertices[14] = uv[1].u; _vertices[15] = uv[1].v;   // bottom Right
-		_vertices[22] = uv[2].u; _vertices[23] = uv[2].v;   // bottom Left
-		_vertices[30] = uv[3].u; _vertices[31] = uv[3].v;   // top Left
-	}
-
-	void Sprite::DrawSprite() {
-		UpdateMatrices();
-		if (_transparency) {
-			BlendSprite();
-			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
-			UnBlendSprite();
-			glDisable(GL_TEXTURE_2D);
-		}
-		else {
-			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
-			glDisable(GL_TEXTURE_2D);
-		}
-	}
-
-	void Sprite::DrawFromUVs(glm::vec4 uv) {
-		UpdateMatrices();
-		SetUVs(uv);
-		if (_transparency) {
-			BlendSprite();
-			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
-			UnBlendSprite();
-			glDisable(GL_TEXTURE_2D);
-		}
-		else {
-			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
-			glDisable(GL_TEXTURE_2D);
-		}
-	}
-
-	void Sprite::DrawAnimation(glm::vec4 uvRect) {
-		UpdateMatrices();
-		SetUVs(uvRect);
-		if (_transparency) {
-			BlendSprite();
-			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
-			UnBlendSprite();
-			glDisable(GL_TEXTURE_2D);
-		}
-		else {
-			BindTexture();
-			_renderer->DrawSprite(shader, _vao, _vbo, _vertices, 32, _quadIndices, 6, GetModel());
-			glDisable(GL_TEXTURE_2D);
-		}
-	}
-
-	void Sprite::SetWidth(int width) {
-		_width = width;
-	}
-
-	int Sprite::GetWidth() {
-		return _width;
-	}
-
-	void Sprite::SetHeight(int height) {
-		_height = height;
-	}
-
-	int Sprite::GetHeight() {
-		return _height;
-	}
-
-	void Sprite::SetRenderer(Renderer* renderer) {
-		_renderer = renderer;
-	}
-
-	void Sprite::SetShader(Shader shader) {
-		this->shader = shader;
-	}
-
-	Renderer* Sprite::GetRenderer() {
-		return _renderer;
-	}
-
-	void Sprite::SetPath(const char* path) {
-		if (_texImporter)
-			_texImporter->SetPath(path);
-		else
-			std::cout << "Couldn't set path" << std::endl;
-	}
-
-	const char* Sprite::GetPath() {
-		if (_texImporter)
-			return _texImporter->GetPath();
-		else
-			return nullptr;
-	}
-
-	void Sprite::SetTransparency(bool value) {
-		_transparency = value;
-	}
-
-	void Sprite::UnbindBuffers() {
-		_renderer->UnbindBuffers();
-	}
-
-	void Sprite::DeleteBuffer() {
-		_renderer->DeleteBuffers(_vao, _vbo, _ebo);
+		_renderer->BindBufferAdditional(_bufferPosUV, UVs, sizeof(UVs), GL_DYNAMIC_DRAW);
 	}
 }

@@ -9,7 +9,7 @@ namespace Engine {
 	class CollisionManager;
 	enum class CollisionDirection {UP, DOWN, LEFT, RIGHT, NONE};
 
-	class ENGINE_API Entity2D : Entity
+	class ENGINE_API Entity2D : public Entity
 	{
 	public:
 		Entity2D();

@@ -74,6 +74,7 @@ namespace Engine {
 		void SetAnimation(TextureData* animationAtlasData, int columns, int rows);
 		void SetAnimation(TextureData* animationAtlasData, AtlasConfigurations config);
 		void AddFrameToAnimation(int posX, int posY, int width, int height);
+		int GetTextureID();
 		glm::vec2* GetCurrentFrameCoordinates();
 
 	private:

@@ -176,6 +176,11 @@ void Engine::Animation::AddFrameToAnimation(int posX, int posY, int width, int h
 	_frameCoordinates.push_back(newCoord);
 }
 
+int Engine::Animation::GetTextureID()
+{
+	return _texture->ID;
+}
+
 glm::vec2* Engine::Animation::GetCurrentFrameCoordinates()
 {
 	return _frameCoordinates[_currentFrame];

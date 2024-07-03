@@ -38,6 +38,10 @@ namespace Engine {
 		void SetColor(glm::vec4 color);
 		void SetViewMatrix(glm::mat4 viewMatrix);
 		void SetProjectionMatrix(glm::mat4 projectionMatrix);
+
+		//Shaders Used
+		Shader textureShader;
+		Shader solidShader;
 	private:
 		float lastTime = 0;
 		Window* currentWindow;
