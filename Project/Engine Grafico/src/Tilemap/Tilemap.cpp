@@ -1,250 +1,264 @@
 #include "Tilemap.h"
+#include "Tile.cpp"
 #include "../xml_lib/tinyxml2.h"
-#include <sstream>
+#include "../Utils/TextureImporter.h"
 
+namespace Engine
+{
 
-using namespace tinyxml2;
-using namespace Engine;
+	Engine::Tilemap::Tilemap(Renderer* renderer)
+	{
+		_renderer = renderer;
+	}
 
-Tilemap::Tilemap(glm::ivec2 dimension, const char* imagePath, Shader shader, Renderer* renderer) {
-	_mapDims = dimension;
-	_imagePath = imagePath;
-	_shader = shader;
-	_renderer = renderer;
-	_textureImporter = new TextureImporter();
-	_collisionManager = new CollisionManager();
-}
+	Engine::Tilemap::~Tilemap()
+	{
 
-Tilemap::Tilemap() {
-	_mapDims = glm::ivec2(0, 0);
-	_imagePath = "";
-	_renderer = nullptr;
-	_textureImporter = nullptr;
-	_collisionManager = nullptr;
-}
+	}
 
-Tilemap::~Tilemap() {
-	if (!_grid.empty())
-		_grid.clear();
+	const Tile& Engine::Tilemap::Tile(unsigned int tileID)
+	{
+		Engine::Tile* noTileFound = nullptr;
 
-	if (!_tiles.empty()) {
-		for (int i = 0; i < _tiles.size(); i++) {
-			for (int j = 0; j < _tiles[i].size(); j++) {
-				for (int k = 0; k < _tiles[i][j].size(); k++) {
-					if (_tiles[i][j][k]) {
-						delete _tiles[i][j][k];
-						_tiles[i][j][k] = NULL;
+		for (int i = 0; i < _tiles.size(); i++)
+		{
+			if (tileID == _tiles[i].GetID())			
+				return _tiles[i];			
+		}
+
+		return *noTileFound;
+	}
+
+	void Engine::Tilemap::SetTile(const Engine::Tile& tile)
+	{
+		_tiles.push_back(tile);
+	}
+
+	void Engine::Tilemap::SetMapTileID(int layer, unsigned int column, unsigned int row, unsigned int ID)
+	{
+		_tilesGrid[layer][column][row] = Tile(ID);
+	}
+
+	void Engine::Tilemap::SetDimensions(float width, float height)
+	{
+		_width = width;
+		_height = height;
+
+		Engine::Tile** tilemapTemp;
+
+		tilemapTemp = new Engine::Tile * [height];
+
+		for (int i = 0; i < height; i++)
+		{
+			tilemapTemp[i] = new Engine::Tile[width];
+		}
+		_tilesGrid.push_back(tilemapTemp);
+	}
+
+	void Engine::Tilemap::SetTileDimensions(float tileWidth, float tileHeight)
+	{
+		_tileWidth = tileWidth;
+		_tileHeight = tileHeight;
+	}
+
+	void Engine::Tilemap::SetTexture(TextureData* texture)
+	{
+		_texture = texture;
+	}
+
+	void Engine::Tilemap::Draw()
+	{
+		float mapWidth = -(_width * _tileWidth) / 2.0f;
+		float mapHeight = (_height * _tileHeight) / 2.0f;
+
+		for (int i = 0; i < _tilesGrid.size(); i++)
+		{
+			for (int y = 0; y < _height; y++)
+			{
+				for (int x = 0; x < _width; x++)
+				{
+					if (_tilesGrid[i][y][x].GetID() != NULL)
+					{
+						glm::vec3 pos = glm::vec3(mapWidth + (_tileWidth * x), mapHeight - (_tileHeight * y), 0);
+						_tilesGrid[i][y][x].SetPos(pos);
+						_tilesGrid[i][y][x].Draw();
 					}
 				}
 			}
 		}
-		_tiles.clear();
 	}
 
-	if (_textureImporter != NULL) {
-		delete _textureImporter;
-		_textureImporter = NULL;
-	}
+	bool Engine::Tilemap::ImportTilemap(std::string filePath)
+	{
+		tinyxml2::XMLDocument document;
+		tinyxml2::XMLError errorHandler;
 
-	if (_collisionManager != NULL) {
-		delete _collisionManager;
-		_collisionManager = NULL;
-	}
-}
+		errorHandler = document.LoadFile(filePath.c_str());
+		if (errorHandler == tinyxml2::XML_ERROR_FILE_NOT_FOUND || errorHandler == tinyxml2::XML_ERROR_FILE_COULD_NOT_BE_OPENED)
+			return false;
 
-void Tilemap::SetImagePath(const char* path) {
-	_imagePath = path;
-}
+		tinyxml2::XMLElement* mapNode = document.FirstChildElement("map");
+		if (mapNode == nullptr)
+			return false;
 
-void Tilemap::LoadMap(const char* path) {
-	//Aca hacemos las carga del mapa a travez de tinyxml
-	tinyxml2::XMLDocument doc;
+		SetDimensions(mapNode->FloatAttribute("width"), mapNode->FloatAttribute("height"));
+		SetTileDimensions(mapNode->FloatAttribute("tileWidth"), mapNode->FloatAttribute("tileHeight"));
 
-	doc.LoadFile(path);
+		tinyxml2::XMLElement* pTileset = mapNode->FirstChildElement("tileset");
+		if (pTileset == NULL)
+			return false;
 
-	//Creamos los punteros para obtener los elementos del archivo xml
-	tinyxml2::XMLElement* p_root_element = doc.FirstChildElement("map");
+		int tileCount = pTileset->IntAttribute("tilecount");
+		int columns = pTileset->IntAttribute("columns");
+		int rows = tileCount / columns;
 
-	if (p_root_element == NULL) {
-		std::cout << "Error loading tilemap" << std::endl;
-		return;
-	}
+		_filePath = "../res/assets/";
+		_filePath += pTileset->FirstChildElement("image")->Attribute("source");
+		TextureData texData = TextureImporter::LoadTexture(_filePath.c_str(), true);
+		SetTexture(&texData);
 
-	//Almacenamos el ancho y alto del mapa como el ancho y alto de cada tile
-	int width = p_root_element->IntAttribute("width");
-	int height = p_root_element->IntAttribute("height");
-	_tileWidth = p_root_element->IntAttribute("tilewidth");
-	_tileHeight = p_root_element->IntAttribute("tileheight");
+		_imageWidth = pTileset->FirstChildElement("image")->IntAttribute("width");
+		_imageHeight = pTileset->FirstChildElement("image")->IntAttribute("height");
+		float tileX = 0.0f, tileY = 0.0f;
+		int _id = 1;
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				Engine::Tile newTile;
 
-	_layerDims.x = width;
-	_layerDims.y = height;
+				newTile.SetID(_id);
+				newTile.SetTexture(_renderer, _filePath.c_str(), false);
+				newTile.SetScale(glm::vec3(_tileWidth, _tileHeight, 1.0f));
 
-	//buscamos los layers del mapa
-	int layerCount = 0;
-	std::vector<tinyxml2::XMLElement*> layerElement;
-	for (tinyxml2::XMLElement* childElement = p_root_element->FirstChildElement(); childElement != NULL; childElement = childElement->NextSiblingElement()) {
-		string childName = childElement->Name();
-		string layer = "layer";
-		if (childElement != NULL && childName == layer) {
+				newTile.SetTextureCoordinates(glm::vec2((tileX + _tileWidth) / _imageWidth, tileY / _imageHeight),
+					glm::vec2((tileX + _tileWidth) / _imageWidth, (tileY + _tileHeight) / _imageHeight),
+					glm::vec2(tileX / _imageWidth, (tileY + _tileHeight) / _imageHeight),
+					glm::vec2(tileX / _imageWidth, tileY / _imageHeight));
+
+				tileX += _tileWidth;
+				SetTile(newTile);
+				_id++;
+			}
+			tileX = 0;
+			tileY += _tileHeight;
+		}
+
+		tinyxml2::XMLElement* pTile = pTileset->FirstChildElement("tile");
+
+		while (pTile) {
+			unsigned int id = pTile->IntAttribute("id");
+			tinyxml2::XMLElement* pProperty = pTile->FirstChildElement("properties")->FirstChildElement("property");
+			std::string propertyName = pProperty->Attribute("value");
+			if (propertyName == "false")
+				_tiles[id].SetWalkable(false);
+			else
+				_tiles[id].SetWalkable(true);
+
+			pTile = pTile->NextSiblingElement("tile");
+		}
+
+		tinyxml2::XMLElement* pLayer = mapNode->FirstChildElement("layer");
+		if (pLayer == NULL)
+			return false;
+
+		int layerCount = 0;
+		while (pLayer) {
+			tinyxml2::XMLElement* pData = pLayer->FirstChildElement("data");
+			if (pData == NULL)
+				return false;
+
+			if (layerCount > 0) {
+				Engine::Tile** tileMap;
+				tileMap = new Engine::Tile * [_height];
+
+				for (int i = 0; i < _height; i++)
+				{
+					tileMap[i] = new Engine::Tile[_width];
+				}
+
+				_tilesGrid.push_back(tileMap);
+			}
+
+			while (pData) {
+				std::vector<int> tileGids;
+				for (tinyxml2::XMLElement* pTile = pData->FirstChildElement("tile");
+					pTile != NULL;
+					pTile = pTile->NextSiblingElement("tile"))
+				{
+					unsigned int gid = std::atoi(pTile->Attribute("gid")); // tile's id is saved
+					tileGids.push_back(gid);
+				}
+
+				int gid = 0;
+				for (int y = 0; y < _height; y++) {
+					for (int x = 0; x < _width; x++) {
+						if (tileGids[gid] != 0)
+							SetMapTileID(layerCount, y, x, tileGids[gid]);
+						gid++;
+					}
+				}
+
+				pData = pData->NextSiblingElement("data");
+			}
 			layerCount++;
-			layerElement.push_back(childElement);
+			pLayer = pLayer->NextSiblingElement("layer");
 		}
 
-	}
-	std::cout << "cantidad de layers cargados desde archivo: " << layerCount << std::endl;
-	_grid.resize(layerCount); //resize del vector a numero de layers encontrados
-	for (int l = 0; l < _grid.size(); l++) {
-		tinyxml2::XMLText* dataElement = layerElement[l]->FirstChildElement("data")->FirstChild()->ToText();
-		if (dataElement == NULL) {
-			std::cout << "Error loading tilemap" << std::endl;
-			return;
-		}
-
-		//en el segundo vector que representa a Y lo llenamos con los datos encontrados dentro del hijo data, 
-		//lo mismo para el vector que representa X.
-		std::string mapGrid;
-		mapGrid = dataElement->Value();
-		std::stringstream ss(mapGrid); //creamos un string stream en donde se almaceneran los ids de cada layer
-		_grid[l].resize(height);
-		for (int y = 0; y < height; y++) {
-			_grid[l][y].resize(width);
-			for (int x = 0; x < width; x++) {
-				std::string value;
-				std::getline(ss, value, ',');
-				if (!ss.good())
-					break;
-
-				int val;
-				if (std::stringstream(value) >> val) //string stream usa string buffer para operar con secuencias de caracteres
-					_grid[l][y][x] = val;
-
-				_tilesAmount++;
-			}
-		}
+		return true;
 	}
 
-	doc.Clear();
-	LoadMapFromGrid();
-}
+	bool Engine::Tilemap::CheckCollision(Entity2D& entity)
+	{
+		_convertedPosX = entity.GetTransform().position.x + (_width / 2.0f) * _tileWidth;
+		_convertedPosY = entity.GetTransform().position.y + (_height / 2.0f) * _tileHeight;
 
-void Tilemap::SetTilesInfo(const char* path) {
-	_tilesInfoPath = path;
-}
 
-void Tilemap::LoadMapFromGrid() {
-	_textureImporter->SetPath(_imagePath);
-	_textureImporter->LoadImage(_mapWidth, _mapHeight, true);
-	int xPos = _tileWidth;
-	std::cout << "tile width: " << _tileWidth << std::endl;
-	int yPos = 700;
-	float z = 0;
-	int actualID = 0;
-	_tiles.resize(_grid.size());
+		int leftTile = _convertedPosX / _tileWidth;
+		int rightTile = (_convertedPosX + entity.GetTransform().scale.x) / _tileWidth;
 
-	for (int l = 0; l < _grid.size(); l++) {
-		xPos = _tileWidth;
-		yPos = 700;
-		_tiles[l].resize(_grid[l].size());
-		for (int y = 0; y < _grid[l].size(); y++) {
-			_tiles[l][y].resize(_grid[l][y].size());
-			for (int x = 0; x < _grid[l][y].size(); x++) {
-				Tile* newTile = new Tile(_grid[l][y][x], false, _tileWidth, _tileHeight, _renderer);
-				newTile->SetRenderer(_renderer);
-				newTile->SetShader(_shader);
-				newTile->SetPath(_imagePath);
-				newTile->Init();
-				newTile->Translate(xPos, yPos, z);
-				newTile->Scale(_tileWidth, _tileHeight, 1);
+		int topTile = (_convertedPosY / _tileHeight) * -1;
+		int bottomTile = ((_convertedPosY - entity.GetTransform().scale.y) / _tileHeight) * -1;
 
-				newTile->SetUVs(GetTileFromID(newTile->GetID()));
+		if (leftTile < 0)
+			leftTile = 0;
 
-				if (newTile->GetID() <= 0 && l > 0) {
-					delete newTile;
-					newTile = NULL;
-					xPos += _tileWidth + _tileWidth;
-				}
-				else {
-					if (newTile->GetID() > 0 && l > 0) {
-						newTile->SetID(newTile->GetID() - actualID);
-					}
-					newTile->SetIsWalkable(_tilesInfoPath);
-					newTile->SetUVs(GetTileFromID(newTile->GetID()));
-					_tiles[l][y][x] = newTile;
-					xPos += newTile->transform.scale.x + _tileWidth;
-				}
-			}
-			
-			z += 0.001f;
-			yPos -= _tileHeight + _tileHeight;
-			xPos = _tileWidth;
-			actualID = 1;
-		}
-	}
-	std::cout << "Cantidad de layers: " << _tiles.size() << endl;
-}
+		if (rightTile >= _width)
+			rightTile = _width - 1;
 
-glm::vec4 Tilemap::GetTileFromID(unsigned int id) {
-	int xTile = id % _mapDims.x;
-	int yTile = id / _mapDims.x;
-	yTile = _mapHeight - yTile - 1;
-	std::cout << "xTile: " << xTile << std::endl;
-	std::cout << "yTile: " << yTile << std::endl;
+		if (topTile < 0)
+			topTile = 0;
 
-	glm::vec4 uv = glm::vec4(0, 0, 0, 0);
+		if (bottomTile >= _height)
+			bottomTile = _height - 1;
 
-	uv.x = xTile / static_cast<float>(_mapDims.x);
-	uv.y = yTile / static_cast<float>(_mapDims.y);
-	uv.z = 1.0f / (_mapDims.x);
-	uv.w = 1.0f / (_mapDims.y);
+		for (int i = leftTile; i <= rightTile; i++)
+		{
+			for (int j = topTile; j <= bottomTile; j++)
+			{
+				for (int k = 0; k < _tilesGrid.size(); k++)
+				{
+					if (!_tilesGrid[k][j][i].GetWalkable())
+					{
+						float overlapX = 0;
+						float overlapY = 0;
 
-	return uv;
-}
+						Engine::CollisionDirection collisionDirection = entity.CheckCollision(_tilesGrid[k][j][i], overlapX, overlapY);
 
-void Tilemap::Draw() {
-	if (!_tiles.empty()) {
-		for (int i = 0; i < _tiles.size(); i++) {
-			for (int j = 0; j < _tiles[i].size(); j++) {
-				for (int k = 0; k < _tiles[i][j].size(); k++) {
-					if (_tiles[i][j][k]) {
-						_tiles[i][j][k]->DrawSprite();
+						if (collisionDirection != Engine::CollisionDirection::NONE)
+						{
+							entity.ApplyCollisionRestriction(collisionDirection, overlapX, overlapY, false);
+							return true;
+						}
 					}
 				}
 			}
 		}
+
+		return false;
 	}
-}
 
-void Tilemap::CheckCollisionWithTileMap(Entity2D* entity, float speed) {
-	float distanceWithTilemapX = glm::distance(glm::vec2(entity->transform.position.x, 0), glm::vec2(0, 0));
-	float distanceWithTilemapWidth = glm::distance(glm::vec2(entity->transform.position.x + entity->transform.scale.x * 0.5f, 0), glm::vec2(0, 0));
-	float distanceWithTilemapY = glm::distance(glm::vec2(0, entity->transform.position.y), glm::vec2(0, 700));
-	float distanceeWithTilemapHeight = glm::distance(glm::vec2(0, entity->transform.position.y - entity->transform.scale.y * 0.5f), glm::vec2(0, 700));
-
-	float indexInX = distanceWithTilemapX / _tileWidth * 0.5f;
-	float indexInY = distanceWithTilemapY / _tileHeight * 0.5f;
-	float indexInWidth = distanceWithTilemapWidth / _tileWidth * 0.5f;
-	float indexInHeight = distanceeWithTilemapHeight / _tileHeight * 0.5f;
-
-	int rightTile = static_cast<int>(indexInWidth) + 1;
-	int leftTile = static_cast<int>(indexInX) - 1;
-	int topTile = static_cast<int>(indexInY) - 1;
-	int bottomTile = static_cast<int>(indexInHeight) + 1;
-
-	std::cout << "rightTile: " << rightTile << std::endl;
-	std::cout << "leftTile: " << leftTile << std::endl;
-	std::cout << "topTile: " << topTile << std::endl;
-	std::cout << "bottomTile: " << bottomTile << std::endl;
-
-	for (int i = leftTile; i <= rightTile; i++) {
-		for (int j = topTile; j <= bottomTile; j++) {
-			for (int l = 0; l < _grid.size(); l++) {
-				if (i >= 0 && i <= _layerDims.x - 1 && j >= 0 && j <= _layerDims.y - 1 && l >= 0) {
-					Tile* t = _tiles[l][j][i];
-					if (t != NULL && !t->GetIsWalkable()) {
-						_collisionManager->CheckCollision(entity, t, speed);
-					}
-				}
-			}
-		}
+	std::vector<Engine::Tile**> Engine::Tilemap::GetTileGrid()
+	{
+		return _tilesGrid;
 	}
+
 }
