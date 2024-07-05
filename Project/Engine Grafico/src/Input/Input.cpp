@@ -1,59 +1,64 @@
 #include "glew.h"
 #include "glfw3.h"
+#include "../Window/Window.h"
+
+#include <algorithm>
 
 #include "input.h"
 
-Input::Input() {
-	_window = NULL;
-	mousePosition = glm::vec3(1.0f);
-}
-Input::Input(GLFWwindow* window) {
-	_window = window;
-	mousePosition = glm::vec3(1.0f);
-}
-Input::~Input() {
-	if (_window) _window = NULL;
-}
+namespace Engine {
 
-void Input::SetWindow(GLFWwindow* window) {
-	_window = window;
-}
+	void KeyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods);
+	void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 
-bool Input::GetKey(KeyCode key) {
-	return glfwGetKey(_window, static_cast<int>(key)) == GLFW_PRESS;
-}
+	std::list<int> currentKeysDown;
+	glm::vec2 mousePos;
 
-bool Input::GetKeyUp(KeyCode key) {
-	return glfwGetKey(_window, static_cast<int>(key)) == GLFW_RELEASE;
-}
+	Engine::Input::Input(Window* window)
+	{
+		glfwSetKeyCallback(window->GetWindow(), KeyCallback);
+		glfwSetCursorPosCallback(window->GetWindow(), MouseCallback);
+	}
 
-bool Input::GetMouseButton(MouseButtons mb) {
-	return glfwGetMouseButton(_window, static_cast<int>(mb)) == GLFW_PRESS;
-}
+	Engine::Input::~Input()
+	{
 
-bool Input::GetMouseButtonUp(MouseButtons mb) {
-	return glfwGetMouseButton(_window, static_cast<int>(mb)) == GLFW_RELEASE;
-}
+	}
 
-glm::vec2 Input::GetMousePosition2D() {
-	double xPos, yPos;
-	glfwGetCursorPos(_window, &xPos, &yPos);
+	bool Engine::Input::IsKeyPressed(int keyCode, Window* window)
+	{
+		int keyPressed = glfwGetKey(window->GetWindow(), keyCode);
+		return keyPressed == GLFW_PRESS;
+	}
 
-	mousePosition = glm::vec3(xPos, yPos, 0.0f);
+	bool Engine::Input::IsKeyDown(int keyCode, Window* window)
+	{
+		std::list<int>::iterator it = find(currentKeysDown.begin(), currentKeysDown.end(), keyCode);
 
-	return mousePosition;
-}
+		if (it != currentKeysDown.end())
+		{
+			currentKeysDown.remove(keyCode);
+			return true;
+		}
 
-glm::vec3 Input::GetMousePosition3D() {
-	double xPos, yPos, zPos;
-	zPos = 0;
-	glfwGetCursorPos(_window, &xPos, &yPos);
+		return false;
+	}
 
-	mousePosition = glm::vec3(xPos, yPos, zPos);
+	glm::vec2 Engine::Input::GetMousePosition()
+	{
+		return mousePos;
+	}
 
-	return mousePosition;
-}
+	void KeyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods)
+	{
+		if (action == GLFW_PRESS)
+			currentKeysDown.push_front(key);
+		else if (action == GLFW_RELEASE)
+			currentKeysDown.remove(key);
+	}
 
-void Input::UnloadWindow() {
-	if (_window) _window = NULL;
+	void MouseCallback(GLFWwindow* window, double xPos, double yPos)
+	{
+		mousePos = glm::vec2(xPos, yPos);
+	}
 }

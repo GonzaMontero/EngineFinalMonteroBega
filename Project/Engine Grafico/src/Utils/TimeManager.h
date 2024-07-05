@@ -2,32 +2,20 @@
 #define TIME_MANAGER_H
 
 #include "Export.h"
-#include <chrono>
 
 using namespace std;
 
 namespace Engine {
 	class ENGINE_API Time {
-	private:
-		std::chrono::system_clock::time_point _prevTime;
-		std::chrono::system_clock::time_point _currentTime;
-		std::chrono::duration<float> _deltaTime;
-		float _time = 0;
-		float _fps;
-		float _fpsElapesedTime;
-		int _frames;
-
 	public:
 		Time();
 		~Time();
+		static float GetDeltaTime();
+		void UpdateDeltaTime(float currentTime);
 
-		void Tick();
-		void Reset();
-		void CalculateFPS();
-
-		float GetFPS();
-		float GetDeltaTime();
-		float GetTime();
+	private:
+		static float _deltaTime;
+		float _previousDeltaTime;
 	};
 }
 
