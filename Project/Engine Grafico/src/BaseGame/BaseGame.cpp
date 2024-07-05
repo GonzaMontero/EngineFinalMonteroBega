@@ -123,12 +123,12 @@ void Engine::BaseGame::InitEngine(int windowWidth, int windowHeight, const char*
 
 bool Engine::BaseGame::IsKeyPressed(int keycode)
 {
-	return _input -> IsKeyPressed(keycode);
+	return _input -> IsKeyPressed(keycode, _window);
 }
 
 bool Engine::BaseGame::IsKeyDown(int keycode)
 {
-	return _input -> IsKeyDown(keycode);
+	return _input -> IsKeyDown(keycode, _window);
 }
 
 glm::vec2 Engine::BaseGame::GetMousePosition()
@@ -176,52 +176,23 @@ glm::vec4 Engine::BaseGame::GetRandomColor()
 
 void Engine::BaseGame::AttachCollider(Entity2D* entity, bool isStatic)
 {
-	_collisionManager->AddToCollision(entity, isStatic);
+	_collisionManager->AddToCollisionList(entity, isStatic);
 }
 
 void Engine::BaseGame::RemoveCollider(Entity2D* entity)
 {
-	_collisionManager->RemoveFromCollision(entity);
+	_collisionManager->RemoveFromCollisionList(entity);
 }
 
 bool Engine::BaseGame::ContainsCollider(Entity2D* entity)
 {
-	return _collisionManager->IsEntityOnCollisions(entity);
+	return _collisionManager->IsInCollisionList(entity);
 }
 
 void Engine::BaseGame::UpdateCollisionsTilemap(Tilemap* tileMap)
 {
-	_collisionManager->UpdateCollisionsOnMap();
+	_collisionManager->UpdateCollisions(tileMap);
 }
-
-//int BaseGame::Init() {
-//	_window->CreateWindow("Engine Final Montero-Bega");
-//
-//	if (!_renderer->InitializeGlew()) 
-//	{
-//		return 0;
-//	}
-//
-//	basicShader.Create("..//Engine Grafico//src//Shader//shader//vertex.vert", "..//Engine Grafico//src//Shader//shader//fragment.frag");
-//	textureShader.Create("..//Engine Grafico//src//Shader//shader//texture_vert.vert", "..//Engine Grafico//src//Shader//shader//texture_frag.frag");
-//
-//	glEnable(GL_DEPTH_TEST);
-//
-//	_camera->transform.position = glm::vec3(0.0f, 0.0f, -3.0f);
-//
-//	_camera->SetView(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-//	_camera->SetProjection(ProjectionType::orthographic);
-//
-//	_camera->Init(basicShader);
-//	_camera->Init(textureShader);
-//
-//
-//	input.SetWindow(_window->GetWindow());
-//
-//	time.Reset();
-//
-//	InitGame();
-//}
 
 // (1) - Source: https://cplusplus.com/reference/random/mt19937/
 // (2) - Source: https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution

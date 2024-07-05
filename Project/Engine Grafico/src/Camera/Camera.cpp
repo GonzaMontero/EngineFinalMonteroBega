@@ -10,66 +10,38 @@
 
 using namespace Engine;
 
-Camera::Camera(Renderer* renderer, ProjectionType type) {
-	_renderer = renderer;
-	_type = type;
-
-	_view = glm::mat4(1.0);
-	_projection = glm::mat4(1.0);
-}
-
-Camera::~Camera() {
-
-}
-
-void Camera::SetView(glm::vec3 direction, glm::vec3 up) {
-	_view = glm::translate(_view, transform.position);
-}
-
-void Camera::SetProjection(ProjectionType type) {
-	_type = type;
-
-	switch (_type)
+namespace Engine
+{
+	Camera::Camera(Renderer* renderer, glm::vec3 position, glm::vec3 lookPosition, glm::vec3 upVector)
 	{
-	case ProjectionType::orthographic:
-		_projection = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, 0.01f, 100.0f);
-		break;
-	case ProjectionType::perspective:
-		_projection = glm::perspective(glm::radians(45.0f), GLfloat(1280.0f) / GLfloat(720.0f), 0.01f, 100.0f);
-		break;
-	default:
-		break;
+		_renderer = renderer;
+
+		_projectionMatrix = glm::perspective(glm::radians(90.0f),
+			(float)_renderer->GetWindow()->GetWidth() / (float)_renderer->GetWindow()->GetHeight(), 0.1f, 500.0f);
+
+		_renderer->SetProjectionMatrix(_projectionMatrix);
+
+		SetCameraTransform(position, lookPosition, upVector);
 	}
-}
 
-void Camera::Init(Shader& shader) {
-	unsigned int transformLoc = glGetUniformLocation(shader.GetID(), "model");
-	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
-	unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
+	Camera::~Camera()
+	{
 
-	shader.Use();
+	}
 
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(GetModel()));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(GetView()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(GetProjection()));
-}
+	void Camera::SetCameraTransform(glm::vec3 newPositon, glm::vec3 newLookPosition, glm::vec3 newUpVector)
+	{
+		_data._position = newPositon;
+		_data._lookPositon = newLookPosition;
+		_data._upVector = newUpVector;
 
-glm::mat4 Camera::GetView() {
-	return _view;
-}
+		_viewMatrix = glm::lookAt(newPositon, newLookPosition, newUpVector);
+	}
 
-glm::mat4 Camera::GetProjection() {
-	return _projection;
-}
-
-glm::mat4 Engine::Camera::GetMVP() {
-	return GetProjection() * GetView() * GetModel();
-}
-
-ProjectionType Camera::GetProjectionType() {
-	return _type;
-}
-
-void Camera::Draw(Shader& shader) {
-	_renderer->DrawCamera(shader, GetModel(), GetView());
+	void Camera::MoveCamera(glm::vec3 newPosition)
+	{
+		_data._position += newPosition;
+		_data._lookPositon += newPosition;
+		SetCameraTransform(_data._position, _data._lookPositon, _data._upVector);
+	}
 }

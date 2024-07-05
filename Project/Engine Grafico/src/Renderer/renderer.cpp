@@ -5,6 +5,7 @@
 #include "../Shader/Shader.h"
 
 #include <iostream>
+#include <gtc/type_ptr.hpp>
 
 using namespace Engine;
 

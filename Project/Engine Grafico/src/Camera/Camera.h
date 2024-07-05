@@ -2,37 +2,34 @@
 #define CAMERA_H
 
 #include "../Utils/Export.h"
-#include "../Renderer/renderer.h"
-#include "../Shader/Shader.h"
-#include "../Entity/Entity2D.h"
+#include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
+#include "gtc/type_ptr.hpp"
 
 
 namespace Engine {
-	enum class ENGINE_API ProjectionType {
-		orthographic, perspective
+	class Renderer;
+
+	struct ENGINE_API CameraData
+	{
+		glm::vec3 _position;
+		glm::vec3 _lookPositon;
+		glm::vec3 _upVector;
 	};
 
-	class ENGINE_API Camera:public Entity2D {
-	private:
-		Renderer* _renderer;
-		ProjectionType _type;
-		glm::mat4 _view;
-		glm::mat4 _projection;
+	class ENGINE_API Camera {
 	public:
-		Camera(Renderer* renderer, ProjectionType type);
+		Camera(Renderer* renderer, glm::vec3 position, glm::vec3 lookPositon, glm::vec3 upVector);
 		~Camera();
 
-		void SetView(glm::vec3 direction, glm::vec3 up);
-		void SetProjection(ProjectionType type);
+		void SetCameraTransform(glm::vec3 newPositon, glm::vec3 newLookPosition, glm::vec3 newUpVector);
+		void MoveCamera(glm::vec3 newPosition);
 
-		void Init(Shader& shader);
-
-		glm::mat4 GetView();
-		glm::mat4 GetProjection();
-		glm::mat4 GetMVP();
-
-		ProjectionType GetProjectionType();
-		void Draw(Shader& shader);
+	private:
+		glm::mat4 _viewMatrix;
+		glm::mat4 _projectionMatrix;
+		CameraData _data;
+		Renderer* _renderer;
 	};
 }
 #endif // !CAMERA_H

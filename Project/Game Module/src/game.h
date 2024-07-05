@@ -6,25 +6,26 @@
 
 using namespace Engine;
 
-class Vector2 {
-	int x;
-	int y;
-};
-
 class Game : public BaseGame {
-private:
-	float _time = 0;
-	
-	Vector2 shapePos;
-	Sprite* _sprite = NULL;
-	Animation* _player = NULL;
-	Tilemap* _map = NULL;
 public:
 	Game();
 	~Game();
-	void PlayerInputs();
-	void InitGame() override;
-	void UpdateGame() override;
-	void UnloadGame() override;
+
+	void Init() override;
+	void Update() override;
+	void Draw() override;
+	void DeInit() override;
+
+private:
+	float t = 0;
+	Engine::Sprite* _samurai;
+	Engine::Camera* _camera;
+	Engine::Tilemap* _tilemap;
+
+	int _samuraiBreathingAnimationID;
+	int _samuraiGuardingAnimationID;
+	int _samuraiSwingAnimationID;
+
+	float _moveSpeed;
 }; 
 #endif // !GAME_H

@@ -1,120 +1,46 @@
 #include "Game.h"
 
-float speed = 100.f;
+Game::Game()
+{
+	_samurai = nullptr;
+	_camera = nullptr;
+	_tilemap = nullptr;
 
-Game::Game() {
+	_samuraiBreathingAnimationID = 0;
+	_samuraiGuardingAnimationID = 0;
+	_samuraiSwingAnimationID = 0;
+}
+
+Game::~Game()
+{
 
 }
 
-Game::~Game() {
-	if (_sprite != NULL) {
-		delete _sprite;
-		_sprite = NULL;
-	}
+void Game::Init()
+{
+	glm::vec3 camStartingPos = { 0, 50, 150 };
+	glm::vec3 camLookPos = { 0, 50, 0 };
+	glm::vec3 camUpVector = { 0, 1, 0 };
 
-	if (_player != NULL) {
-		delete _player;
-		_player = NULL;
-	}
-
-	if (_map != NULL) {
-		delete _map;
-		_map = NULL;
-	}
+	_camera = new Engine::Camera(_renderer, camStartingPos, camLookPos, camUpVector);
+	_tilemap = new Engine::Tilemap(_renderer);
 }
 
-void Game::InitGame() {
-
-	_sprite = new Engine::Sprite(true, "res/textures/samurai.png", GetRenderer(), textureShader);
-	_player = new Animation();
-
-	_map = new Tilemap(glm::ivec2(11,16), "res/textures/FD_Dungeon_Free.png", textureShader, GetRenderer());
-	_map->SetTilesInfo("res/tilemap/Map3Tileset.tsx");
-	_map->LoadMap("res/tilemap/Map3.tmx");
-
-	_sprite->Init();
-
-
-	_player->Init(_sprite, glm::ivec2(6, 3));
-
-	_player->AddAnimation(0, 6, false, 1.f);
-	_player->AddAnimation(6, 11, false, 1.f);
-	_player->AddAnimation(12, 14, true, .4f);
-	_player->SetAnimation(2);
-
-
-	_sprite->Scale(50.0f, 50.0f, 1.0f);
-	_sprite->SetBoundingSize(-10.0f, 20.0f);
-
-	_sprite->Color(1.0f, 1.0f, 1.0f);
-	_sprite->transform.position = glm::vec3(300, 300, 1);
-}
-
-void Game::PlayerInputs() {
-	if (input.GetKey(KeyCode::W)) {
-		_sprite->transform.position.y += speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::S)) {
-		_sprite->transform.position.y -= speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::D)) {
-		_sprite->transform.position.x += speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::A)) {
-		_sprite->transform.position.x -= speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::X)) {
-		_sprite->transform.scale.x -= speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::C)) {
-		_sprite->transform.scale.x += speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::Y)) {
-		_sprite->transform.scale.y -= speed * time.GetDeltaTime();
-	}
-	else if (input.GetKey(KeyCode::U)) {
-		_sprite->transform.scale.y += speed * time.GetDeltaTime();
-	}
-
-	if (input.GetMouseButton(MouseButtons::LEFT_MOUSE_BUTTON)) {
-		_player->SetAnimation(0);
-	}
-	if (input.GetMouseButton(MouseButtons::RIGHT_MOUSE_BUTTON)) {
-		_player->SetAnimation(1);
-	}
-}
-void Game::UpdateGame() {
-
-	PlayerInputs();
-
-	if (!_player->GetCurrentAnimation().loop && _player->GetCurrentAnimation().hasEnded) {
-		_player->SetAnimation(2);
-	}
-
-	_map->Draw();
-
-	_map->CheckCollisionWithTileMap(_sprite, speed * time.GetDeltaTime());
-
-	_player->UpdateIndex(time);
-
-	_sprite->DrawAnimation(_player->GetUVs(_player->GetCurrentIndex()));
+void Game::Update()
+{
 
 }
 
-void Game::UnloadGame() {
+void Game::Draw()
+{
+	_tilemap->Draw();
+	_samurai->Draw();
+}
 
-	if (_sprite != NULL) {
-		delete _sprite;
-		_sprite = NULL;
-	}
+void Game::DeInit()
+{
+	delete _camera;
 
-	if (_player != NULL) {
-		delete _player;
-		_player = NULL;
-	}
-
-	if (_map != NULL) {
-		delete _map;
-		_map = NULL;
-	}
+	_samurai->Denitialize();
+	delete _samurai;
 }

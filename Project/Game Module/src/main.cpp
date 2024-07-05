@@ -3,11 +3,7 @@
 int main() {
 	Game* game = new Game();
 
-	if (game != NULL) {
+	game->InitEngine(800, 600, "Engine Montero");
 
-		game->Execute();
-		delete game;
-		game = NULL;
-	}
-	return 0;
+	delete game;
 }
