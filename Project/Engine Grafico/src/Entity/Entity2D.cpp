@@ -69,7 +69,7 @@ CollisionDirection Engine::Entity2D::CheckCollision(Entity2D& otherEntity, float
 	return CollisionDirection::NONE;
 }
 
-void Engine::Entity2D::ApplyCollisionRestriction(CollisionDirection direction, float& xOverlap, float& yOverlap, bool halfOverlap)
+void Engine::Entity2D::ApplyCollisionRestriction(CollisionDirection direction, float xOverlap, float yOverlap, bool halfOverlap)
 {
 	float defYOverlap = halfOverlap ? yOverlap / 2 : yOverlap;
 	float defXOverlap = halfOverlap ? xOverlap / 2 : xOverlap;

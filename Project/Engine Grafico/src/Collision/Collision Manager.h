@@ -2,35 +2,31 @@
 #define COLLISION_MANAGER_H
 
 #include "../Utils/Export.h"
-#include "../Entity/Entity2D.h"
-#include "../Sprite/Sprite.h"
-#include "vec3.hpp"
-#include "iostream";
+#include "../Tilemap/Tilemap.h"
+#include <list>
 
 using namespace std;
 
 namespace Engine{
 
-	enum ENGINE_API collisionPos {
-		none,
-		topCollision,
-		rightCollision,
-		leftCollision,
-		bottomCollision
-	};
+	class Entity2D;
 
 	class ENGINE_API CollisionManager {
 	public:
-	private:
-		Entity2D* _entity;
-		collisionPos PartialCollision(Entity2D* entity, Entity2D* otherEntity);
-	public:
 		CollisionManager();
 		~CollisionManager();
-		bool CheckTrigger(Entity2D* entity1, Entity2D* entity2);
-		bool CheckCollision(Entity2D* entity1, Entity2D* entity2, float speedEntity1);
-		bool ColisionWithSprite(Entity2D* entity, Sprite* sprite);
+
+		void AddToCollisionList(Entity2D* entityToAdd, bool isStatic);
+		void RemoveFromCollisionList(Entity2D* entityToRemove);
+		bool IsInCollisionList(Entity2D* entityToCheck);
+
+		void UpdateCollisions();
+		void UpdateCollisions(Engine::Tilemap* tilemap);
+
+	private:
+		std::list<Entity2D*> _dynamicCollisionList;
+		std::list<Entity2D*> _staticCollisionList;
 	};
 }
 
-#endif // !CAMERA_H
+#endif // !COLLISION_MANAGER_H

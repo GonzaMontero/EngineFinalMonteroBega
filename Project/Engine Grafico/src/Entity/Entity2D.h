@@ -20,7 +20,7 @@ namespace Engine {
 
 		//Check if objects are colliding + move and check collision direction
 		CollisionDirection CheckCollision(Entity2D& otherEntity, float& xOverlap, float& yOverlap);
-		void ApplyCollisionRestriction(CollisionDirection direction, float& xOverlap, float& yOverlap, bool halfOverlap);
+		void ApplyCollisionRestriction(CollisionDirection direction, float xOverlap, float yOverlap, bool halfOverlap);
 	private:
 		CollisionManager* _collisionManager;
 	};

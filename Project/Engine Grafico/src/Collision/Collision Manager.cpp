@@ -1,85 +1,101 @@
 #include "Collision Manager.h"
 
 namespace Engine {
-	CollisionManager::CollisionManager() {
+	CollisionManager::CollisionManager()
+	{
 
 	}
 
-	CollisionManager::~CollisionManager() {
+	CollisionManager::~CollisionManager()
+	{
 
 	}
 
-	collisionPos CollisionManager::PartialCollision(Entity2D* entity, Entity2D* otherEntity) {
-		glm::vec2 entityScale(entity->transform.scale.x + entity->GetBoundingSize().x, entity->transform.scale.y + entity->GetBoundingSize().y);
-		glm::vec2 obstacleScale(otherEntity->transform.scale.x, otherEntity->transform.scale.y);
-		glm::vec2 entityPos(entity->transform.position.x, entity->transform.position.y - 10);
-		glm::vec2 obstaclePos(otherEntity->transform.position.x, otherEntity->transform.position.y);
-		float minX = 0.0f;
-		float maxX = glm::min(entityPos.x + fabs(entityScale.x) / 2.0f, obstaclePos.x + fabs(obstacleScale.x) / 2.0f) - glm::max(entityPos.x - fabs(entityScale.x) / 2.0f, obstaclePos.x - fabs(obstacleScale.x) / 2.0f);
-		float overlapX = glm::max(minX, maxX);
-
-		float minY = 0.0f;
-		float maxY = glm::min(entityPos.y + fabs(entityScale.y) / 2.0f, obstaclePos.y + fabs(obstacleScale.y) / 2.0f) - glm::max(entityPos.y - fabs(entityScale.y) / 2.0f, obstaclePos.y - fabs(obstacleScale.y) / 2.0f);
-		float overlapY = glm::max(minY, maxY);
-
-		if (overlapX != 0.0f && overlapY != 0.0f) {
-			if (overlapX > overlapY) {
-				if (obstaclePos.y < 0 && entityPos.y < obstaclePos.y || entityPos.y > 0 && entityPos.y < obstaclePos.y) {
-					return bottomCollision;
-				}
-				else if (entityPos.y < 0 && entityPos.y > obstaclePos.y || entityPos.y > 0 && entityPos.y > obstaclePos.y) {
-					return topCollision;
-				}
-			}
-			else {
-				if (entityPos.x < 0 && entityPos.x < obstaclePos.x || entityPos.x > 0 && entityPos.x < obstaclePos.x) {
-					return leftCollision;
-				}
-				else if (entityPos.x < 0 && entityPos.x > obstaclePos.x || entityPos.x > 0 && entityPos.x > obstaclePos.x) {
-					return rightCollision;
-				}
-			}
-		}
-		return none;
+	void CollisionManager::AddToCollisionList(Entity2D* entityToAdd, bool isStatic)
+	{
+		entityToAdd->SetCollisionManager(this);
+		isStatic ? _staticCollisionList.push_back(entityToAdd) : _dynamicCollisionList.push_back(entityToAdd);
 	}
 
-	bool CollisionManager::CheckTrigger(Entity2D* entity1, Entity2D* entity2) {
-		collisionPos cPosition = PartialCollision(entity1, entity2);
-		if (cPosition != none) {
-			return true;
-		}
+	void CollisionManager::RemoveFromCollisionList(Entity2D* entityToRemove)
+	{
+		_staticCollisionList.remove(entityToRemove);
+		_dynamicCollisionList.remove(entityToRemove);
+	}
+
+	bool CollisionManager::IsInCollisionList(Entity2D* entityToCheck)
+	{
+		for (auto const& d1 : _dynamicCollisionList)
+			if (d1 == entityToCheck) return true;
+
+		for (auto const& s1 : _staticCollisionList)
+			if (s1 == entityToCheck)return true;
+
 		return false;
 	}
 
-	bool CollisionManager::CheckCollision(Entity2D* entity1, Entity2D* entity2, float speedEntity1) {
-		collisionPos cPosition = PartialCollision(entity1, entity2);
-		switch (cPosition) {
-		case none:
-			return false;
-			break;
-		case topCollision:
-			entity1->transform.position = glm::vec3(entity1->transform.position.x, entity1->transform.position.y + speedEntity1, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x, entity1->transform.position.y + speedEntity1, entity1->transform.position.z);
-			break;
-		case rightCollision:
-			entity1->transform.position = glm::vec3(entity1->transform.position.x + speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x + speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
-			break;
-		case bottomCollision:
-			entity1->transform.position = glm::vec3(entity1->transform.position.x, entity1->transform.position.y - speedEntity1, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x, entity1->transform.position.y - speedEntity1, entity1->transform.position.z);
-			break;
-		case leftCollision:
-			entity1->transform.position = glm::vec3(entity1->transform.position.x - speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
-			//entity1->setPosition(entity1->transform.position.x - speedEntity1, entity1->transform.position.y, entity1->transform.position.z);
-			break;
-		default:
-			break;
+	void CollisionManager::UpdateCollisions()
+	{
+		for (auto const& d1 : _dynamicCollisionList)
+		{
+			for (auto const& d2 : _dynamicCollisionList)
+			{
+				if (d1 != d2)
+				{
+					float overlapX = 0;
+					float overlapY = 0;
+
+					CollisionDirection currentCollision = d1->CheckCollision(*d2, overlapX, overlapY);
+
+					if (currentCollision != CollisionDirection::NONE)
+					{
+						d1->ApplyCollisionRestriction(currentCollision, overlapX, overlapY, true);
+						d2->ApplyCollisionRestriction(currentCollision, -overlapX, -overlapY, true);
+					}
+				}
+			}
 		}
-		return false;
+
+		for (auto const& d : _dynamicCollisionList)
+		{
+			for (auto const& s : _staticCollisionList)
+			{
+				float overlapX = 0;
+				float overlapY = 0;
+
+				CollisionDirection currentColision = d->CheckCollision(*s, overlapX, overlapY);
+
+				if (currentColision != CollisionDirection::NONE)
+					d->ApplyCollisionRestriction(currentColision, overlapX, overlapY, false);
+			}
+		}
 	}
 
-	bool CollisionManager::ColisionWithSprite(Entity2D* entity, Sprite* sprite) {
-		return true;
+	void CollisionManager::UpdateCollisions(Engine::Tilemap* tilemap)
+	{
+		for (auto const& d1 : _dynamicCollisionList)
+		{
+			for (auto const& d2 : _dynamicCollisionList)
+			{
+				if (d1 != d2)
+				{
+					tilemap->CheckCollision(*d1);
+					tilemap->CheckCollision(*d2);
+
+					float overlapX = 0;
+					float overlapY = 0;
+
+					CollisionDirection currentCollision = d1->CheckCollision(*d2, overlapX, overlapY);
+
+					if (currentCollision != CollisionDirection::NONE)
+					{
+						d1->ApplyCollisionRestriction(currentCollision, overlapX, overlapY, true);
+						d2->ApplyCollisionRestriction(currentCollision, overlapX, overlapY, true);
+					}
+				}
+				else
+					tilemap->CheckCollision(*d1);
+			}
+		}
 	}
 }

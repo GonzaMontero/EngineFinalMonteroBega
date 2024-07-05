@@ -5,6 +5,7 @@
 
 namespace Engine {
 	class ENGINE_API Tilemap {
+	public:
 		Tilemap(Renderer* renderer);
 		~Tilemap();
 
