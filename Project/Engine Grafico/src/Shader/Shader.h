@@ -2,32 +2,28 @@
 #define SHADER_H
 
 #include "../Utils/Export.h"
-
-#include <glm.hpp>
-#include <matrix_transform.hpp>
-#include <type_ptr.hpp>
-
+#include <string>
+#include <fstream>
+#include <sstream>
 #include <iostream>
 
 namespace Engine {
 
 	class ENGINE_API Shader {
+	public:
+		Shader(const char* vertexPath, const char* fragmentPath);
+
+		void Use();
+		void SetBool(const std::string& name, bool value) const;
+		void SetInt(const std::string& name, int value) const;
+		void SetFloat(const std::string& name, float value) const;
+
+		unsigned int GetID();
+
 	private:
 		unsigned int _id;
-		unsigned int Compile(unsigned int type, std::string& source);
-		void CreateAttribPointer(unsigned int shaderAttribIndex, int dataAmmount, int dataSize, int dataPosition);
 
-	public:
-		Shader();
-		~Shader();
-		void Create(const char* vertexPath, const char* fragmentPath);
-		void Use();
-		void Use(glm::mat4 model);
-		void SetVertexAttributes(const char* name, int vertexSize);
-		void SetColorAttributes(const char* name, int vertexSize);
-		void SetTextureAttributes(const char* name, int vertexSize);
-		unsigned int GetMatrixAttributes(const char* name);
-		unsigned int GetID();
+		void CheckCompileErrors(unsigned int shader, std::string type);
 	};
 
 }
