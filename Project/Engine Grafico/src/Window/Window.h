@@ -3,14 +3,13 @@
 
 #include "../Utils/Export.h"
 
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace Engine {
 	class ENGINE_API Window {
 	public:
 		//Creator and Destructor for Window, using requested height, width and name
-		Window();
-		Window(int width, int height, std::string name);
+		Window(int width, int height, const char* name);
 		~Window();
 
 		//Functions to not only initialize the window, but to also get window in itself + the data

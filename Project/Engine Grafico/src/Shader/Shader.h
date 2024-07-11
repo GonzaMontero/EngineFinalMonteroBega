@@ -8,7 +8,6 @@
 #include <iostream>
 
 namespace Engine {
-
 	class ENGINE_API Shader {
 	public:
 		Shader(const char* vertexPath, const char* fragmentPath);

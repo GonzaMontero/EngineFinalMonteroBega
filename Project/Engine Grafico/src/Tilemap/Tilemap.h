@@ -9,8 +9,8 @@ namespace Engine {
 		Tilemap(Renderer* renderer);
 		~Tilemap();
 
-		const Tile& Tile(unsigned int tileID);
-		void SetTile(const Engine::Tile& tile);
+		const Tile& GetTileByID(unsigned int tileID);
+		void SetTile(const Tile& tile);
 		void SetMapTileID(int layer, unsigned int column, unsigned int row, unsigned int ID);
 
 		void SetDimensions(float width, float height);
@@ -22,11 +22,11 @@ namespace Engine {
 		bool ImportTilemap(std::string filePath);
 		bool CheckCollision(Entity2D& entity);
 
-		std::vector<Engine::Tile**> GetTileGrid();
+		std::vector<Tile**> GetTileGrid();
 
 	private:
-		std::vector<Engine::Tile> _tiles;
-		std::vector<Engine::Tile**> _tilesGrid;
+		std::vector<Tile> _tiles;
+		std::vector<Tile**> _tilesGrid;
 
 		unsigned int _width;
 		unsigned int _height;

@@ -4,9 +4,7 @@
 #include "../../Engine Grafico/src/BaseGame/BaseGame.h"
 #include <vector>
 
-using namespace Engine;
-
-class Game : public BaseGame {
+class Game : public Engine::BaseGame {
 public:
 	Game();
 	~Game();

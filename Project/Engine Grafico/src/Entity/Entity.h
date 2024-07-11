@@ -6,8 +6,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 
-namespace Engine
-{
+namespace Engine{
 	class Renderer;
 
 	struct ENGINE_API Rotation {
@@ -75,5 +74,4 @@ namespace Engine
 		void SetRotZAxis(float z);
 	};
 }
-
 #endif // !ENTITY_H

@@ -9,9 +9,7 @@
 
 using namespace std;
 
-namespace Engine
-{
-
+namespace Engine{
     enum class ENGINE_API KeyCode {
         SPACE = 32,
         APOSTROPHE = 39,
@@ -153,5 +151,4 @@ namespace Engine
         glm::vec2 GetMousePosition();
     };
 }
-
 #endif // !INPUT_H

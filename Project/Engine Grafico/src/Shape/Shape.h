@@ -16,6 +16,5 @@ namespace Engine {
 	private:
 		void SetShader();
 	};
-
 }
 #endif // !SHAPE_H

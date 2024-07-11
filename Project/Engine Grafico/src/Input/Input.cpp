@@ -7,31 +7,30 @@
 #include "input.h"
 
 namespace Engine {
-
 	void KeyCallback(GLFWwindow* window, int key, int scanCode, int action, int mods);
 	void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 
 	std::list<int> currentKeysDown;
 	glm::vec2 mousePos;
 
-	Engine::Input::Input(Window* window)
+	Input::Input(Window* window)
 	{
 		glfwSetKeyCallback(window->GetWindow(), KeyCallback);
 		glfwSetCursorPosCallback(window->GetWindow(), MouseCallback);
 	}
 
-	Engine::Input::~Input()
+	Input::~Input()
 	{
 
 	}
 
-	bool Engine::Input::IsKeyPressed(int keyCode, Window* window)
+	bool Input::IsKeyPressed(int keyCode, Window* window)
 	{
 		int keyPressed = glfwGetKey(window->GetWindow(), keyCode);
 		return keyPressed == GLFW_PRESS;
 	}
 
-	bool Engine::Input::IsKeyDown(int keyCode, Window* window)
+	bool Input::IsKeyDown(int keyCode, Window* window)
 	{
 		std::list<int>::iterator it = find(currentKeysDown.begin(), currentKeysDown.end(), keyCode);
 
@@ -44,7 +43,7 @@ namespace Engine {
 		return false;
 	}
 
-	glm::vec2 Engine::Input::GetMousePosition()
+	glm::vec2 Input::GetMousePosition()
 	{
 		return mousePos;
 	}

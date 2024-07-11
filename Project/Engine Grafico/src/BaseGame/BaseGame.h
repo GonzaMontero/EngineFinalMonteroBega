@@ -2,9 +2,8 @@
 #define BASEGAME_H
 
 #include "../Utils/Export.h"
-
-#include "../Renderer/renderer.h"
 #include "../Window/Window.h"
+#include "../Renderer/renderer.h"
 #include "../Shader/Shader.h"
 #include "../Shape/Shape.h"
 #include "../Sprite/Sprite.h"

@@ -1,24 +1,22 @@
 #include "Tilemap.h"
-#include "Tile.cpp"
 #include "../xml_lib/tinyxml2.h"
 #include "../Utils/TextureImporter.h"
 
 namespace Engine
 {
-
-	Engine::Tilemap::Tilemap(Renderer* renderer)
+	Tilemap::Tilemap(Renderer* renderer)
 	{
 		_renderer = renderer;
 	}
 
-	Engine::Tilemap::~Tilemap()
+	Tilemap::~Tilemap()
 	{
 
 	}
 
-	const Tile& Engine::Tilemap::Tile(unsigned int tileID)
+	const Tile& Tilemap::GetTileByID(unsigned int tileID)
 	{
-		Engine::Tile* noTileFound = nullptr;
+		Tile* noTileFound = nullptr;
 
 		for (int i = 0; i < _tiles.size(); i++)
 		{
@@ -29,44 +27,44 @@ namespace Engine
 		return *noTileFound;
 	}
 
-	void Engine::Tilemap::SetTile(const Engine::Tile& tile)
+	void Tilemap::SetTile(const Tile& tile)
 	{
 		_tiles.push_back(tile);
 	}
 
-	void Engine::Tilemap::SetMapTileID(int layer, unsigned int column, unsigned int row, unsigned int ID)
+	void Tilemap::SetMapTileID(int layer, unsigned int column, unsigned int row, unsigned int ID)
 	{
-		_tilesGrid[layer][column][row] = Tile(ID);
+		_tilesGrid[layer][column][row] = GetTileByID(ID);
 	}
 
-	void Engine::Tilemap::SetDimensions(float width, float height)
+	void Tilemap::SetDimensions(float width, float height)
 	{
 		_width = width;
 		_height = height;
 
-		Engine::Tile** tilemapTemp;
+		Tile** tilemapTemp;
 
-		tilemapTemp = new Engine::Tile * [height];
+		tilemapTemp = new Tile * [height];
 
 		for (int i = 0; i < height; i++)
 		{
-			tilemapTemp[i] = new Engine::Tile[width];
+			tilemapTemp[i] = new Tile[width];
 		}
 		_tilesGrid.push_back(tilemapTemp);
 	}
 
-	void Engine::Tilemap::SetTileDimensions(float tileWidth, float tileHeight)
+	void Tilemap::SetTileDimensions(float tileWidth, float tileHeight)
 	{
 		_tileWidth = tileWidth;
 		_tileHeight = tileHeight;
 	}
 
-	void Engine::Tilemap::SetTexture(TextureData* texture)
+	void Tilemap::SetTexture(TextureData* texture)
 	{
 		_texture = texture;
 	}
 
-	void Engine::Tilemap::Draw()
+	void Tilemap::Draw()
 	{
 		float mapWidth = -(_width * _tileWidth) / 2.0f;
 		float mapHeight = (_height * _tileHeight) / 2.0f;
@@ -88,7 +86,7 @@ namespace Engine
 		}
 	}
 
-	bool Engine::Tilemap::ImportTilemap(std::string filePath)
+	bool Tilemap::ImportTilemap(std::string filePath)
 	{
 		tinyxml2::XMLDocument document;
 		tinyxml2::XMLError errorHandler;
@@ -167,12 +165,12 @@ namespace Engine
 				return false;
 
 			if (layerCount > 0) {
-				Engine::Tile** tileMap;
-				tileMap = new Engine::Tile * [_height];
+				Tile** tileMap;
+				tileMap = new Tile * [_height];
 
 				for (int i = 0; i < _height; i++)
 				{
-					tileMap[i] = new Engine::Tile[_width];
+					tileMap[i] = new Tile[_width];
 				}
 
 				_tilesGrid.push_back(tileMap);
@@ -206,7 +204,7 @@ namespace Engine
 		return true;
 	}
 
-	bool Engine::Tilemap::CheckCollision(Entity2D& entity)
+	bool Tilemap::CheckCollision(Entity2D& entity)
 	{
 		_convertedPosX = entity.GetTransform().position.x + (_width / 2.0f) * _tileWidth;
 		_convertedPosY = entity.GetTransform().position.y + (_height / 2.0f) * _tileHeight;
@@ -241,9 +239,9 @@ namespace Engine
 						float overlapX = 0;
 						float overlapY = 0;
 
-						Engine::CollisionDirection collisionDirection = entity.CheckCollision(_tilesGrid[k][j][i], overlapX, overlapY);
+						CollisionDirection collisionDirection = entity.CheckCollision(_tilesGrid[k][j][i], overlapX, overlapY);
 
-						if (collisionDirection != Engine::CollisionDirection::NONE)
+						if (collisionDirection != CollisionDirection::NONE)
 						{
 							entity.ApplyCollisionRestriction(collisionDirection, overlapX, overlapY, false);
 							return true;
@@ -256,9 +254,8 @@ namespace Engine
 		return false;
 	}
 
-	std::vector<Engine::Tile**> Engine::Tilemap::GetTileGrid()
+	std::vector<Tile**> Tilemap::GetTileGrid()
 	{
 		return _tilesGrid;
 	}
-
 }

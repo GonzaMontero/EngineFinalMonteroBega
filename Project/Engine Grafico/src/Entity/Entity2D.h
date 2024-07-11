@@ -5,7 +5,6 @@
 #include "Entity.h"
 
 namespace Engine {
-
 	class CollisionManager;
 	enum class CollisionDirection {UP, DOWN, LEFT, RIGHT, NONE};
 
@@ -25,5 +24,4 @@ namespace Engine {
 		CollisionManager* _collisionManager;
 	};
 }
-
 #endif // !ENTITY2D_H

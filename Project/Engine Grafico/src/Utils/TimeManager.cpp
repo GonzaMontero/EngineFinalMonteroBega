@@ -2,23 +2,28 @@
 
 using namespace Engine;
 
-Engine::Time::Time()
-{
-	_previousDeltaTime = 0;
+namespace Engine{
+	Time::Time()
+	{
+		_previousDeltaTime = 0;
+	}
+
+	Time::~Time()
+	{
+
+	}
+
+	float Time::_deltaTime = 0.0f;
+
+	float Time::GetDeltaTime()
+	{
+		return _deltaTime;
+	}
+
+	void Time::UpdateDeltaTime(float currentTime)
+	{
+		_deltaTime = currentTime - _previousDeltaTime;
+		_previousDeltaTime = currentTime;
+	}
 }
 
-Engine::Time::~Time()
-{
-
-}
-
-float Engine::Time::GetDeltaTime()
-{
-	return _deltaTime;
-}
-
-void Engine::Time::UpdateDeltaTime(float currentTime)
-{
-	_deltaTime = currentTime - _previousDeltaTime;
-	_previousDeltaTime = currentTime;
-}

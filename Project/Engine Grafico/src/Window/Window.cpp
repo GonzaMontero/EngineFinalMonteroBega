@@ -4,46 +4,33 @@
 #include "Window.h"
 #include <iostream>
 
-using namespace Engine;
-
-
-
-Window::Window() {
-	_window = NULL;
-	_width = 800;
-	_height = 600;
-}
-
-Engine::Window::Window(int width, int height, std::string name)
-{
-	_height = height;
-	_width = width;
-
-	_window = glfwCreateWindow(_width, _height, &name[0], NULL, NULL);
-	if (_window == NULL)
+namespace Engine {
+	Window::Window(int width, int height, const char* name)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
+		_height = height;
+		_width = width;
+
+		_window = glfwCreateWindow(_width, _height, name, NULL, NULL);
 	}
-}
 
-Window::~Window() {
+	Window::~Window() {
 
-}
+	}
 
-void Engine::Window::InitWindow()
-{
-	glfwMakeContextCurrent(_window);
-}
+	void Window::InitWindow()
+	{
+		glfwMakeContextCurrent(_window);
+	}
 
-GLFWwindow* Window::GetWindow() {
-	return _window;
-}
+	GLFWwindow* Window::GetWindow() {
+		return _window;
+	}
 
-int Window::GetWidth() {
-	return _width;
-}
+	int Window::GetWidth() {
+		return _width;
+	}
 
-int Window::GetHeight() {
-	return _height;
+	int Window::GetHeight() {
+		return _height;
+	}
 }

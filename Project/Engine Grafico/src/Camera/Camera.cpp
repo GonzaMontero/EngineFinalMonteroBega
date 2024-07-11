@@ -8,8 +8,6 @@
 
 #include "../Renderer/renderer.h"
 
-using namespace Engine;
-
 namespace Engine
 {
 	Camera::Camera(Renderer* renderer, glm::vec3 position, glm::vec3 lookPosition, glm::vec3 upVector)

@@ -2,9 +2,6 @@
 #include "glew.h"
 #include "glfw3.h"
 
-
-using namespace Engine;
-
 namespace Engine
 {
 	Shader::Shader(const char* vertexPath, const char* fragmentPath)
