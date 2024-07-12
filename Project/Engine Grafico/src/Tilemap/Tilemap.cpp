@@ -100,7 +100,7 @@ namespace Engine
 			return false;
 
 		SetDimensions(mapNode->FloatAttribute("width"), mapNode->FloatAttribute("height"));
-		SetTileDimensions(mapNode->FloatAttribute("tileWidth"), mapNode->FloatAttribute("tileHeight"));
+		SetTileDimensions(mapNode->FloatAttribute("tilewidth"), mapNode->FloatAttribute("tileheight"));
 
 		tinyxml2::XMLElement* pTileset = mapNode->FirstChildElement("tileset");
 		if (pTileset == NULL)
@@ -110,7 +110,7 @@ namespace Engine
 		int columns = pTileset->IntAttribute("columns");
 		int rows = tileCount / columns;
 
-		_filePath = "../res/assets/";
+		_filePath = "../Game Module/res/textures/";
 		_filePath += pTileset->FirstChildElement("image")->Attribute("source");
 		TextureData texData = TextureImporter::LoadTexture(_filePath.c_str(), true);
 		SetTexture(&texData);

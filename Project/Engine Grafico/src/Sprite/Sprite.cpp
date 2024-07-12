@@ -28,7 +28,7 @@ namespace Engine {
 		VBO = 0;
 		EBO = 0;
 		_vertices = 0;
-		_renderer = 0;
+		_renderer = renderer;
 
 		uvCoords[0] = { 1.0f, 1.0f };
 		uvCoords[1] = { 1.0f, 0.0f };

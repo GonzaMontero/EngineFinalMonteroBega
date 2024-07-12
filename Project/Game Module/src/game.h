@@ -24,6 +24,7 @@ private:
 	int _samuraiGuardingAnimationID;
 	int _samuraiSwingAnimationID;
 
-	float _moveSpeed;
+	float _moveSpeed = 50;
+	float _cameraSpeed = 30;
 }; 
 #endif // !GAME_H
