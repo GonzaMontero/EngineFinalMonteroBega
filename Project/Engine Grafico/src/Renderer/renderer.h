@@ -40,8 +40,8 @@ namespace Engine {
 		void SetProjectionMatrix(glm::mat4 projectionMatrix);
 
 		//Shaders Used
-		Shader textureShader = Shader("../src/Shader/shader/TextureVertex.shader", "../src/Shader/shader/TextureFragment.shader");
-		Shader solidShader = Shader("../src/Shader/shader/SolidVertex.shader", "../src/Shader/shader/SolidFragment.shader");
+		Shader textureShader = Shader("../Engine Grafico/src/Shader/shader/TextureVertex.shader", "../Engine Grafico/src/Shader/shader/TextureFragment.shader");
+		Shader solidShader = Shader("../Engine Grafico/src/Shader/shader/SolidVertex.shader", "../Engine Grafico/src/Shader/shader/SolidFragment.shader");
 	private:
 		float lastTime = 0;
 		Window* currentWindow;

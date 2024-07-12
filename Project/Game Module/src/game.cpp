@@ -27,7 +27,7 @@ void Game::Init()
 	_camera = new Engine::Camera(_renderer, camStartingPos, camLookPos, camUpVector);
 	_tilemap = new Engine::Tilemap(_renderer);
 
-	if (_tilemap->ImportTilemap("../res/textures/Map1.tmx"))
+	if (_tilemap->ImportTilemap("../Game Module/res/textures/Map1.tmx"))
 	{
 		std::cout << "Tilemap Loaded";
 	}
