@@ -34,6 +34,8 @@ namespace Engine
 		_data._upVector = newUpVector;
 
 		_viewMatrix = glm::lookAt(newPositon, newLookPosition, newUpVector);
+
+		_renderer->SetViewMatrix(_viewMatrix);
 	}
 
 	void Camera::MoveCamera(glm::vec3 newPosition)

@@ -65,7 +65,7 @@ namespace Engine {
 
 		//Useful methods for the end user to perform - Calculations and Random
 		float Lerp(float v0, float v1, float t); //Interpolates between two values based on T
-		float Lerp(glm::vec4 color1, glm::vec4 color2, float t); //Interpolates between two colors based on T
+		glm::vec4 Lerp(glm::vec4 color1, glm::vec4 color2, float t); //Interpolates between two colors based on T
 		float GetRandomNumber(float min, float max); //Returns a random number between the min and max value parameters
 		glm::vec4 GetRandomColor(); //Returns a random color
 

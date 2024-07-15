@@ -146,12 +146,16 @@ namespace Engine {
 
 	float BaseGame::Lerp(float v0, float v1, float t)
 	{
-		return 0.0f;
+		return v0 + t * (v1 - v0);
 	}
 
-	float BaseGame::Lerp(glm::vec4 color1, glm::vec4 color2, float t)
+	glm::vec4 BaseGame::Lerp(glm::vec4 color1, glm::vec4 color2, float t)
 	{
-		return 0.0f;
+		float r = Lerp(color1.r, color2.r, t);
+		float g = Lerp(color1.g, color2.g, t);
+		float b = Lerp(color1.b, color2.b, t);
+		float a = Lerp(color1.a, color2.a, t);
+		return glm::vec4(r, g, b, a);
 	}
 
 	float BaseGame::GetRandomNumber(float min, float max)

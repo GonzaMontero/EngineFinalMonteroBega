@@ -64,7 +64,5 @@ namespace Engine{
 		TextureData tex = { newTextureID, textureWidth, textureHeight };
 
 		return tex;
-
-		return TextureData();
 	}
 }
