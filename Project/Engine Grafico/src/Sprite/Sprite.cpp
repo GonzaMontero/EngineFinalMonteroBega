@@ -150,6 +150,11 @@ namespace Engine {
 		_allAnimations[ID]->Stop();
 	}
 
+	void Sprite::SetAnimationRepeat(int ID, bool active)
+	{
+		_allAnimations[ID]->RepeatAnimation(active);
+	}
+
 	void Sprite::StopAllAnimations()
 	{
 		for (unsigned int i = 0; i < _allAnimations.size(); i++)

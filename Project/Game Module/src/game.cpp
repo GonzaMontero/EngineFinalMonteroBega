@@ -43,7 +43,7 @@ void Game::Init()
 	_samuraiAnimationAtlasConfig.CutByCount(6, 3, 2, 1, 2);
 	_samuraiBreathingAnimationID = _samurai->CreateAnimation(_samuraiAnimationAtlasConfig);
 
-	_samurai->SetAnimationFullTime(_samuraiBreathingAnimationID, .5f);
+	_samurai->SetAnimationFullTime(_samuraiBreathingAnimationID, 1.0f);
 
 	_samurai->SetScale(32, 32, 1);
 	_samurai->SetPos(-80, 20, 0);
@@ -51,6 +51,10 @@ void Game::Init()
 	ChangeClearColor(glm::vec4(0, 0, 0, 1));
 
 	AttachCollider(_samurai, false);
+
+	_samurai->PlayAnimation(_samuraiBreathingAnimationID);
+	_samurai->SetAnimationRepeat(_samuraiBreathingAnimationID, true);
+	
 }
 
 void Game::Update()
@@ -75,6 +79,29 @@ void Game::Update()
 		glm::vec3 movement = { 0, Engine::Time::GetDeltaTime() * -_cameraSpeed , 0 };
 		_camera->MoveCamera(movement);
 	}
+
+	if (IsKeyPressed(ENGINE_KEY_A))
+	{
+		glm::vec3 pos = _samurai->GetTransform().position;
+		_samurai->SetPos(pos.x - Engine::Time::GetDeltaTime() * _moveSpeed, pos.y, pos.z);
+	}
+	else if (IsKeyPressed(ENGINE_KEY_D))
+	{
+		glm::vec3 pos = _samurai->GetTransform().position;
+		_samurai->SetPos(pos.x + Engine::Time::GetDeltaTime() * _moveSpeed, pos.y, pos.z);
+	}
+	else if (IsKeyPressed(ENGINE_KEY_W))
+	{
+		glm::vec3 pos = _samurai->GetTransform().position;
+		_samurai->SetPos(pos.x, pos.y + Engine::Time::GetDeltaTime() * _moveSpeed, pos.z);
+	}
+	else if (IsKeyPressed(ENGINE_KEY_S))
+	{
+		glm::vec3 pos = _samurai->GetTransform().position;
+		_samurai->SetPos(pos.x, pos.y - Engine::Time::GetDeltaTime() * _moveSpeed, pos.z);
+	}
+
+	UpdateCollisionsTilemap(_tilemap);
 }
 
 void Game::Draw()

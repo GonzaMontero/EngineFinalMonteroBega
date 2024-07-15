@@ -26,15 +26,15 @@ namespace Engine {
 			min(GetTransform().position.x + fabs(GetTransform().scale.x) / 2.0f,
 				otherEntity.GetTransform().position.x + fabs(otherEntity.GetTransform().scale.x) / 2.0f) -
 
-			max(GetTransform().position.x + fabs(GetTransform().scale.x) / 2.0f,
-				otherEntity.GetTransform().position.x + fabs(otherEntity.GetTransform().scale.x) / 2.0f));
+			max(GetTransform().position.x - fabs(GetTransform().scale.x) / 2.0f,
+				otherEntity.GetTransform().position.x - fabs(otherEntity.GetTransform().scale.x) / 2.0f));
 
 		yOverlap = max(0.0f,
 			min(GetTransform().position.y + fabs(GetTransform().scale.y) / 2.0f,
 				otherEntity.GetTransform().position.y + fabs(otherEntity.GetTransform().scale.y) / 2.0f) -
 
-			max(GetTransform().position.y + fabs(GetTransform().scale.y) / 2.0f,
-				otherEntity.GetTransform().position.y + fabs(otherEntity.GetTransform().scale.y) / 2.0f));
+			max(GetTransform().position.y - fabs(GetTransform().scale.y) / 2.0f,
+				otherEntity.GetTransform().position.y - fabs(otherEntity.GetTransform().scale.y) / 2.0f));
 
 
 		if (xOverlap != 0.0f && yOverlap != 0.0f)

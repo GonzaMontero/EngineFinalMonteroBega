@@ -39,6 +39,7 @@ namespace Engine {
 		void AddFrameToExistingAnimation(int animationID, int positonX, int positionY, int width, int height);
 		void PlayAnimation(int ID);
 		void StopAnimation(int ID);
+		void SetAnimationRepeat(int ID, bool active);
 		void StopAllAnimations();
 
 		void SetAnimationSpeed(int ID, float speed);
