@@ -40,7 +40,7 @@ void Game::Init()
 
 	Engine::AtlasConfigurations _samuraiAnimationAtlasConfig;
 
-	_samuraiAnimationAtlasConfig.CutByCount(6, 3, 2, 1, 2);
+	_samuraiAnimationAtlasConfig.CutByCount(6, 3, 0, 0, 2);
 	_samuraiBreathingAnimationID = _samurai->CreateAnimation(_samuraiAnimationAtlasConfig);
 
 	_samurai->SetAnimationFullTime(_samuraiBreathingAnimationID, 1.0f);
